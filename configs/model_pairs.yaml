@@ -1,0 +1,67 @@
+# Matched base/instruct model pairs for alignment-effect isolation.
+# Every pair shares architecture and pretraining — only the alignment step differs.
+
+llama-3.1-8b:
+  base:
+    name: "Llama 3.1 8B Base"
+    hf_id: "meta-llama/Llama-3.1-8B"
+    alignment_level: 0
+    quantization: "4bit"
+    chat_template: false
+    max_new_tokens: 256
+  aligned:
+    name: "Llama 3.1 8B Instruct"
+    hf_id: "meta-llama/Llama-3.1-8B-Instruct"
+    alignment_level: 2
+    quantization: "4bit"
+    chat_template: true
+    max_new_tokens: 256
+
+qwen-2.5-7b:
+  base:
+    name: "Qwen 2.5 7B Base"
+    hf_id: "Qwen/Qwen2.5-7B"
+    alignment_level: 0
+    quantization: "4bit"
+    chat_template: false
+    max_new_tokens: 256
+  aligned:
+    name: "Qwen 2.5 7B Instruct"
+    hf_id: "Qwen/Qwen2.5-7B-Instruct"
+    alignment_level: 2
+    quantization: "4bit"
+    chat_template: true
+    max_new_tokens: 256
+
+mistral-7b:
+  base:
+    name: "Mistral 7B Base"
+    hf_id: "mistralai/Mistral-7B-v0.3"
+    alignment_level: 0
+    quantization: "4bit"
+    chat_template: false
+    max_new_tokens: 256
+  aligned:
+    name: "Mistral 7B Instruct"
+    hf_id: "mistralai/Mistral-7B-Instruct-v0.3"
+    alignment_level: 1
+    quantization: "4bit"
+    chat_template: true
+    max_new_tokens: 256
+
+# Reasoning model pair (Level 4)
+llama-r1-8b:
+  base:
+    name: "Llama 3.1 8B Instruct"
+    hf_id: "meta-llama/Llama-3.1-8B-Instruct"
+    alignment_level: 2
+    quantization: "4bit"
+    chat_template: true
+    max_new_tokens: 256
+  aligned:
+    name: "DeepSeek R1 Distill Llama 8B"
+    hf_id: "deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+    alignment_level: 4
+    quantization: "4bit"
+    chat_template: true
+    max_new_tokens: 2048  # Reasoning models need more tokens

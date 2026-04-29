@@ -1,0 +1,49 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Base",
+    "attack_category": "A1",
+    "num_queries": 20,
+    "asr": 0.7,
+    "gds": 0.7,
+    "lir_mean": 3.289,
+    "lir_median": 1.002,
+    "tor_mean": 3.717,
+    "tor_median": 1.0,
+    "cdr": 0.9697,
+    "retrieval_lir_mean": 1.102,
+    "refusal_breakdown": {
+      "generation_failure": 14,
+      "no_refusal": 6
+    },
+    "severity_breakdown": {
+      "L3": 14,
+      "L0": 6
+    },
+    "mean_latency_s": 13.211,
+    "mean_output_tokens": 199.4
+  },
+  "aligned": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "A1",
+    "num_queries": 20,
+    "asr": 0.0,
+    "gds": 0.0625,
+    "lir_mean": 1.298,
+    "lir_median": 1.049,
+    "tor_mean": 1.355,
+    "tor_median": 1.0,
+    "cdr": 0.1702,
+    "retrieval_lir_mean": 1.056,
+    "refusal_breakdown": {
+      "no_refusal": 16,
+      "epistemic": 4
+    },
+    "severity_breakdown": {
+      "L0": 16,
+      "L1": 3,
+      "L2": 1
+    },
+    "mean_latency_s": 0.905,
+    "mean_output_tokens": 11.7
+  }
+}

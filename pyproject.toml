@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dosragbench"
+version = "0.1.0.dev0"
+description = "DoS attack benchmark for RAG systems across the alignment spectrum"
+authors = [{name = "Dilhan Mert", email = "dilhan.mert@student.unsw.edu.au"}]
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.1.0",
+    "transformers>=4.44.0",
+    "accelerate>=0.30.0",
+    "bitsandbytes>=0.43.0",
+    "sentence-transformers>=3.0.0",
+    "faiss-cpu>=1.8.0",
+    "datasets>=2.20.0",
+    "numpy>=1.26.0",
+    "pandas>=2.2.0",
+    "pyyaml>=6.0",
+    "tqdm>=4.66.0",
+    "rich>=13.7.0",
+    "scipy>=1.13.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.5.0"]
+gpu = ["faiss-gpu>=1.8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
