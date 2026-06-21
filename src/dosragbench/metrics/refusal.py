@@ -115,12 +115,12 @@ def classify_refusal(answer: str) -> RefusalType:
 
 
 def _is_repetition_loop(text: str, min_repeats: int = 5) -> bool:
-    """Detect if the text contains a repetition loop (consecutive or scattered)."""
+    """Detect if the text contains a repetition loop."""
     words = text.split()
     if len(words) < min_repeats * 2:
         return False
 
-    # Consecutive repetition: same short phrase back-to-back
+    # Look for the same short phrase (2-5 words) repeating
     for phrase_len in (2, 3, 4, 5):
         for start in range(len(words) - phrase_len * min_repeats):
             phrase = tuple(words[start : start + phrase_len])
@@ -134,17 +134,6 @@ def _is_repetition_loop(text: str, min_repeats: int = 5) -> bool:
                     break
             if count >= min_repeats:
                 return True
-
-    # Scattered repetition: same phrase appearing anywhere >= min_repeats times
-    # (catches Q&A cycling loops like "Question: X Answer: Y Question: X Answer: Y")
-    for phrase_len in (4, 5, 6, 7, 8):
-        counts: dict = {}
-        for i in range(len(words) - phrase_len + 1):
-            phrase = tuple(words[i : i + phrase_len])
-            counts[phrase] = counts.get(phrase, 0) + 1
-            if counts[phrase] >= min_repeats:
-                return True
-
     return False
 
 

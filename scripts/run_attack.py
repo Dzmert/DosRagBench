@@ -165,7 +165,7 @@ def main():
     else:
         attack = build_attack(attack_config)
 
-    # Run on each side of the pair 
+    # ── Run on each side of the pair ──
     all_results = {}
     metrics_reports = {}
 
@@ -214,7 +214,7 @@ def main():
             f"CDR={report.cdr:.3f}"
         )
 
-    #  Save results 
+    # ── Save results ──
     out_dir = RESULTS_DIR / f"{args.model_pair}_{args.category}"
     out_dir.mkdir(parents=True, exist_ok=True)
 

@@ -23,7 +23,8 @@ cd dosragbench
 pip install -e .
 ```
 
-### 2. Validate the pipeline 
+### 2. Validate the pipeline (no GPU required)
+
 ```bash
 python scripts/smoke_test.py
 ```
@@ -32,7 +33,7 @@ Expected output:
 ```
 A1 (Guardrail Triggering): AVI = 5.00 -- Strong paradox
 C1 (Embedding Clustering): AVI = 1.00 -- Alignment-independent
-Smoke test PASSED
+✅ Smoke test PASSED
 ```
 
 ### 3. Prepare data
@@ -43,14 +44,15 @@ python scripts/prepare_data.py --num-queries 50 --kb-size 1000
 
 This downloads a Natural Questions subset (or falls back to synthetic data if HuggingFace is unreachable).
 
-### 4. Run first experiment
+### 4. Run your first real experiment
 
 ```bash
+# Requires ~12GB VRAM (RTX 4070 with 4-bit quantization)
 python scripts/run_attack.py --category A1 --model-pair llama-3.1-8b --num-queries 20
 python scripts/run_attack.py --category C1 --model-pair llama-3.1-8b --num-queries 20
 ```
 
-### 5. Generate a report of the results
+### 5. Generate the alignment paradox report
 
 ```bash
 python scripts/compute_avi.py
@@ -67,7 +69,42 @@ This produces a table like:
 └────────┴──────────┴─────────────┴───────────┴────────────────────────┘
 ```
 
+Plus `results/avi_report.md` for inclusion in your seminar/thesis.
 
+## Project Structure
+
+```
+dosragbench/
+├── src/dosragbench/
+│   ├── attacks/
+│   │   ├── base.py              # Abstract DoSAttack class
+│   │   ├── a1_guardrail.py      # MutedRAG-style A1
+│   │   └── c1_clustering.py     # Novel embedding-space clustering
+│   ├── metrics/
+│   │   ├── refusal.py           # Refusal type + severity classifier
+│   │   └── metrics.py           # ASR, GDS, LIR, TOR, CDR, AVI
+│   ├── models/
+│   │   └── loader.py            # HF model loading (4-bit local / HPC)
+│   ├── pipeline/
+│   │   ├── retriever.py         # FAISS HNSW retriever (timed)
+│   │   └── rag.py               # End-to-end pipeline
+│   └── utils/
+│       └── config.py            # YAML config loading
+├── configs/
+│   ├── model_pairs.yaml         # Matched base/instruct pairs
+│   └── attacks.yaml             # Attack parameters per category
+├── scripts/
+│   ├── prepare_data.py          # Download NQ subset, build KB
+│   ├── run_attack.py            # Main experiment runner
+│   ├── compute_avi.py           # Generate alignment paradox report
+│   ├── smoke_test.py            # End-to-end test without GPU
+│   └── submit_katana.sh         # SLURM template for HPC
+├── tests/
+│   └── test_refusal.py          # 18 unit tests (all passing)
+├── data/                        # queries.json, knowledge_base.json
+├── results/                     # Output: metrics.json, avi_report.md
+└── pyproject.toml
+```
 
 ## Model Pairs Available
 
@@ -82,6 +119,23 @@ Defined in `configs/model_pairs.yaml`:
 
 The last pair is the reasoning comparison: same architecture, different post-training. Useful for testing Category D (CoT deadlocks) in Thesis B.
 
+## Hardware Requirements
+
+- **Local smoke test:** Any machine (uses stub models)
+- **Local real experiments:** RTX 4070 or better (~12GB VRAM with 4-bit quantization)
+- **Katana HPC:** Required for 70B+ models. Use `scripts/submit_katana.sh` as a template.
+
+## Running on Katana
+
+```bash
+# On Katana login node, after cloning:
+module load python/3.11 cuda/12.1
+python -m venv .venv && source .venv/bin/activate
+pip install -e .
+
+# Submit a job:
+qsub -v PAIR=llama-3.1-8b,CATEGORY=A1,NUM_QUERIES=50 scripts/submit_katana.sh
+```
 
 ## Running Tests
 
@@ -89,5 +143,24 @@ The last pair is the reasoning comparison: same architecture, different post-tra
 pytest tests/ -v
 ```
 
+## Extending for Thesis B
 
+To add a new attack category (e.g., B1 Context Saturation or D1 Logic Traps):
 
+1. Create `src/dosragbench/attacks/b1_saturation.py` subclassing `DoSAttack`
+2. Implement `generate_adversarial_docs(query, clean_docs)`
+3. Register in `src/dosragbench/attacks/__init__.py` → `ATTACK_REGISTRY`
+4. Add config to `configs/attacks.yaml`
+
+The experiment runner, metrics, and AVI reporter require no changes.
+
+## Known Limitations (Prototype Scope)
+
+- **HNSW rebuild after attack:** FAISS HNSW doesn't support deletion, so we rebuild the index per query. For Thesis B, switch to a deletion-friendly backend (e.g., Weaviate with tombstones) for faster cycles.
+- **Single embedder:** Currently uses `all-MiniLM-L6-v2`. Thesis B should test multiple embedders to validate embedder-independence.
+- **No defence evaluation:** Phase 4 (perplexity filtering, NLI detection) not yet implemented — this is Thesis B scope.
+- **Adversarial optimization is template-based:** C1 uses sampling + similarity filtering, not gradient-based optimization. For grey-box attacks against specific embedders, gradient methods should give tighter clusters (Thesis B).
+
+## Citing
+
+This prototype validates the framework proposed in the Thesis A proposal. When you have real numbers, update the "Expected Output" in this README with your actual AVI values — that's your hypothesis being proved/disproved.

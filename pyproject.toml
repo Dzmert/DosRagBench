@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dosragbench"
-version = "0.1.0.dev0"
+version = "0.1.0-prototype"
 description = "DoS attack benchmark for RAG systems across the alignment spectrum"
 authors = [{name = "Dilhan Mert", email = "dilhan.mert@student.unsw.edu.au"}]
 requires-python = ">=3.10"

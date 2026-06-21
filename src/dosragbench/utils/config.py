@@ -68,7 +68,7 @@ class RunConfig:
 
 def load_yaml(path: Path) -> dict:
     """Load a YAML file."""
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, "r") as f:
         return yaml.safe_load(f)
 
 

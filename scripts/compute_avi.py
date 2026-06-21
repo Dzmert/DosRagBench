@@ -3,7 +3,7 @@
 Reads results/*/metrics.json and produces:
   - A formatted console table comparing base vs aligned ASR/GDS/CDR per attack
   - results/avi_report.json with all AVI values
-  - results/avi_report.md with a markdown-formatted
+  - results/avi_report.md with a markdown-formatted report suitable for the seminar
 
 Usage:
     python scripts/compute_avi.py                  # All completed runs
@@ -212,7 +212,7 @@ def write_markdown_report(avi_entries: list[dict], out_path: Path) -> None:
                 f"(Hypothesis 1)."
             )
 
-    out_path.write_text("\n".join(lines), encoding="utf-8")
+    out_path.write_text("\n".join(lines))
     logger.info(f"Wrote markdown report to {out_path}")
 
 

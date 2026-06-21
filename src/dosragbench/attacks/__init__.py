@@ -1,16 +1,22 @@
 """Attack implementations for DoSRAGBench prototype."""
 
 from dosragbench.attacks.a1_guardrail import GuardrailTriggeringAttack
+from dosragbench.attacks.a2_contradiction import ContradictionFloodingAttack
+from dosragbench.attacks.a3_authority import AuthoritySpoofingAttack
 from dosragbench.attacks.base import DoSAttack
 from dosragbench.attacks.c1_clustering import EmbeddingClusteringAttack
+from dosragbench.attacks.c2_index_pollution import IndexPollutionAttack
+from dosragbench.attacks.c3_embedding_perturbation import EmbeddingPerturbationAttack
 from dosragbench.utils.config import AttackConfig
 
 
 ATTACK_REGISTRY: dict[str, type[DoSAttack]] = {
     "A1": GuardrailTriggeringAttack,
-    "A1_instructional": GuardrailTriggeringAttack,
-    "A1_reframe": GuardrailTriggeringAttack,
+    "A2": ContradictionFloodingAttack,
+    "A3": AuthoritySpoofingAttack,
     "C1": EmbeddingClusteringAttack,
+    "C2": IndexPollutionAttack,
+    "C3": EmbeddingPerturbationAttack,
 }
 
 
@@ -28,7 +34,11 @@ def build_attack(config: AttackConfig, **kwargs) -> DoSAttack:
 __all__ = [
     "DoSAttack",
     "GuardrailTriggeringAttack",
+    "ContradictionFloodingAttack",
+    "AuthoritySpoofingAttack",
     "EmbeddingClusteringAttack",
+    "IndexPollutionAttack",
+    "EmbeddingPerturbationAttack",
     "ATTACK_REGISTRY",
     "build_attack",
 ]

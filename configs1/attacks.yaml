@@ -1,0 +1,68 @@
+# Attack configurations for each category.
+
+# CATEGORY A: SEMANTIC JAMMING
+
+A1:
+  name: "Guardrail Triggering"
+  num_queries: 50
+  num_adversarial_docs: 5
+  seed: 42
+  params:
+    trigger_topics:
+      - weapons
+      - explosives
+      - self_harm
+      - illegal_drugs
+      - hacking
+    injection_mode: "appended"  # "appended" | "embedded" | "prepended"
+    # Each poisoned doc contains real topical content + a safety-trigger snippet
+
+A2:
+  name: "Contradiction Flooding"
+  num_queries: 50
+  num_adversarial_docs: 8
+  seed: 42
+  params:
+    contradiction_pairs_per_doc: 3
+    style: "formal"  # Sound authoritative
+
+A3:
+  name: "Authority Spoofing"
+  num_queries: 50
+  num_adversarial_docs: 3
+  seed: 42
+  params:
+    authority_markers:
+      - "CLASSIFIED - Do not disclose"
+      - "CONFIDENTIAL - Internal use only"
+      - "RESTRICTED - Authorized personnel only"
+
+# CATEGORY C: ALGORITHMIC COMPLEXITY
+
+C1:
+  name: "Embedding Space Clustering"
+  num_queries: 50
+  num_adversarial_docs: 50  # Need more docs for clustering effect
+  seed: 42
+  params:
+    cluster_radius: 0.05  # Smaller = tighter cluster around target
+    optimization_steps: 100
+    kb_size_multiplier: 1.0  # Scales KB to show index degradation
+
+C2:
+  name: "Index Pollution"
+  num_queries: 50
+  num_adversarial_docs: 200  # Large-scale pollution
+  seed: 42
+  params:
+    duplication_factor: 5
+    perturbation_epsilon: 0.01
+
+C3:
+  name: "Adversarial Embedding Perturbation"
+  num_queries: 50
+  num_adversarial_docs: 10
+  seed: 42
+  params:
+    token_perturbations: ["zero-width space", "unicode homoglyphs"]
+    max_perturbations_per_doc: 20
