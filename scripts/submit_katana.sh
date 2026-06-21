@@ -1,9 +1,10 @@
 #!/bin/bash
 #PBS -N DosRagBench
-#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1:gpu_id=A100
+#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1:gpu_model=A100
 #PBS -l walltime=12:00:00
 #PBS -j oe
-#PBS -M z5419867@student.unsw.edu.au
+#PBS -M z5419867@ad.unsw.edu.au
+#PBS -m ae
 
 # DoSRAGBench — Katana HPC submission template.
 #
