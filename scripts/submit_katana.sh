@@ -3,7 +3,7 @@
 #PBS -l select=1:ncpus=8:mem=64gb:ngpus=1:gpu_id=A100
 #PBS -l walltime=12:00:00
 #PBS -j oe
-#PBS -M z0000000@student.unsw.edu.au
+#PBS -M z5419867@student.unsw.edu.au
 
 # DoSRAGBench — Katana HPC submission template.
 #
