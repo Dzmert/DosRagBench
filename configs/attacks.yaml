@@ -4,7 +4,7 @@
 
 A1:
   name: "Guardrail Triggering"
-  num_queries: 50
+  num_queries: 200
   num_adversarial_docs: 5
   seed: 42
   params:
@@ -19,7 +19,7 @@ A1:
 
 A2:
   name: "Contradiction Flooding"
-  num_queries: 50
+  num_queries: 200
   num_adversarial_docs: 8
   seed: 42
   params:
@@ -28,7 +28,7 @@ A2:
 
 A3:
   name: "Authority Spoofing"
-  num_queries: 50
+  num_queries: 200
   num_adversarial_docs: 3
   seed: 42
   params:
@@ -41,8 +41,8 @@ A3:
 
 C1:
   name: "Embedding Space Clustering"
-  num_queries: 50
-  num_adversarial_docs: 50  # Need more docs for clustering effect
+  num_queries: 200
+  num_adversarial_docs: 200  # Need more docs for clustering effect
   seed: 42
   params:
     cluster_radius: 0.05  # Smaller = tighter cluster around target

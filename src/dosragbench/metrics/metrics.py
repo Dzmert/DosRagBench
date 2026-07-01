@@ -29,6 +29,8 @@ class QueryResult:
     output_tokens: int
     input_tokens: int
     retrieved_adversarial_count: int = 0
+    gold_in_topk: bool = False
+    gold_rank: int = -1  # position of gold doc in results, -1 if absent
     refusal_type: RefusalType = RefusalType.NO_REFUSAL
     severity: SeverityLevel = SeverityLevel.FULL_AVAILABILITY
 
@@ -47,6 +49,9 @@ class QueryResult:
             output_tokens=resp.output_tokens,
             input_tokens=resp.input_tokens,
             retrieved_adversarial_count=resp.retrieved_adversarial_count,
+            # Retrieval-displacement analytics (absent on stub shims -> defaults)
+            gold_in_topk=getattr(resp, "gold_in_topk", False),
+            gold_rank=getattr(resp, "gold_rank", -1),
             refusal_type=refusal,
             severity=severity,
         )
@@ -61,6 +66,8 @@ class QueryResult:
             "output_tokens": self.output_tokens,
             "input_tokens": self.input_tokens,
             "retrieved_adversarial_count": self.retrieved_adversarial_count,
+            "gold_in_topk": self.gold_in_topk,
+            "gold_rank": self.gold_rank,
             "refusal_type": self.refusal_type.value,
             "severity": int(self.severity),
         }
@@ -86,6 +93,12 @@ class MetricsReport:
     # Retrieval-specific
     retrieval_lir_mean: float = 1.0  # For Category C - retrieval-only latency ratio
 
+    # Retrieval displacement (Category C) - gold-doc eviction & adversarial pollution
+    gold_recall_baseline: float = 0.0   # fraction of queries with gold in top-k, clean
+    gold_recall_attacked: float = 0.0   # fraction with gold in top-k, under attack
+    gold_eviction_rate: float = 0.0     # of queries with gold clean, fraction evicted under attack
+    mean_adversarial_in_topk: float = 0.0
+
     # Refusal breakdown
     refusal_breakdown: dict = field(default_factory=dict)
     severity_breakdown: dict = field(default_factory=dict)
@@ -107,6 +120,10 @@ class MetricsReport:
             "tor_median": round(self.tor_median, 3),
             "cdr": round(self.cdr, 4),
             "retrieval_lir_mean": round(self.retrieval_lir_mean, 3),
+            "gold_recall_baseline": round(self.gold_recall_baseline, 3),
+            "gold_recall_attacked": round(self.gold_recall_attacked, 3),
+            "gold_eviction_rate": round(self.gold_eviction_rate, 3),
+            "mean_adversarial_in_topk": round(self.mean_adversarial_in_topk, 3),
             "refusal_breakdown": self.refusal_breakdown,
             "severity_breakdown": self.severity_breakdown,
             "mean_latency_s": round(self.mean_latency_s, 3),
@@ -166,6 +183,18 @@ def compute_metrics(
     lir_median = sorted(lir_values)[len(lir_values) // 2] if lir_values else 1.0
     retrieval_lir_mean = mean(retrieval_lir_values) if retrieval_lir_values else 1.0
 
+    # ── Displacement: gold-doc eviction & adversarial pollution (Category C) ──
+    gold_present_baseline = sum(1 for b in baseline if b.gold_in_topk)
+    gold_present_attacked = sum(1 for a in attacked if a.gold_in_topk)
+    gold_evicted = sum(
+        1 for att, base in zip(attacked, baseline)
+        if base.gold_in_topk and not att.gold_in_topk
+    )
+    gold_recall_baseline = gold_present_baseline / n
+    gold_recall_attacked = gold_present_attacked / n
+    gold_eviction_rate = (gold_evicted / gold_present_baseline) if gold_present_baseline else 0.0
+    mean_adversarial_in_topk = mean(r.retrieved_adversarial_count for r in attacked)
+
     # ── TOR: token overhead ratio ──
     tor_values = []
     for att, base in zip(attacked, baseline):
@@ -207,6 +236,10 @@ def compute_metrics(
         tor_median=tor_median,
         cdr=cdr,
         retrieval_lir_mean=retrieval_lir_mean,
+        gold_recall_baseline=gold_recall_baseline,
+        gold_recall_attacked=gold_recall_attacked,
+        gold_eviction_rate=gold_eviction_rate,
+        mean_adversarial_in_topk=mean_adversarial_in_topk,
         refusal_breakdown=refusal_breakdown,
         severity_breakdown=severity_breakdown,
         mean_latency_s=mean(r.total_latency_s for r in attacked),

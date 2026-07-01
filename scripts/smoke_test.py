@@ -142,10 +142,10 @@ def run_stub_side(stub_model, retriever, queries, attack, top_k):
         baseline_result = QueryResult.from_rag_response(resp)
         baseline_results.append(baseline_result)
 
-        # Attack injection
+        # Attack injection: register adversarial docs in the ephemeral store,
+        # query, then clear. No index rebuild (new set/clear_adversarial API).
         adv_docs = attack.generate_adversarial_docs(query_text, retrieval.documents)
-        n_before = len(retriever.documents)
-        retriever.add_documents(adv_docs)
+        retriever.set_adversarial(adv_docs)
 
         try:
             retrieval2 = retriever.retrieve(query_text, top_k=top_k)
@@ -166,9 +166,7 @@ def run_stub_side(stub_model, retriever, queries, attack, top_k):
             )
             attacked_results.append(attacked_result)
         finally:
-            # Rollback
-            kept = retriever.documents[:n_before]
-            retriever.build_index(kept)
+            retriever.clear_adversarial()
 
     return baseline_results, attacked_results
 
