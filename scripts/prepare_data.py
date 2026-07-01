@@ -47,7 +47,7 @@ def load_nq_subset(num_queries: int, kb_size: int, seed: int = 42) -> dict:
         from datasets import load_dataset
 
         logger.info("Loading Natural Questions (nq_open) from HuggingFace...")
-        ds = load_dataset("nq_open", split="validation")
+        ds = load_dataset("google-research-datasets/nq_open", split="validation")
 
         rng = random.Random(seed)
         indices = list(range(len(ds)))
