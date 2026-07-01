@@ -1,0 +1,256 @@
+==========================================
+DoSRAGBench run
+  Pair:     llama-3.1-8b
+  Category: A1
+  Queries:  5
+  Node:     k174
+  GPU:      NVIDIA H200
+==========================================
+2026-06-28 15:30:03,280 [INFO] Environment: katana
+2026-06-28 15:30:03,286 [INFO] Model pair: llama-3.1-8b
+2026-06-28 15:30:03,286 [INFO] Attack: A1 (Guardrail Triggering)
+2026-06-28 15:30:03,286 [INFO] Queries: 5, top_k: 5
+2026-06-28 15:30:03,289 [INFO] Loaded 50 queries, 1050 KB docs
+2026-06-28 15:30:03,289 [INFO] Loading embedder: sentence-transformers/all-MiniLM-L6-v2
+2026-06-28 15:30:03,356 [INFO] No device provided, using cuda:0
+2026-06-28 15:30:03,596 [INFO] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+2026-06-28 15:30:03,830 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:03,843 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/modules.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:03,864 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/modules.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:04,094 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-06-28 15:30:04,094 [WARNING] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-06-28 15:30:04,098 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:04,106 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:04,129 [INFO] Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-06-28 15:30:04,344 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:04,350 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:04,566 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:04,579 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/README.md "HTTP/1.1 200 OK"
+2026-06-28 15:30:04,587 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/README.md "HTTP/1.1 200 OK"
+2026-06-28 15:30:04,817 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:04,825 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/modules.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:05,042 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:05,052 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:05,063 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:05,299 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-06-28 15:30:05,524 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:05,529 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:05,538 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:05,802 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 15242.33it/s]
+2026-06-28 15:30:09,369 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-06-28 15:30:09,588 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-06-28 15:30:09,818 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-06-28 15:30:10,058 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-06-28 15:30:10,318 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:10,323 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:10,331 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:10,579 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:10,584 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:10,800 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:10,804 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:11,027 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:11,033 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:11,257 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-06-28 15:30:11,488 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-06-28 15:30:11,716 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/vocab.txt "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:11,721 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/vocab.txt "HTTP/1.1 200 OK"
+2026-06-28 15:30:11,728 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/vocab.txt "HTTP/1.1 200 OK"
+2026-06-28 15:30:11,960 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:11,964 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:11,971 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:12,232 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+2026-06-28 15:30:12,449 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:12,455 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/special_tokens_map.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:12,462 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/special_tokens_map.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:12,695 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+2026-06-28 15:30:12,939 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-06-28 15:30:12,943 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:12,951 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-06-28 15:30:13,175 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+/home/z5419867/thesis_b/DosRagBench/src/dosragbench/pipeline/retriever.py:71: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.embedder.get_sentence_embedding_dimension()
+2026-06-28 15:30:13,327 [INFO] Building HNSW index (1050 docs, M=16)
+Batches:   0%|          | 0/33 [00:00<?, ?it/s]Batches:   3%|▎         | 1/33 [00:00<00:08,  3.99it/s]Batches:  79%|███████▉  | 26/33 [00:00<00:00, 93.08it/s]Batches: 100%|██████████| 33/33 [00:00<00:00, 87.23it/s]
+2026-06-28 15:30:13,721 [INFO] Index built: 1050 vectors, dim=384
+2026-06-28 15:30:13,721 [INFO] ══ Running BASE side: Llama 3.1 8B Base ══
+2026-06-28 15:30:13,721 [INFO] Loading model: Llama 3.1 8B Base
+2026-06-28 15:30:13,721 [INFO] Loading Llama 3.1 8B Base (meta-llama/Llama-3.1-8B)
+2026-06-28 15:30:13,936 [INFO] HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json "HTTP/1.1 401 Unauthorized"
+2026-06-28 15:30:14,158 [INFO] HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json "HTTP/1.1 401 Unauthorized"
+Traceback (most recent call last):
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 772, in hf_raise_for_status
+    response.raise_for_status()
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '401 Unauthorized' for url 'https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/utils/hub.py", line 437, in cached_files
+    hf_hub_download(
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1016, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1167, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1805, in _raise_on_head_call_error
+    raise head_call_error
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1691, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1613, in get_hf_file_metadata
+    response = _httpx_follow_relative_redirects_with_backoff(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 703, in _httpx_follow_relative_redirects_with_backoff
+    hf_raise_for_status(response)
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 798, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response, repo_type=repo_type, repo_id=repo_id) from e
+huggingface_hub.errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-6a40b165-38b9d2ac22bb61cd620caac9;deaa7428-de4c-46b6-8079-18b76b29bcbe)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/models/auto/tokenization_auto.py", line 716, in from_pretrained
+    config = AutoConfig.from_pretrained(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/models/auto/configuration_auto.py", line 376, in from_pretrained
+    config_dict, unused_kwargs = PreTrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/configuration_utils.py", line 687, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/configuration_utils.py", line 742, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/utils/hub.py", line 293, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/utils/hub.py", line 503, in cached_files
+    raise OSError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/meta-llama/Llama-3.1-8B.
+401 Client Error. (Request ID: Root=1-6a40b165-38b9d2ac22bb61cd620caac9;deaa7428-de4c-46b6-8079-18b76b29bcbe)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 772, in hf_raise_for_status
+    response.raise_for_status()
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '401 Unauthorized' for url 'https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/utils/hub.py", line 437, in cached_files
+    hf_hub_download(
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1016, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1167, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1805, in _raise_on_head_call_error
+    raise head_call_error
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1691, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 88, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1613, in get_hf_file_metadata
+    response = _httpx_follow_relative_redirects_with_backoff(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 703, in _httpx_follow_relative_redirects_with_backoff
+    hf_raise_for_status(response)
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 798, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response, repo_type=repo_type, repo_id=repo_id) from e
+huggingface_hub.errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-6a40b166-7673ffec4dfee0ca5d36827b;37be41b4-668b-4dda-816e-6b6d710cd53d)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/z5419867/thesis_b/DosRagBench/scripts/run_attack.py", line 232, in <module>
+    main()
+  File "/home/z5419867/thesis_b/DosRagBench/scripts/run_attack.py", line 182, in main
+    results = run_model_side(
+              ^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/scripts/run_attack.py", line 76, in run_model_side
+    loaded = load_model(model_config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/src/dosragbench/models/loader.py", line 91, in load_model
+    tokenizer = AutoTokenizer.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/models/auto/tokenization_auto.py", line 720, in from_pretrained
+    config = PreTrainedConfig.from_pretrained(pretrained_model_name_or_path, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/configuration_utils.py", line 646, in from_pretrained
+    config_dict, kwargs = cls.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/configuration_utils.py", line 687, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/configuration_utils.py", line 742, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/utils/hub.py", line 293, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/transformers/utils/hub.py", line 503, in cached_files
+    raise OSError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/meta-llama/Llama-3.1-8B.
+401 Client Error. (Request ID: Root=1-6a40b166-7673ffec4dfee0ca5d36827b;37be41b4-668b-4dda-816e-6b6d710cd53d)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.1-8B/resolve/main/config.json.
+Access to model meta-llama/Llama-3.1-8B is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+================================================================================
+                     Resource Usage on 28/06/2026 15:30:18                      
+
+Job Id: 8407375 
+Queue: CSE
+Walltime: 00:00:23  (requested 12:00:00)
+Job unsuccessful. Exit Status 1 - Exit status refers to the exit value of the
+top process in the job, typically the shell.
+This may be the exit value of the last command executed in the shell.
+See job output error.
+
+--------------------------------------------------------------------------------
+|              |             GPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node  GPU ID | Requested   Used   Efficiency | Available   Used              |
+| k174    3    |     1        0.0       0%     |143771 MiB  848.0M             |
+--------------------------------------------------------------------------------
+|Total         |     1        0.0      0.0%    |                               |
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k174         |     8        0.3      4.0%    |  64.0gb    2.76gb     4.3%    |
+--------------------------------------------------------------------------------

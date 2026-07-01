@@ -1,0 +1,28 @@
+/var/spool/pbs/mom_priv/jobs/8407346.kman.restech.unsw.edu.au.SC: line 24: .venv/bin/activate: No such file or directory
+
+================================================================================
+                     Resource Usage on 28/06/2026 15:23:59                      
+
+Job Id: 8407346 
+Queue: CSE
+Walltime: 00:00:01  (requested 12:00:00)
+Job unsuccessful. Exit Status 1 - Exit status refers to the exit value of the
+top process in the job, typically the shell.
+This may be the exit value of the last command executed in the shell.
+See job output error.
+
+--------------------------------------------------------------------------------
+|              |             GPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node  GPU ID | Requested   Used   Efficiency | Available   Used              |
+| k174    3    |     1        0.0       0%     |143771 MiB   0.0B              |
+--------------------------------------------------------------------------------
+|Total         |     1        0.0      0.0%    |                               |
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k174         |     8        0.0      0.0%    |  64.0gb    0.01gb     0.0%    |
+--------------------------------------------------------------------------------

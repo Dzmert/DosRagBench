@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N DosRagBench
-#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1:gpu_model=A100
+#PBS -l select=1:ncpus=8:mem=64gb:ngpus=1
 #PBS -l walltime=12:00:00
 #PBS -j oe
 #PBS -M z5419867@ad.unsw.edu.au
@@ -22,6 +22,9 @@ cd $PBS_O_WORKDIR
 # ── Environment setup ──
 module load python/3.11 cuda/12.1
 source .venv/bin/activate
+set -a
+source .env
+set +a
 
 # Hugging Face cache on scratch to avoid quota issues
 export HF_HOME=${HF_HOME:-/srv/scratch/$USER/hf_cache}

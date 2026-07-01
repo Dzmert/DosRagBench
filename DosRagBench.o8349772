@@ -1,0 +1,49 @@
+==========================================
+DoSRAGBench run
+  Pair:     llama-3.1-8b
+  Category: A1
+  Queries:  50
+  Node:     k174
+  GPU:      NVIDIA H200
+==========================================
+2026-06-28 15:03:50,030 [INFO] Environment: katana
+Traceback (most recent call last):
+  File "/home/z5419867/thesis_b/DosRagBench/scripts/run_attack.py", line 232, in <module>
+    main()
+  File "/home/z5419867/thesis_b/DosRagBench/scripts/run_attack.py", line 145, in main
+    pair = load_model_pair(args.model_pair)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/src/dosragbench/utils/config.py", line 77, in load_model_pair
+    cfg = load_yaml(CONFIGS_DIR / "model_pairs.yaml")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/z5419867/thesis_b/DosRagBench/src/dosragbench/utils/config.py", line 71, in load_yaml
+    with open(path, "r") as f:
+         ^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/z5419867/thesis_b/DosRagBench/configs/model_pairs.yaml'
+
+================================================================================
+                     Resource Usage on 28/06/2026 15:03:54                      
+
+Job Id: 8349772 
+Queue: CSE
+Walltime: 00:00:14  (requested 12:00:00)
+Job unsuccessful. Exit Status 1 - Exit status refers to the exit value of the
+top process in the job, typically the shell.
+This may be the exit value of the last command executed in the shell.
+See job output error.
+
+--------------------------------------------------------------------------------
+|              |             GPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node  GPU ID | Requested   Used   Efficiency | Available   Used              |
+| k174    0    |     1        0.0       0%     |143771 MiB   0.0B              |
+--------------------------------------------------------------------------------
+|Total         |     1        0.0      0.0%    |                               |
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k174         |     8       0.43      5.0%    |  64.0gb    2.15gb     3.4%    |
+--------------------------------------------------------------------------------

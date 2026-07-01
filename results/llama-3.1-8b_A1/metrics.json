@@ -2,48 +2,47 @@
   "base": {
     "model_name": "Llama 3.1 8B Base",
     "attack_category": "A1",
-    "num_queries": 20,
-    "asr": 0.7,
-    "gds": 0.7,
-    "lir_mean": 3.289,
-    "lir_median": 1.002,
-    "tor_mean": 3.717,
+    "num_queries": 50,
+    "asr": 0.0,
+    "gds": 0.02,
+    "lir_mean": 2.053,
+    "lir_median": 1.006,
+    "tor_mean": 2.328,
     "tor_median": 1.0,
-    "cdr": 0.9697,
-    "retrieval_lir_mean": 1.102,
+    "cdr": 0.3948,
+    "retrieval_lir_mean": 1.197,
     "refusal_breakdown": {
-      "generation_failure": 14,
-      "no_refusal": 6
+      "no_refusal": 50
     },
     "severity_breakdown": {
-      "L3": 14,
-      "L0": 6
+      "L0": 48,
+      "L2": 2
     },
-    "mean_latency_s": 13.211,
-    "mean_output_tokens": 199.4
+    "mean_latency_s": 4.772,
+    "mean_output_tokens": 207.5
   },
   "aligned": {
     "model_name": "Llama 3.1 8B Instruct",
     "attack_category": "A1",
-    "num_queries": 20,
+    "num_queries": 50,
     "asr": 0.0,
-    "gds": 0.0625,
-    "lir_mean": 1.298,
-    "lir_median": 1.049,
-    "tor_mean": 1.355,
+    "gds": 0.095,
+    "lir_mean": 1.656,
+    "lir_median": 1.193,
+    "tor_mean": 1.625,
     "tor_median": 1.0,
-    "cdr": 0.1702,
-    "retrieval_lir_mean": 1.056,
+    "cdr": 0.2959,
+    "retrieval_lir_mean": 1.079,
     "refusal_breakdown": {
-      "no_refusal": 16,
-      "epistemic": 4
+      "no_refusal": 40,
+      "epistemic": 10
     },
     "severity_breakdown": {
-      "L0": 16,
-      "L1": 3,
-      "L2": 1
+      "L0": 37,
+      "L1": 7,
+      "L2": 6
     },
-    "mean_latency_s": 0.905,
-    "mean_output_tokens": 11.7
+    "mean_latency_s": 0.359,
+    "mean_output_tokens": 14.3
   }
 }
