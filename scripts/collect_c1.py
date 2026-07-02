@@ -73,21 +73,25 @@ def aggregate(reports: list[dict]) -> list[dict]:
             "adv_in_topk": round(mean(adv_vals), 3) if adv_vals else None,
         })
 
-    rows.sort(key=lambda x: (x["kb_size"] or 0, x["pollution_rate"] or 0))
+    rows.sort(key=lambda x: ((x["kb_size"] or 0), (x["pollution_rate"] or 0)))
     return rows
 
 
 def print_table(rows: list[dict]) -> None:
+    def s(v):
+        """Format any value (including None) as a string for the table."""
+        return "n/a" if v is None else str(v)
+
     print()
     print("=" * 92)
     print(f"{'KB size':>9} {'Pollut.':>8} {'Runs':>5} {'AdvDocs':>8} "
           f"{'LIR':>7} {'±std':>6} {'Eviction':>9} {'Adv@k':>7}")
     print("-" * 92)
     for r in rows:
-        print(f"{r['kb_size']:>9} {r['pollution_rate']:>8} {r['n_runs']:>5} "
-              f"{str(r['adversarial_docs']):>8} "
-              f"{str(r['lir_mean']):>7} {str(r['lir_std']):>6} "
-              f"{str(r['eviction_rate']):>9} {str(r['adv_in_topk']):>7}")
+        print(f"{s(r['kb_size']):>9} {s(r['pollution_rate']):>8} {s(r['n_runs']):>5} "
+              f"{s(r['adversarial_docs']):>8} "
+              f"{s(r['lir_mean']):>7} {s(r['lir_std']):>6} "
+              f"{s(r['eviction_rate']):>9} {s(r['adv_in_topk']):>7}")
     print("=" * 92)
     print()
 
@@ -116,12 +120,19 @@ def make_plot(rows: list[dict], out_path: Path) -> None:
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
-    for kb_size, group in sorted(by_kb.items()):
+    for kb_size, group in sorted(by_kb.items(), key=lambda kv: kv[0] or 0):
+        # Keep only rows with the fields the plot needs
+        group = [g for g in group
+                 if g["pollution_rate"] is not None
+                 and g["eviction_rate"] is not None
+                 and g["lir_mean"] is not None]
+        if not group:
+            continue
         group = sorted(group, key=lambda x: x["pollution_rate"])
         prs = [g["pollution_rate"] for g in group]
         evic = [g["eviction_rate"] for g in group]
         lir = [g["lir_mean"] for g in group]
-        label = f"KB={kb_size:,}"
+        label = f"KB={kb_size:,}" if kb_size else "KB=?"
         ax1.plot(prs, evic, marker="o", label=label)
         ax2.plot(prs, lir, marker="s", label=label)
 
