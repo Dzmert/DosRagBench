@@ -15,10 +15,16 @@ Two adversarial-injection modes:
     shared adversarial set across all queries (batch injection) rather than
     per-query rebuild, measuring aggregate retrieval-latency inflation.
 
+Adversarial budget:
+    --pollution-rate R sets the TOTAL adversarial budget as a fraction of the
+    clean KB size (total_adv = int(R * len(kb_docs))). This is a realistic
+    threat model: an attacker controls R of the corpus, not a fixed count per
+    query. If --pollution-rate is omitted, falls back to the per-query count in
+    the attack config (num_adversarial_docs).
+
 Usage:
     python scripts/run_attack.py --category A1 --model-pair llama-3.1-8b --num-queries 200
-    python scripts/run_attack.py --category C1 --model-pair llama-3.1-8b --num-queries 200
-    python scripts/run_attack.py --category C1 --model-pair llama-3.1-8b --c1-latency
+    python scripts/run_attack.py --category C1 --model-pair llama-3.1-8b --c1-latency --pollution-rate 0.05
 """
 
 from __future__ import annotations
@@ -76,6 +82,38 @@ def get_or_build_index(retriever: HNSWRetriever, kb_docs, embedder_id, kb_signat
             logger.warning(f"Could not cache index: {exc}")
 
 
+def _pooled_adversarial_docs(attack, queries, num_queries, total_budget):
+    """Generate a pooled adversarial set honoring a TOTAL budget.
+
+    Distributes the budget across queries as evenly as possible: each query
+    gets floor(total/n) docs, and the first (total mod n) queries get one extra.
+    Falls back to the attack's own per-query count when total_budget is None.
+    """
+    q_slice = queries[:num_queries]
+    all_adv = []
+
+    if total_budget is None:
+        for q in q_slice:
+            all_adv.extend(attack.generate_adversarial_docs(q["query"], []))
+        return all_adv
+
+    n = len(q_slice)
+    if n == 0:
+        return all_adv
+    base = total_budget // n
+    remainder = total_budget % n
+
+    for i, q in enumerate(q_slice):
+        want = base + (1 if i < remainder else 0)
+        if want <= 0:
+            continue
+        docs = attack.generate_adversarial_docs(q["query"], [])
+
+        all_adv.extend(docs[:want])
+
+    return all_adv
+
+
 def run_model_side(model_config, retriever, queries, attack, top_k, num_queries):
     """MERGE MODE: baseline + attacked for one model, no per-query rebuild."""
     logger.info(f"Loading model: {model_config.name}")
@@ -88,12 +126,10 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries)
         query_text = q["query"]
         gold_doc_id = q.get("gold_doc_id")
 
-        # Baseline: no adversarial docs
         retriever.clear_adversarial()
         baseline_resp = rag.query(query_text, gold_doc_id=gold_doc_id)
         baseline_results.append(QueryResult.from_rag_response(baseline_resp))
 
-        # Attack: register adversarial docs (cheap), query, clear
         adv_docs = attack.generate_adversarial_docs(query_text, baseline_resp.retrieved_docs)
         retriever.set_adversarial(adv_docs)
         attacked_resp = rag.query(query_text, gold_doc_id=gold_doc_id)
@@ -109,17 +145,12 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries)
     return {"baseline": baseline_results, "attacked": attacked_results}
 
 
-def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id, kb_docs, kb_signature):
-    """INDEX-INJECTION MODE: measure retrieval-latency degradation for C1.
-
-    Generates one combined adversarial set (clustered across the query
-    distribution), injects it into a copy of the HNSW graph, and compares
-    retrieval latency clean vs polluted. No generation step - this isolates
-    the algorithmic-complexity effect on retrieval.
-    """
+def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
+                   kb_docs, kb_signature, pollution_rate):
+    """INDEX-INJECTION MODE: measure retrieval-latency degradation for C1."""
     logger.info("C1 latency mode: measuring retrieval degradation")
 
-    # Clean baseline latencies (index without adversarial docs)
+    # Clean baseline latencies
     retriever.clear_adversarial()
     clean_latencies, clean_gold_ranks = [], []
     for q in queries[:num_queries]:
@@ -127,11 +158,19 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id, 
         clean_latencies.append(r.latency_s)
         clean_gold_ranks.append(r.gold_rank)
 
-    # Build adversarial docs for every query, pool them, inject into the index
+    # Determine total adversarial budget from pollution rate
+    if pollution_rate is not None:
+        total_budget = int(pollution_rate * len(kb_docs))
+        logger.info(
+            f"Pollution rate {pollution_rate:.3f} of {len(kb_docs)} KB docs "
+            f"= {total_budget} adversarial docs total"
+        )
+    else:
+        total_budget = None
+        logger.info("No pollution rate set; using attack config per-query count")
+
     logger.info("Generating pooled adversarial documents...")
-    all_adv = []
-    for q in queries[:num_queries]:
-        all_adv.extend(attack.generate_adversarial_docs(q["query"], []))
+    all_adv = _pooled_adversarial_docs(attack, queries, num_queries, total_budget)
     logger.info(f"Injecting {len(all_adv)} adversarial docs into HNSW graph")
 
     polluted = HNSWRetriever(
@@ -156,6 +195,8 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id, 
     )
     return {
         "mode": "c1_latency",
+        "pollution_rate": pollution_rate,
+        "kb_size": len(kb_docs),
         "num_queries": len(clean_latencies),
         "num_adversarial_docs": len(all_adv),
         "clean_retrieval_latency_ms_mean": round(st.mean(clean_latencies) * 1000, 3),
@@ -179,6 +220,9 @@ def main():
     parser.add_argument("--side", choices=["both", "base", "aligned"], default="both")
     parser.add_argument("--c1-latency", action="store_true",
                         help="Run C1 retrieval-latency degradation mode (no generation)")
+    parser.add_argument("--pollution-rate", type=float, default=None,
+                        help="Total adversarial budget as a fraction of KB size "
+                             "(e.g. 0.05 = 5%% of the corpus). Overrides per-query count.")
     args = parser.parse_args()
 
     logger.info(f"Environment: {detect_environment()}")
@@ -196,8 +240,6 @@ def main():
     retriever = HNSWRetriever(embedder_id=args.embedder)
     get_or_build_index(retriever, kb_docs, args.embedder, kb_signature)
 
-    # Only C1 (embedding-space clustering) is grey-box and needs the embedder;
-    # C2/C3 and the A-category attacks construct from config alone.
     if args.category == "C1":
         attack = build_attack(attack_config, embedder_id=args.embedder)
     else:
@@ -206,19 +248,22 @@ def main():
     out_dir = RESULTS_DIR / f"{args.model_pair}_{args.category}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # ── C1 latency mode: retrieval-only, no models needed ──
     if args.c1_latency:
         report = run_c1_latency(
             retriever, queries, attack, args.top_k, num_queries,
-            args.embedder, kb_docs, kb_signature,
+            args.embedder, kb_docs, kb_signature, args.pollution_rate,
         )
-        with open(out_dir / "c1_latency.json", "w") as f:
+        # Filename encodes pollution rate so sweep runs don't clobber each other
+        if args.pollution_rate is not None:
+            fname = f"c1_latency_p{args.pollution_rate}.json"
+        else:
+            fname = "c1_latency.json"
+        with open(out_dir / fname, "w") as f:
             json.dump(report, f, indent=2)
         logger.info(f"C1 latency report: {json.dumps(report, indent=2)}")
-        logger.info(f"Saved to {out_dir}/c1_latency.json")
+        logger.info(f"Saved to {out_dir}/{fname}")
         return
 
-    # ── Standard merge mode: run both model sides ──
     all_results, metrics_reports = {}, {}
     sides = []
     if args.side in ("both", "base"):
