@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import json
 import logging
 import sys
@@ -114,12 +115,18 @@ def _pooled_adversarial_docs(attack, queries, num_queries, total_budget):
     base = total_budget // n
     remainder = total_budget % n
 
+    # Pass the per-query allocation to attacks that accept a `count` (e.g. C1),
+    # so a budget larger than the config's num_adversarial_docs is actually met.
+    supports_count = "count" in inspect.signature(attack.generate_adversarial_docs).parameters
+
     for i, q in enumerate(q_slice):
         want = base + (1 if i < remainder else 0)
         if want <= 0:
             continue
-        docs = attack.generate_adversarial_docs(q["query"], [])
-
+        if supports_count:
+            docs = attack.generate_adversarial_docs(q["query"], [], count=want)
+        else:
+            docs = attack.generate_adversarial_docs(q["query"], [])
         all_adv.extend(docs[:want])
 
     return all_adv

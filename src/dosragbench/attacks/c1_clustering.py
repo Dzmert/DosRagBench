@@ -218,8 +218,13 @@ class EmbeddingClusteringAttack(DoSAttack):
         self,
         query: str,
         clean_docs: list[Document],
+        count: int | None = None,
     ) -> list[Document]:
-        """Generate documents whose embeddings cluster around the query."""
+        """Generate documents whose embeddings cluster around the query.
+
+        `count` overrides config.num_adversarial_docs (used by the pooled-budget
+        path to honour a per-query allocation larger than the config default).
+        """
         self._lazy_load_embedder()
 
         # Get target query embedding
@@ -227,9 +232,11 @@ class EmbeddingClusteringAttack(DoSAttack):
             [query], convert_to_numpy=True, normalize_embeddings=True
         )[0]
 
-        # Generate 3x more candidates than needed, keep the closest
-        n_needed = self.config.num_adversarial_docs
-        n_candidates = min(self.optimization_steps, n_needed * 3)
+        # Generate 3x more candidates than needed (>= optimization_steps), keep closest.
+        # max() prevents the candidate pool from being smaller than n_needed, which
+        # previously silently capped the pooled adversarial budget at scale.
+        n_needed = count if count is not None else self.config.num_adversarial_docs
+        n_candidates = max(self.optimization_steps, n_needed * 3)
 
         topic_seed = clean_docs[0].text[:200] if clean_docs else query
 

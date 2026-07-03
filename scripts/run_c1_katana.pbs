@@ -43,18 +43,29 @@ source "$PROJECT/.venv/bin/activate"
 echo "Node: $(hostname)   GPU check:"
 python -c "import torch; print(' cuda_available =', torch.cuda.is_available(), '|', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'no gpu')"
 
-# --- 1. Build the real BEIR NQ dataset (only re-runs if data/ is missing) ---
-if [ ! -f data/queries.json ] || [ ! -f data/knowledge_base.json ]; then
-    echo "Preparing BEIR NQ corpus (500k passages)..."
-    python scripts/prepare_data.py --corpus beir --num-queries 200 --kb-size 500000
+# --- Experiment config ---
+CORPUS=beir
+NUM_QUERIES=200
+KB_SIZE=500000
+POLLUTION_RATE=0.05
+MODEL_PAIR=llama-3.1-8b
+
+# --- 1. Build the dataset. Re-runs whenever CORPUS/KB_SIZE changes (marker
+#        file), so a stale data/ from an earlier run is never reused silently. ---
+MARKER="data/.prepared_${CORPUS}_${KB_SIZE}"
+if [ ! -f "$MARKER" ]; then
+    echo "Preparing $CORPUS corpus (num_queries=$NUM_QUERIES, kb_size=$KB_SIZE)..."
+    python scripts/prepare_data.py --corpus "$CORPUS" --num-queries "$NUM_QUERIES" --kb-size "$KB_SIZE"
+    rm -f data/.prepared_*        # drop stale markers
+    touch "$MARKER"
 fi
 
 # --- 2. C1 retrieval-latency / gold-eviction run on the H200 ---
 python scripts/run_attack.py \
     --category C1 \
-    --model-pair llama-3.1-8b \
+    --model-pair "$MODEL_PAIR" \
     --c1-latency \
-    --pollution-rate 0.05 \
+    --pollution-rate "$POLLUTION_RATE" \
     --device cuda
 
-echo "Done. Results in results/llama-3.1-8b_C1/"
+echo "Done. Results in results/${MODEL_PAIR}_C1/"
