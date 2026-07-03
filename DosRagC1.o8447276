@@ -1,0 +1,106 @@
+CUDA: True NVIDIA H200
+2026-07-02 12:09:58,195 [INFO] Environment: katana
+2026-07-02 12:09:58,216 [INFO] Loaded 200 queries, 3610 KB docs; using 200 queries
+2026-07-02 12:09:58,217 [INFO] Loading embedder: sentence-transformers/all-MiniLM-L6-v2
+2026-07-02 12:09:58,368 [INFO] No device provided, using cuda:0
+2026-07-02 12:09:58,415 [INFO] Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights:  50%|█████     | 52/103 [00:00<00:00, 489.06it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 704.15it/s]
+/home/z5419867/thesis_b/DosRagBench/src/dosragbench/pipeline/retriever.py:85: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.embedder.get_sentence_embedding_dimension()
+2026-07-02 12:09:59,207 [INFO] Building HNSW index (3610 docs, M=16)
+Batches:   0%|          | 0/57 [00:00<?, ?it/s]Batches:   2%|▏         | 1/57 [00:00<00:09,  5.68it/s]Batches:  33%|███▎      | 19/57 [00:00<00:00, 81.73it/s]Batches:  68%|██████▊   | 39/57 [00:00<00:00, 126.80it/s]Batches: 100%|██████████| 57/57 [00:00<00:00, 121.27it/s]
+2026-07-02 12:09:59,753 [INFO] Index built: 3610 vectors, dim=384
+2026-07-02 12:09:59,858 [INFO] Saved index to /srv/scratch/z5419867/dosragbench_cache/index_3610_all-MiniLM-L6-v2.faiss (+ .docs.json)
+2026-07-02 12:09:59,861 [INFO] C1 latency mode: measuring retrieval degradation
+2026-07-02 12:10:00,482 [INFO] Pollution rate 0.010 of 3610 KB docs = 36 adversarial docs total
+2026-07-02 12:10:00,482 [INFO] Generating pooled adversarial documents...
+2026-07-02 12:10:00,482 [INFO] Loading embedder for C1 attack: sentence-transformers/all-MiniLM-L6-v2
+2026-07-02 12:10:00,485 [INFO] No device provided, using cuda:0
+2026-07-02 12:10:00,486 [INFO] Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 15511.03it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 510.07it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 514.13it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 509.51it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 500.57it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 511.56it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 504.06it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 506.25it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 503.70it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 515.84it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 519.55it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 505.03it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 509.82it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 504.12it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 503.58it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 505.64it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 513.32it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 499.98it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 500.93it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 530.79it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 520.19it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 505.58it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 511.19it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 506.19it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 504.12it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 503.88it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 518.58it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 517.30it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 522.20it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 510.57it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 522.72it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 507.42it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 520.77it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 516.09it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 513.82it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 510.57it/s]
+Batches:   0%|          | 0/1 [00:00<?, ?it/s]Batches: 100%|██████████| 1/1 [00:00<00:00, 516.86it/s]
+2026-07-02 12:10:01,235 [INFO] Injecting 36 adversarial docs into HNSW graph
+2026-07-02 12:10:01,236 [INFO] Loading embedder: sentence-transformers/all-MiniLM-L6-v2
+2026-07-02 12:10:01,238 [INFO] No device provided, using cuda:0
+2026-07-02 12:10:01,239 [INFO] Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 15140.83it/s]
+/home/z5419867/thesis_b/DosRagBench/src/dosragbench/pipeline/retriever.py:85: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.embedder.get_sentence_embedding_dimension()
+2026-07-02 12:10:01,325 [INFO] Building HNSW index (3646 docs, M=16)
+Batches:   0%|          | 0/57 [00:00<?, ?it/s]Batches:  30%|██▉       | 17/57 [00:00<00:00, 169.61it/s]Batches:  65%|██████▍   | 37/57 [00:00<00:00, 185.65it/s]Batches: 100%|██████████| 57/57 [00:00<00:00, 191.85it/s]
+2026-07-02 12:10:01,701 [INFO] Index built: 3646 vectors, dim=384
+2026-07-02 12:10:02,281 [INFO] C1 latency report: {
+  "mode": "c1_latency",
+  "pollution_rate": 0.01,
+  "kb_size": 3610,
+  "num_queries": 200,
+  "num_adversarial_docs": 36,
+  "clean_retrieval_latency_ms_mean": 0.078,
+  "polluted_retrieval_latency_ms_mean": 0.075,
+  "retrieval_lir_mean": 0.959,
+  "retrieval_lir_median": 0.959,
+  "retrieval_lir_p90": 1.024,
+  "gold_docs_evicted": 0,
+  "gold_eviction_rate": 0.0,
+  "mean_adversarial_in_topk": 0.25
+}
+2026-07-02 12:10:02,281 [INFO] Saved to /home/z5419867/thesis_b/DosRagBench/results/llama-3.1-8b_C1/c1_latency_p0.01.json
+
+================================================================================
+                     Resource Usage on 02/07/2026 12:10:06                      
+
+Job Id: 8447276 
+Queue: CSE
+Walltime: 00:00:38  (requested 04:00:00)
+Job execution was successful. Exit Status 0. 
+
+--------------------------------------------------------------------------------
+|              |             GPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node  GPU ID | Requested   Used   Efficiency | Available   Used              |
+| k204    2    |     1       0.01       1%     |143771 MiB   1.07G             |
+--------------------------------------------------------------------------------
+|Total         |     1       0.01      1.0%    |                               |
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k204         |     8       0.37      5.0%    |  64.0gb    2.53gb     4.0%    |
+--------------------------------------------------------------------------------

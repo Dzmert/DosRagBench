@@ -1,0 +1,33 @@
+CUDA: True NVIDIA H200
+usage: run_attack.py [-h] --category CATEGORY --model-pair MODEL_PAIR
+                     [--num-queries NUM_QUERIES] [--top-k TOP_K]
+                     [--embedder EMBEDDER] [--side {both,base,aligned}]
+                     [--c1-latency]
+run_attack.py: error: unrecognized arguments: --pollution-rate 0.05
+
+================================================================================
+                     Resource Usage on 02/07/2026 09:44:07                      
+
+Job Id: 8445517 
+Queue: CSE
+Walltime: 00:00:38  (requested 04:00:00)
+Job unsuccessful. Exit Status 2 - Exit status refers to the exit value of the
+top process in the job, typically the shell.
+This may be the exit value of the last command executed in the shell.
+See job output error.
+
+--------------------------------------------------------------------------------
+|              |             GPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node  GPU ID | Requested   Used   Efficiency | Available   Used              |
+| k204    4    |     1        0.0       0%     |143771 MiB   0.0B              |
+--------------------------------------------------------------------------------
+|Total         |     1        0.0      0.0%    |                               |
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k204         |     8       0.24      3.0%    |  64.0gb    1.88gb     2.9%    |
+--------------------------------------------------------------------------------
