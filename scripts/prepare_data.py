@@ -1,30 +1,8 @@
 """Prepare a query set + knowledge base for DoSRAGBench.
 
-Two corpus modes (selectable with --corpus):
-
-  beir   (default for real experiments):
-     Retrieves over the BEIR Natural Questions Wikipedia corpus
-     (``BeIR/nq``, ~2.68M passages) exactly like PoisonedRAG / CorruptRAG /
-     RAG-Security-Bench. Real Wikipedia passages give realistic embedding-space
-     geometry (the premise of the C1 clustering attack) and literature
-     comparability. ``gold_doc_id`` is a REAL relevance label taken from the
-     BEIR qrels (``BeIR/nq-qrels``), not a document synthesized from the query.
-     The corpus is subsettable: KB = (all gold passages for the selected
-     queries) + (random filler passages) up to --kb-size, so gold passages are
-     guaranteed to survive subsetting.
-
-  synthetic (fast smoke tests / offline):
-     The original prototype path. Each "document" is a templated string built
-     from a Natural-Questions Q/A pair (or a hand-written topic list if HF is
-     unreachable). Kept behind the flag so quick local runs need no download.
-     NOTE: the corpus is derived from the queries here, so retrieval is
-     artificial - use it only for plumbing checks, not for reported results.
-
-Usage (run on Katana where HuggingFace is reachable):
-    # real corpus, 500k-passage KB, 200 queries
-    python scripts/prepare_data.py --corpus beir --num-queries 200 --kb-size 500000
-    # quick smoke test, no real corpus
-    python scripts/prepare_data.py --corpus synthetic --num-queries 20 --kb-size 2000
+Corpus modes (--corpus):
+  beir       - real BEIR NQ Wikipedia passages + qrels gold labels (default).
+  synthetic  - templated docs derived from queries; smoke tests only.
 
 Outputs (schema identical across modes):
     data/queries.json         - [{query_id, query, gold_answer, gold_doc_id}]
@@ -61,12 +39,7 @@ def _make_doc_text(question: str, answer: str) -> str:
 
 
 def build_synthetic(num_queries: int, kb_size: int, seed: int = 42) -> dict:
-    """Load a subset of Natural Questions and synthesize documents from it.
-
-    This is the original prototype behaviour: the corpus is derived from the
-    queries, so gold documents are trivially findable. Retained for smoke
-    tests only.
-    """
+    """Synthesize documents from NQ Q/A pairs (corpus derived from queries; smoke tests only)."""
     try:
         from datasets import load_dataset
 
@@ -153,9 +126,7 @@ def _synthetic_offline(num_queries: int, kb_size: int, seed: int) -> dict:
 
 # ───────────────────────────────── BEIR path ──────────────────────────────────
 
-# HuggingFace dataset IDs for the BEIR datasets we support. Each entry is
-# (corpus+queries repo, qrels repo). The qrels test split maps query_id ->
-# corpus_id (the gold passage).
+# dataset name -> (corpus+queries repo, qrels repo)
 BEIR_DATASETS = {
     "nq": ("BeIR/nq", "BeIR/nq-qrels"),
     "hotpotqa": ("BeIR/hotpotqa", "BeIR/hotpotqa-qrels"),
@@ -176,13 +147,7 @@ def _passage_text(row: dict) -> str:
 
 
 def build_beir(dataset: str, num_queries: int, kb_size: int, seed: int = 42) -> dict:
-    """Build a real-corpus dataset from BEIR, with gold passages from qrels.
-
-    KB = (gold passages for the selected queries) + (random filler passages)
-    capped so that the total filler count is `kb_size`. Gold passages are always
-    included, so every query's `gold_doc_id` is a real corpus id present in the
-    KB. Deterministic under `seed`.
-    """
+    """Build a BEIR dataset: KB = gold passages (from qrels) + `kb_size` random filler."""
     from datasets import load_dataset
 
     if dataset not in BEIR_DATASETS:

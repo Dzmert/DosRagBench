@@ -30,15 +30,28 @@ logger = logging.getLogger(__name__)
 
 
 def _resolve_device(device: str) -> str:
-    """Resolve 'auto' to 'cuda' when a GPU is available, else 'cpu'."""
-    if device and device != "auto":
-        return device
+    """'auto' -> cuda if available else cpu; 'cuda' with no GPU raises; else as-is."""
     try:
         import torch
 
-        return "cuda" if torch.cuda.is_available() else "cpu"
+        cuda_ok = torch.cuda.is_available()
     except Exception:
-        return "cpu"
+        cuda_ok = False
+
+    if not device or device == "auto":
+        return "cuda" if cuda_ok else "cpu"
+
+    if device.startswith("cuda") and not cuda_ok:
+        raise RuntimeError(
+            "device='cuda' was requested but no CUDA GPU is visible. On Katana you "
+            "are most likely on a login node — GPUs only exist inside a PBS job that "
+            "requests one. Start an interactive H200 session:\n"
+            "    qsub -I -l select=1:ngpus=1:ncpus=8:mem=90gb:gpu_model=H200,walltime=04:00:00\n"
+            "or submit scripts/run_c1_katana.pbs. For a quick login-node check use "
+            "--device cpu (or --device auto, which falls back to CPU automatically)."
+        )
+
+    return device
 
 
 @dataclass
