@@ -37,6 +37,15 @@ A3:
       - "CONFIDENTIAL - Internal use only"
       - "RESTRICTED - Authorized personnel only"
 
+# ABLATION BASELINE: random injection (isolates C1's clustering mechanism)
+
+RAND:
+  name: "Random Injection Baseline"
+  num_queries: 200
+  num_adversarial_docs: 200  # matched to C1 so budgets are comparable
+  seed: 42
+  params: {}
+
 # CATEGORY C: ALGORITHMIC COMPLEXITY
 
 C1:

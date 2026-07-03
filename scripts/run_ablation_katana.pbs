@@ -1,0 +1,69 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────────────────────
+# ABLATION: C1 clustering vs RAND random-injection at the SAME budget.
+# Both run in retrieval-displacement mode (--c1-latency, no LLM). If RAND barely
+# evicts gold while C1 evicts a lot, gold eviction is caused by the embedding
+# clustering, not merely by adding 25k documents to the corpus.
+#
+# Submit:  qsub scripts/run_ablation_katana.pbs
+# ─────────────────────────────────────────────────────────────────────────────
+#PBS -N dosrag_ablation
+#PBS -l select=1:ncpus=8:ngpus=1:mem=90gb:gpu_model=H200
+#PBS -l walltime=04:00:00
+#PBS -j oe
+#PBS -o ablation_katana.log
+
+set -euo pipefail
+
+PROJECT="$HOME/thesis_b/DosRagBench"
+cd "$PROJECT"
+
+if [ -f .env ]; then
+    set -a; source .env; set +a
+fi
+
+export HF_HOME="/srv/scratch/$USER/hf_cache"
+export HF_DATASETS_CACHE="/srv/scratch/$USER/hf_cache/datasets"
+export DOSRAGBENCH_CACHE="/srv/scratch/$USER/dosragbench_cache"
+mkdir -p "$HF_HOME" "$HF_DATASETS_CACHE" "$DOSRAGBENCH_CACHE"
+
+source "$PROJECT/.venv/bin/activate"
+
+CORPUS=beir
+NUM_QUERIES=200
+KB_SIZE=500000
+POLLUTION_RATE=0.05
+MODEL_PAIR=llama-3.1-8b
+
+MARKER="data/.prepared_${CORPUS}_${KB_SIZE}"
+if [ ! -f "$MARKER" ]; then
+    echo "Preparing $CORPUS corpus (num_queries=$NUM_QUERIES, kb_size=$KB_SIZE)..."
+    python scripts/prepare_data.py --corpus "$CORPUS" --num-queries "$NUM_QUERIES" --kb-size "$KB_SIZE"
+    rm -f data/.prepared_*
+    touch "$MARKER"
+fi
+
+for CAT in C1 RAND; do
+    echo "=== $CAT (pollution_rate=$POLLUTION_RATE) ==="
+    python scripts/run_attack.py \
+        --category "$CAT" \
+        --model-pair "$MODEL_PAIR" \
+        --c1-latency \
+        --pollution-rate "$POLLUTION_RATE" \
+        --device cuda
+done
+
+echo ""
+echo "=== ABLATION SUMMARY (gold eviction: clustering vs random) ==="
+python - <<'PY'
+import json, pathlib
+rate = "0.05"
+for cat in ("C1", "RAND"):
+    p = pathlib.Path(f"results/llama-3.1-8b_{cat}/c1_latency_p{rate}.json")
+    if not p.exists():
+        print(f"{cat}: (missing {p})"); continue
+    d = json.loads(p.read_text())
+    print(f"{cat:5s}  gold_eviction_rate={d['gold_eviction_rate']:.3f}  "
+          f"mean_adv_in_topk={d['mean_adversarial_in_topk']:.2f}  "
+          f"retrieval_lir_mean={d['retrieval_lir_mean']:.3f}")
+PY

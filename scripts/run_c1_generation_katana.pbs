@@ -1,0 +1,64 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────────────────────
+# C1 FULL-PIPELINE run on Katana: closes the loop from retrieval displacement to
+# generation-level denial. Loads the matched base+aligned LLMs, runs baseline
+# and attacked generation for each query, and reports GDS / ASR / gold-eviction.
+#
+# This is the experiment that turns "gold evicted from top-k" into "the model
+# fails to answer" — i.e. an actual denial of service.
+#
+# Requires HF_TOKEN (meta-llama models are gated) — loaded from .env below.
+#
+# Submit:  qsub scripts/run_c1_generation_katana.pbs
+# ─────────────────────────────────────────────────────────────────────────────
+#PBS -N dosrag_c1_gen
+#PBS -l select=1:ncpus=8:ngpus=1:mem=90gb:gpu_model=H200
+#PBS -l walltime=08:00:00
+#PBS -j oe
+#PBS -o c1_generation_katana.log
+
+set -euo pipefail
+
+PROJECT="$HOME/thesis_b/DosRagBench"
+cd "$PROJECT"
+
+# Secrets (HF_TOKEN for the gated Llama models) — venv activation does NOT do this.
+if [ -f .env ]; then
+    set -a; source .env; set +a
+fi
+
+export HF_HOME="/srv/scratch/$USER/hf_cache"
+export HF_DATASETS_CACHE="/srv/scratch/$USER/hf_cache/datasets"
+export DOSRAGBENCH_CACHE="/srv/scratch/$USER/dosragbench_cache"
+mkdir -p "$HF_HOME" "$HF_DATASETS_CACHE" "$DOSRAGBENCH_CACHE"
+
+source "$PROJECT/.venv/bin/activate"
+
+echo "Node: $(hostname)"
+python -c "import torch,os; print('cuda:', torch.cuda.is_available(), '| HF_TOKEN set:', bool(os.environ.get('HF_TOKEN')))"
+
+# Experiment config
+CORPUS=beir
+NUM_QUERIES=200
+KB_SIZE=500000
+MODEL_PAIR=llama-3.1-8b
+
+# 1. Ensure the real corpus exists (regenerates if corpus/size changed)
+MARKER="data/.prepared_${CORPUS}_${KB_SIZE}"
+if [ ! -f "$MARKER" ]; then
+    echo "Preparing $CORPUS corpus (num_queries=$NUM_QUERIES, kb_size=$KB_SIZE)..."
+    python scripts/prepare_data.py --corpus "$CORPUS" --num-queries "$NUM_QUERIES" --kb-size "$KB_SIZE"
+    rm -f data/.prepared_*
+    touch "$MARKER"
+fi
+
+# 2. Full pipeline: baseline vs attacked generation for base AND aligned models.
+#    NOTE: no --c1-latency here. This runs the LLMs and produces metrics.json
+#    with asr / gds / gold_recall_baseline / gold_recall_attacked / gold_eviction_rate.
+python scripts/run_attack.py \
+    --category C1 \
+    --model-pair "$MODEL_PAIR" \
+    --num-queries "$NUM_QUERIES" \
+    --device cuda
+
+echo "Done. Metrics in results/${MODEL_PAIR}_C1/metrics.json"

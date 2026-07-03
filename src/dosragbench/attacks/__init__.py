@@ -4,6 +4,7 @@ from dosragbench.attacks.a1_guardrail import GuardrailTriggeringAttack
 from dosragbench.attacks.a2_contradiction import ContradictionFloodingAttack
 from dosragbench.attacks.a3_authority import AuthoritySpoofingAttack
 from dosragbench.attacks.base import DoSAttack
+from dosragbench.attacks.c0_random_baseline import RandomInjectionAttack
 from dosragbench.attacks.c1_clustering import EmbeddingClusteringAttack
 from dosragbench.attacks.c2_index_pollution import IndexPollutionAttack
 from dosragbench.attacks.c3_embedding_perturbation import EmbeddingPerturbationAttack
@@ -14,6 +15,7 @@ ATTACK_REGISTRY: dict[str, type[DoSAttack]] = {
     "A1": GuardrailTriggeringAttack,
     "A2": ContradictionFloodingAttack,
     "A3": AuthoritySpoofingAttack,
+    "RAND": RandomInjectionAttack,
     "C1": EmbeddingClusteringAttack,
     "C2": IndexPollutionAttack,
     "C3": EmbeddingPerturbationAttack,
@@ -36,6 +38,7 @@ __all__ = [
     "GuardrailTriggeringAttack",
     "ContradictionFloodingAttack",
     "AuthoritySpoofingAttack",
+    "RandomInjectionAttack",
     "EmbeddingClusteringAttack",
     "IndexPollutionAttack",
     "EmbeddingPerturbationAttack",
