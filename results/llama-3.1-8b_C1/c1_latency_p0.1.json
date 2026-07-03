@@ -1,0 +1,15 @@
+{
+  "mode": "c1_latency",
+  "pollution_rate": 0.1,
+  "kb_size": 87925,
+  "num_queries": 200,
+  "num_adversarial_docs": 8792,
+  "clean_retrieval_latency_ms_mean": 0.139,
+  "polluted_retrieval_latency_ms_mean": 0.094,
+  "retrieval_lir_mean": 0.685,
+  "retrieval_lir_median": 0.662,
+  "retrieval_lir_p90": 0.889,
+  "gold_docs_evicted": 136,
+  "gold_eviction_rate": 0.68,
+  "mean_adversarial_in_topk": 4.36
+}
