@@ -21,6 +21,12 @@ set -euo pipefail
 PROJECT="$HOME/thesis_b/DosRagBench"
 cd "$PROJECT"
 
+# Load secrets (HF_TOKEN, etc.) from .env — venv activation does NOT do this.
+# `set -a` auto-exports every VAR=value defined in the file.
+if [ -f .env ]; then
+    set -a; source .env; set +a
+fi
+
 # Keep the HuggingFace cache and datasets on scratch, not your home quota.
 export HF_HOME="/srv/scratch/$USER/hf_cache"
 export HF_DATASETS_CACHE="/srv/scratch/$USER/hf_cache/datasets"
