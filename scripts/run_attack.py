@@ -70,12 +70,7 @@ def load_dataset():
 
 
 def compute_kb_signature(kb_docs, embedder_id: str) -> str:
-    """Cache key that reflects KB *content*, not just its length.
-
-    Two different subsets of the same size (e.g. two 500k BEIR draws) must not
-    collide in the index cache. We hash the ordered doc-id list plus the
-    embedder name; identical data -> identical cached index reused.
-    """
+    """Cache key hashing the ordered doc-ids + embedder, so same-size subsets don't collide."""
     h = hashlib.md5()
     for d in kb_docs:
         h.update(d.doc_id.encode("utf-8"))
