@@ -171,7 +171,8 @@ class EmbeddingClusteringAttack(DoSAttack):
     and repeat until we have enough tightly-clustered adversarial docs.
     """
 
-    def __init__(self, config: AttackConfig, embedder_id: str | None = None):
+    def __init__(self, config: AttackConfig, embedder_id: str | None = None,
+                 device: str = "auto"):
         super().__init__(config)
         self.cluster_radius = config.params.get("cluster_radius", 0.05)
         self.optimization_steps = config.params.get("optimization_steps", 100)
@@ -180,12 +181,16 @@ class EmbeddingClusteringAttack(DoSAttack):
 
         # Grey-box: load the embedder ourselves
         self._embedder_id = embedder_id or "sentence-transformers/all-MiniLM-L6-v2"
+        self._device = device
         self._embedder: SentenceTransformer | None = None
 
     def _lazy_load_embedder(self):
         if self._embedder is None:
-            logger.info(f"Loading embedder for C1 attack: {self._embedder_id}")
-            self._embedder = SentenceTransformer(self._embedder_id)
+            from dosragbench.pipeline.retriever import _resolve_device
+
+            dev = _resolve_device(self._device)
+            logger.info(f"Loading embedder for C1 attack: {self._embedder_id} (device={dev})")
+            self._embedder = SentenceTransformer(self._embedder_id, device=dev)
 
     def _generate_candidate_text(self, topic_seed: str) -> str:
         """Generate a single candidate adversarial document using topic seed."""
