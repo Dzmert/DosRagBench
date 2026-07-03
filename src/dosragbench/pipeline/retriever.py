@@ -29,6 +29,18 @@ from sentence_transformers import SentenceTransformer
 logger = logging.getLogger(__name__)
 
 
+def _resolve_device(device: str) -> str:
+    """Resolve 'auto' to 'cuda' when a GPU is available, else 'cpu'."""
+    if device and device != "auto":
+        return device
+    try:
+        import torch
+
+        return "cuda" if torch.cuda.is_available() else "cpu"
+    except Exception:
+        return "cpu"
+
+
 @dataclass
 class Document:
     """A document in the knowledge base."""
@@ -74,14 +86,16 @@ class HNSWRetriever:
         m: int = 16,
         ef_construction: int = 200,
         ef_search: int = 50,
+        device: str = "auto",
     ):
         self.embedder_id = embedder_id
         self.m = m
         self.ef_construction = ef_construction
         self.ef_search = ef_search
+        self.device = _resolve_device(device)
 
-        logger.info(f"Loading embedder: {embedder_id}")
-        self.embedder = SentenceTransformer(embedder_id)
+        logger.info(f"Loading embedder: {embedder_id} (device={self.device})")
+        self.embedder = SentenceTransformer(embedder_id, device=self.device)
         self.dim = self.embedder.get_sentence_embedding_dimension()
 
         # Clean index (built once)

@@ -30,6 +30,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import sys
@@ -66,6 +67,21 @@ def load_dataset():
         raw_docs = json.load(f)
     docs = [Document(doc_id=d["doc_id"], text=d["text"]) for d in raw_docs]
     return queries, docs
+
+
+def compute_kb_signature(kb_docs, embedder_id: str) -> str:
+    """Cache key that reflects KB *content*, not just its length.
+
+    Two different subsets of the same size (e.g. two 500k BEIR draws) must not
+    collide in the index cache. We hash the ordered doc-id list plus the
+    embedder name; identical data -> identical cached index reused.
+    """
+    h = hashlib.md5()
+    for d in kb_docs:
+        h.update(d.doc_id.encode("utf-8"))
+        h.update(b"\n")
+    digest = h.hexdigest()[:12]
+    return f"{len(kb_docs)}_{embedder_id.split('/')[-1]}_{digest}"
 
 
 def get_or_build_index(retriever: HNSWRetriever, kb_docs, embedder_id, kb_signature):
@@ -178,6 +194,7 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
         m=retriever.m,
         ef_construction=retriever.ef_construction,
         ef_search=retriever.ef_search,
+        device=retriever.device,
     )
     polluted.build_index(kb_docs + all_adv)
 
@@ -217,6 +234,9 @@ def main():
     parser.add_argument("--num-queries", type=int, default=None)
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--embedder", default="sentence-transformers/all-MiniLM-L6-v2")
+    parser.add_argument("--device", default="auto",
+                        help="Embedder device: 'auto' (cuda if available), 'cuda', or 'cpu'. "
+                             "Use cuda on Katana H200 for large-corpus index builds.")
     parser.add_argument("--side", choices=["both", "base", "aligned"], default="both")
     parser.add_argument("--c1-latency", action="store_true",
                         help="Run C1 retrieval-latency degradation mode (no generation)")
@@ -235,13 +255,13 @@ def main():
     num_queries = min(attack_config.num_queries, len(queries))
     logger.info(f"Loaded {len(queries)} queries, {len(kb_docs)} KB docs; using {num_queries} queries")
 
-    kb_signature = f"{len(kb_docs)}_{args.embedder.split('/')[-1]}"
+    kb_signature = compute_kb_signature(kb_docs, args.embedder)
 
-    retriever = HNSWRetriever(embedder_id=args.embedder)
+    retriever = HNSWRetriever(embedder_id=args.embedder, device=args.device)
     get_or_build_index(retriever, kb_docs, args.embedder, kb_signature)
 
     if args.category == "C1":
-        attack = build_attack(attack_config, embedder_id=args.embedder)
+        attack = build_attack(attack_config, embedder_id=args.embedder, device=args.device)
     else:
         attack = build_attack(attack_config)
 
