@@ -1,15 +1,15 @@
 {
   "mode": "c1_latency",
   "pollution_rate": 0.05,
-  "kb_size": 1050,
-  "num_queries": 50,
-  "num_adversarial_docs": 52,
-  "clean_retrieval_latency_ms_mean": 0.077,
-  "polluted_retrieval_latency_ms_mean": 0.064,
-  "retrieval_lir_mean": 0.836,
-  "retrieval_lir_median": 0.845,
-  "retrieval_lir_p90": 0.884,
-  "gold_docs_evicted": 0,
-  "gold_eviction_rate": 0.0,
-  "mean_adversarial_in_topk": 1.3
+  "kb_size": 500200,
+  "num_queries": 200,
+  "num_adversarial_docs": 25010,
+  "clean_retrieval_latency_ms_mean": 0.287,
+  "polluted_retrieval_latency_ms_mean": 0.129,
+  "retrieval_lir_mean": 0.457,
+  "retrieval_lir_median": 0.444,
+  "retrieval_lir_p90": 0.587,
+  "gold_docs_evicted": 124,
+  "gold_eviction_rate": 0.62,
+  "mean_adversarial_in_topk": 4.405
 }

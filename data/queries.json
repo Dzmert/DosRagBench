@@ -1,302 +1,1202 @@
 [
   {
-    "query_id": "nq_0000",
-    "query": "who sold out jesus for 30 pieces of silver",
-    "gold_answer": "Judas Iscariot",
-    "gold_doc_id": "kb_gold_0000"
+    "query_id": "test31",
+    "query": "who do you meet at the gates of heaven",
+    "gold_answer": "",
+    "gold_doc_id": "doc897"
   },
   {
-    "query_id": "nq_0001",
-    "query": "who does the voice of cruz on cars 3",
-    "gold_answer": "Cristela Alonzo",
-    "gold_doc_id": "kb_gold_0001"
+    "query_id": "test3144",
+    "query": "where is hard water found in the us",
+    "gold_answer": "",
+    "gold_doc_id": "doc107393"
   },
   {
-    "query_id": "nq_0002",
-    "query": "who won the academy award for best original musical score",
-    "gold_answer": "Alexandre Desplat",
-    "gold_doc_id": "kb_gold_0002"
+    "query_id": "test0",
+    "query": "what is non controlling interest on balance sheet",
+    "gold_answer": "",
+    "gold_doc_id": "doc0"
   },
   {
-    "query_id": "nq_0003",
-    "query": "when did avatar the last airbender first air",
-    "gold_answer": "February 2005",
-    "gold_doc_id": "kb_gold_0003"
+    "query_id": "test2434",
+    "query": "great tang dynasty record of the western regions",
+    "gold_answer": "",
+    "gold_doc_id": "doc84042"
   },
   {
-    "query_id": "nq_0004",
-    "query": "who is hosting e live from the red carpet",
-    "gold_answer": "Ryan Seacrest",
-    "gold_doc_id": "kb_gold_0004"
+    "query_id": "test3081",
+    "query": "where was when we first met netflix filmed",
+    "gold_answer": "",
+    "gold_doc_id": "doc105375"
   },
   {
-    "query_id": "nq_0005",
-    "query": "what does g stand for in ncis los angeles",
-    "gold_answer": "Grisha",
-    "gold_doc_id": "kb_gold_0005"
+    "query_id": "test730",
+    "query": "who wrote the song rainy days and mondays",
+    "gold_answer": "",
+    "gold_doc_id": "doc26095"
   },
   {
-    "query_id": "nq_0006",
-    "query": "who sings too much time on my hands lyrics",
-    "gold_answer": "Tommy Shaw",
-    "gold_doc_id": "kb_gold_0006"
+    "query_id": "test3353",
+    "query": "what is the location at the end of minority report",
+    "gold_answer": "",
+    "gold_doc_id": "doc114461"
   },
   {
-    "query_id": "nq_0007",
-    "query": "what type of reaction occurs to form a dipeptide",
-    "gold_answer": "peptide bond",
-    "gold_doc_id": "kb_gold_0007"
+    "query_id": "test529",
+    "query": "which episode of charmed does phoebe find out leo is a whitelighter",
+    "gold_answer": "",
+    "gold_doc_id": "doc19180"
   },
   {
-    "query_id": "nq_0008",
-    "query": "when did the first marvel vs capcom come out",
-    "gold_answer": "1998",
-    "gold_doc_id": "kb_gold_0008"
+    "query_id": "test2663",
+    "query": "where did latin american fit in the post-world war ii world",
+    "gold_answer": "",
+    "gold_doc_id": "doc91292"
   },
   {
-    "query_id": "nq_0009",
-    "query": "what is the big gold dome in jerusalem",
-    "gold_answer": "Dome of the Rock",
-    "gold_doc_id": "kb_gold_0009"
+    "query_id": "test2760",
+    "query": "who sang the song should have been a cowboy",
+    "gold_answer": "",
+    "gold_doc_id": "doc94998"
   },
   {
-    "query_id": "nq_0010",
-    "query": "all the motor neurons that control the skeletal muscles are",
-    "gold_answer": "efferent nerves",
-    "gold_doc_id": "kb_gold_0010"
+    "query_id": "test2573",
+    "query": "the most common form of megalithic architecture in europe is",
+    "gold_answer": "",
+    "gold_doc_id": "doc88248"
   },
   {
-    "query_id": "nq_0011",
-    "query": "the region that stretches between the black and caspian seas",
-    "gold_answer": "The Caucasus Mountains",
-    "gold_doc_id": "kb_gold_0011"
+    "query_id": "test1602",
+    "query": "who is the guy who walked across the twin towers",
+    "gold_answer": "",
+    "gold_doc_id": "doc56817"
   },
   {
-    "query_id": "nq_0012",
-    "query": "what does the m number mean on a pint glass",
-    "gold_answer": "imperial fluid ounces",
-    "gold_doc_id": "kb_gold_0012"
+    "query_id": "test1605",
+    "query": "how old is the actress who plays phyllis on y&r",
+    "gold_answer": "",
+    "gold_doc_id": "doc56888"
   },
   {
-    "query_id": "nq_0013",
-    "query": "when did the dallas cowboys win their last playoff game",
-    "gold_answer": "2014",
-    "gold_doc_id": "kb_gold_0013"
+    "query_id": "test1006",
+    "query": "when does the first nba basketball game start",
+    "gold_answer": "",
+    "gold_doc_id": "doc35474"
   },
   {
-    "query_id": "nq_0014",
-    "query": "who sang the theme song for laverne and shirley",
-    "gold_answer": "Cyndi Grecco",
-    "gold_doc_id": "kb_gold_0014"
+    "query_id": "test2449",
+    "query": "name the tissue type of the inner most layer of cells",
+    "gold_answer": "",
+    "gold_doc_id": "doc84434"
   },
   {
-    "query_id": "nq_0015",
-    "query": "who plays the judge in drop dead diva",
-    "gold_answer": "Lex Medlin",
-    "gold_doc_id": "kb_gold_0015"
+    "query_id": "test1454",
+    "query": "where is the love meaning of the song",
+    "gold_answer": "",
+    "gold_doc_id": "doc51853"
   },
   {
-    "query_id": "nq_0016",
-    "query": "the art and science of making objects from clay is called",
-    "gold_answer": "Ceramic art",
-    "gold_doc_id": "kb_gold_0016"
+    "query_id": "test1484",
+    "query": "the south west wind blows across nigeria between",
+    "gold_answer": "",
+    "gold_doc_id": "doc52772"
   },
   {
-    "query_id": "nq_0017",
-    "query": "what was the united states foreign policy after ww1 started",
-    "gold_answer": "neutrality",
-    "gold_doc_id": "kb_gold_0017"
+    "query_id": "test1553",
+    "query": "who wrote the song the glory of love",
+    "gold_answer": "",
+    "gold_doc_id": "doc55509"
   },
   {
-    "query_id": "nq_0018",
-    "query": "what is the largest magnitude earthquake that has occurred in the pacific northwest",
-    "gold_answer": "The 1700 Cascadia earthquake",
-    "gold_doc_id": "kb_gold_0018"
+    "query_id": "test2779",
+    "query": "where was don't you worry child filmed",
+    "gold_answer": "",
+    "gold_doc_id": "doc95427"
   },
   {
-    "query_id": "nq_0019",
-    "query": "where was 2017 beauty and the beast filmed",
-    "gold_answer": "Surrey, United Kingdom",
-    "gold_doc_id": "kb_gold_0019"
+    "query_id": "test3141",
+    "query": "why was the building of a settlement in mexico in 1519 significant",
+    "gold_answer": "",
+    "gold_doc_id": "doc107186"
   },
   {
-    "query_id": "nq_0020",
-    "query": "who is the actor that plays ducky on ncis",
-    "gold_answer": "David McCallum",
-    "gold_doc_id": "kb_gold_0020"
+    "query_id": "test1082",
+    "query": "who designed the earth day flag in 1969",
+    "gold_answer": "",
+    "gold_doc_id": "doc37757"
   },
   {
-    "query_id": "nq_0021",
-    "query": "when was catch me if you can made",
-    "gold_answer": "2002",
-    "gold_doc_id": "kb_gold_0021"
+    "query_id": "test3316",
+    "query": "where do you kick a field goal from",
+    "gold_answer": "",
+    "gold_doc_id": "doc113213"
   },
   {
-    "query_id": "nq_0022",
-    "query": "who played the female lead in the 1942 film casablanca",
-    "gold_answer": "romantic drama",
-    "gold_doc_id": "kb_gold_0022"
+    "query_id": "test2188",
+    "query": "who was the chief guest of india on independence day 2017",
+    "gold_answer": "",
+    "gold_doc_id": "doc76232"
   },
   {
-    "query_id": "nq_0023",
-    "query": "when did i ain't mad at cha come out",
-    "gold_answer": "September 15, 1996",
-    "gold_doc_id": "kb_gold_0023"
+    "query_id": "test1712",
+    "query": "where did the violin get its name from",
+    "gold_answer": "",
+    "gold_doc_id": "doc60739"
   },
   {
-    "query_id": "nq_0024",
-    "query": "who becomes chief resident on grey's anatomy season 7",
-    "gold_answer": "April Kepner M.D.",
-    "gold_doc_id": "kb_gold_0024"
+    "query_id": "test1696",
+    "query": "who are the characters in yo gabba gabba",
+    "gold_answer": "",
+    "gold_doc_id": "doc60175"
   },
   {
-    "query_id": "nq_0025",
-    "query": "when did the usa join world war one",
-    "gold_answer": "April 1917",
-    "gold_doc_id": "kb_gold_0025"
+    "query_id": "test361",
+    "query": "what is the difference between cheddar and american cheese",
+    "gold_answer": "",
+    "gold_doc_id": "doc13835"
   },
   {
-    "query_id": "nq_0026",
-    "query": "who has the most big ten championships in football",
-    "gold_answer": "Michigan",
-    "gold_doc_id": "kb_gold_0026"
+    "query_id": "test2264",
+    "query": "when did cable stayed bridges increase in popularity",
+    "gold_answer": "",
+    "gold_doc_id": "doc78438"
   },
   {
-    "query_id": "nq_0027",
-    "query": "when was the design period known as art deco",
-    "gold_answer": "1910\u20131939",
-    "gold_doc_id": "kb_gold_0027"
+    "query_id": "test1281",
+    "query": "when do the different phases of the moon occur",
+    "gold_answer": "",
+    "gold_doc_id": "doc45316"
   },
   {
-    "query_id": "nq_0028",
-    "query": "when were the first general elections held in independent india",
-    "gold_answer": "1951\u201352",
-    "gold_doc_id": "kb_gold_0028"
+    "query_id": "test1626",
+    "query": "when was the minimum wage established in the united states",
+    "gold_answer": "",
+    "gold_doc_id": "doc57724"
   },
   {
-    "query_id": "nq_0029",
-    "query": "one piece episode 534 english dubbed release date",
-    "gold_answer": "February 5, 2012",
-    "gold_doc_id": "kb_gold_0029"
+    "query_id": "test1151",
+    "query": "what advantage does the dealer have in blackjack",
+    "gold_answer": "",
+    "gold_doc_id": "doc40860"
   },
   {
-    "query_id": "nq_0030",
-    "query": "a request to the supreme court that it review a case that was already decided is made via a(n)",
-    "gold_answer": "a writ of certiorari",
-    "gold_doc_id": "kb_gold_0030"
+    "query_id": "test1773",
+    "query": "difference between document type declaration and document type definition",
+    "gold_answer": "",
+    "gold_doc_id": "doc62471"
   },
   {
-    "query_id": "nq_0031",
-    "query": "when did the first ice age come out",
-    "gold_answer": "2002",
-    "gold_doc_id": "kb_gold_0031"
+    "query_id": "test20",
+    "query": "how many lines of symmetry are there in a equilateral triangle",
+    "gold_answer": "",
+    "gold_doc_id": "doc618"
   },
   {
-    "query_id": "nq_0032",
-    "query": "when did the golden state warriors win the finals",
-    "gold_answer": "1947",
-    "gold_doc_id": "kb_gold_0032"
+    "query_id": "test400",
+    "query": "what is the name given to the common currency to the european union",
+    "gold_answer": "",
+    "gold_doc_id": "doc15007"
   },
   {
-    "query_id": "nq_0033",
-    "query": "how many episodes are in season 7 of pretty little liars",
-    "gold_answer": "20",
-    "gold_doc_id": "kb_gold_0033"
+    "query_id": "test1053",
+    "query": "what are some sociological issues that microsociology confronts",
+    "gold_answer": "",
+    "gold_doc_id": "doc36782"
   },
   {
-    "query_id": "nq_0034",
-    "query": "who plays dr. sloan on kevin saves the world",
-    "gold_answer": "Richard Masur",
-    "gold_doc_id": "kb_gold_0034"
+    "query_id": "test3217",
+    "query": "when does the sword art online movie take place",
+    "gold_answer": "",
+    "gold_doc_id": "doc110107"
   },
   {
-    "query_id": "nq_0035",
-    "query": "what is the 180 degree line of longitude called",
-    "gold_answer": "180th meridian or antimeridian",
-    "gold_doc_id": "kb_gold_0035"
+    "query_id": "test445",
+    "query": "who is the owner of the crowne plaza",
+    "gold_answer": "",
+    "gold_doc_id": "doc16542"
   },
   {
-    "query_id": "nq_0036",
-    "query": "who wrote the music phantom of the opera",
-    "gold_answer": "Andrew Lloyd Webber",
-    "gold_doc_id": "kb_gold_0036"
+    "query_id": "test3288",
+    "query": "who was the main character in their eyes were watching god",
+    "gold_answer": "",
+    "gold_doc_id": "doc112481"
   },
   {
-    "query_id": "nq_0037",
-    "query": "what is the name of the skin between your nostrils",
-    "gold_answer": "the nasal septum",
-    "gold_doc_id": "kb_gold_0037"
+    "query_id": "test2927",
+    "query": "what is the width of the mississippi river",
+    "gold_answer": "",
+    "gold_doc_id": "doc100127"
   },
   {
-    "query_id": "nq_0038",
-    "query": "which site of an enzyme is called allosteric site",
-    "gold_answer": "regulatory site",
-    "gold_doc_id": "kb_gold_0038"
+    "query_id": "test2286",
+    "query": "where are haploid cells found in the human body",
+    "gold_answer": "",
+    "gold_doc_id": "doc79246"
   },
   {
-    "query_id": "nq_0039",
-    "query": "batman and robin episode only fools and horses",
-    "gold_answer": "\"Heroes and Villains\"",
-    "gold_doc_id": "kb_gold_0039"
+    "query_id": "test2638",
+    "query": "when did the ship hector arrived in pictou",
+    "gold_answer": "",
+    "gold_doc_id": "doc90332"
   },
   {
-    "query_id": "nq_0040",
-    "query": "where do kidneys for kidney transplant come from",
-    "gold_answer": "living-donor",
-    "gold_doc_id": "kb_gold_0040"
+    "query_id": "test3193",
+    "query": "who came up with the idea of the transcontinental railroad",
+    "gold_answer": "",
+    "gold_doc_id": "doc108892"
   },
   {
-    "query_id": "nq_0041",
-    "query": "when did the movie peter pan come out",
-    "gold_answer": "2003",
-    "gold_doc_id": "kb_gold_0041"
+    "query_id": "test567",
+    "query": "where was a hologram for the king filmed",
+    "gold_answer": "",
+    "gold_doc_id": "doc20544"
   },
   {
-    "query_id": "nq_0042",
-    "query": "when was the last time michigan basketball won the championship",
-    "gold_answer": "1989",
-    "gold_doc_id": "kb_gold_0042"
+    "query_id": "test3151",
+    "query": "when was lucknam park hotel & spa built",
+    "gold_answer": "",
+    "gold_doc_id": "doc107662"
   },
   {
-    "query_id": "nq_0043",
-    "query": "if there is a line that lies parallel to the horizon it is said to be",
-    "gold_answer": "A vanishing point",
-    "gold_doc_id": "kb_gold_0043"
+    "query_id": "test1102",
+    "query": "which battle ended britain's support for the south",
+    "gold_answer": "",
+    "gold_doc_id": "doc38615"
   },
   {
-    "query_id": "nq_0044",
-    "query": "who sang the american anthem at the super bowl",
-    "gold_answer": "Pink",
-    "gold_doc_id": "kb_gold_0044"
+    "query_id": "test2925",
+    "query": "which body system differentiates a male from a female",
+    "gold_answer": "",
+    "gold_doc_id": "doc100061"
   },
   {
-    "query_id": "nq_0045",
-    "query": "what has been the origin of most classical dances of india",
-    "gold_answer": "the Sanskrit text Natya Shastra",
-    "gold_doc_id": "kb_gold_0045"
+    "query_id": "test3122",
+    "query": "who sing say you won't let go",
+    "gold_answer": "",
+    "gold_doc_id": "doc106777"
   },
   {
-    "query_id": "nq_0046",
-    "query": "who sings i can't take my eyes off of you",
-    "gold_answer": "Frankie Valli",
-    "gold_doc_id": "kb_gold_0046"
+    "query_id": "test1548",
+    "query": "when was the first documented case of tool mark identification",
+    "gold_answer": "",
+    "gold_doc_id": "doc55379"
   },
   {
-    "query_id": "nq_0047",
-    "query": "who was the first to say i'm going to disney world",
-    "gold_answer": "Jeana Yeager",
-    "gold_doc_id": "kb_gold_0047"
+    "query_id": "test380",
+    "query": "book series about the end of the world",
+    "gold_answer": "",
+    "gold_doc_id": "doc14284"
   },
   {
-    "query_id": "nq_0048",
-    "query": "where is the new football stadium in atlanta",
-    "gold_answer": "Mercedes-Benz Stadium",
-    "gold_doc_id": "kb_gold_0048"
+    "query_id": "test2398",
+    "query": "why is southern ireland not part of the united kingdom",
+    "gold_answer": "",
+    "gold_doc_id": "doc82772"
   },
   {
-    "query_id": "nq_0049",
-    "query": "georgia out of angus thongs and perfect snogging",
-    "gold_answer": "Georgia Groome as Georgia Nicolson",
-    "gold_doc_id": "kb_gold_0049"
+    "query_id": "test2052",
+    "query": "who plays the dad in girl meets world",
+    "gold_answer": "",
+    "gold_doc_id": "doc71482"
+  },
+  {
+    "query_id": "test3335",
+    "query": "how many championships did kobe win after shaq",
+    "gold_answer": "",
+    "gold_doc_id": "doc114051"
+  },
+  {
+    "query_id": "test1807",
+    "query": "who said the only thing we have to fear is fear itself",
+    "gold_answer": "",
+    "gold_doc_id": "doc63567"
+  },
+  {
+    "query_id": "test599",
+    "query": "what is use case model in software engineering",
+    "gold_answer": "",
+    "gold_doc_id": "doc21387"
+  },
+  {
+    "query_id": "test798",
+    "query": "what is the value of the currency in paraguay",
+    "gold_answer": "",
+    "gold_doc_id": "doc28431"
+  },
+  {
+    "query_id": "test839",
+    "query": "who sings summer wine with lana del rey",
+    "gold_answer": "",
+    "gold_doc_id": "doc30337"
+  },
+  {
+    "query_id": "test3222",
+    "query": "who sings the song i want to go outside in the rain",
+    "gold_answer": "",
+    "gold_doc_id": "doc110251"
+  },
+  {
+    "query_id": "test3348",
+    "query": "south african spider with black and yellow legs",
+    "gold_answer": "",
+    "gold_doc_id": "doc114363"
+  },
+  {
+    "query_id": "test19",
+    "query": "where are the mitochondria located in the sperm",
+    "gold_answer": "",
+    "gold_doc_id": "doc565"
+  },
+  {
+    "query_id": "test662",
+    "query": "who sang the song tell me something good",
+    "gold_answer": "",
+    "gold_doc_id": "doc23573"
+  },
+  {
+    "query_id": "test3291",
+    "query": "a country having an island location and a country having continental location",
+    "gold_answer": "",
+    "gold_doc_id": "doc112577"
+  },
+  {
+    "query_id": "test1710",
+    "query": "what happened to the fourth member of destinys child",
+    "gold_answer": "",
+    "gold_doc_id": "doc60609"
+  },
+  {
+    "query_id": "test1767",
+    "query": "where does the white witch live in narnia",
+    "gold_answer": "",
+    "gold_doc_id": "doc62368"
+  },
+  {
+    "query_id": "test2607",
+    "query": "the fellowship of the ring director's cut length",
+    "gold_answer": "",
+    "gold_doc_id": "doc89324"
+  },
+  {
+    "query_id": "test1650",
+    "query": "who played mark on the show the rifleman",
+    "gold_answer": "",
+    "gold_doc_id": "doc58443"
+  },
+  {
+    "query_id": "test2064",
+    "query": "when did david akers kick the 63 yard field goal",
+    "gold_answer": "",
+    "gold_doc_id": "doc72033"
+  },
+  {
+    "query_id": "test3230",
+    "query": "explain the significance of the reduced mitochondria of the microsporidia",
+    "gold_answer": "",
+    "gold_doc_id": "doc110613"
+  },
+  {
+    "query_id": "test728",
+    "query": "where is simple squamous epithelium found in the body",
+    "gold_answer": "",
+    "gold_doc_id": "doc26059"
+  },
+  {
+    "query_id": "test387",
+    "query": "where did the queen's crown come from",
+    "gold_answer": "",
+    "gold_doc_id": "doc14516"
+  },
+  {
+    "query_id": "test1278",
+    "query": "what is the definition of the word hosanna",
+    "gold_answer": "",
+    "gold_doc_id": "doc45168"
+  },
+  {
+    "query_id": "test2537",
+    "query": "who has the right to vote in philippines",
+    "gold_answer": "",
+    "gold_doc_id": "doc87217"
+  },
+  {
+    "query_id": "test2991",
+    "query": "where is the tibia and fibula bone located",
+    "gold_answer": "",
+    "gold_doc_id": "doc102543"
+  },
+  {
+    "query_id": "test598",
+    "query": "when did the sims 4 toddlers come out",
+    "gold_answer": "",
+    "gold_doc_id": "doc21340"
+  },
+  {
+    "query_id": "test1339",
+    "query": "who supported war with great britain and who opposed it",
+    "gold_answer": "",
+    "gold_doc_id": "doc47371"
+  },
+  {
+    "query_id": "test2379",
+    "query": "where does cleavage of the peptide bond by chymotrypsin occur",
+    "gold_answer": "",
+    "gold_doc_id": "doc82160"
+  },
+  {
+    "query_id": "test3160",
+    "query": "who has won the most world series in baseball",
+    "gold_answer": "",
+    "gold_doc_id": "doc107897"
+  },
+  {
+    "query_id": "test888",
+    "query": "which is one effect of the team halo effect",
+    "gold_answer": "",
+    "gold_doc_id": "doc31753"
+  },
+  {
+    "query_id": "test1507",
+    "query": "what is the use of adobe flash cs3 professional",
+    "gold_answer": "",
+    "gold_doc_id": "doc53737"
+  },
+  {
+    "query_id": "test2150",
+    "query": "when does wonder woman come out on blue ray",
+    "gold_answer": "",
+    "gold_doc_id": "doc74884"
+  },
+  {
+    "query_id": "test684",
+    "query": "where is the movie only the brave filmed",
+    "gold_answer": "",
+    "gold_doc_id": "doc24405"
+  },
+  {
+    "query_id": "test865",
+    "query": "who took the first steps on the moon in 1969",
+    "gold_answer": "",
+    "gold_doc_id": "doc30933"
+  },
+  {
+    "query_id": "test1818",
+    "query": "how tall is a 4 story building in meters",
+    "gold_answer": "",
+    "gold_doc_id": "doc63947"
+  },
+  {
+    "query_id": "test1771",
+    "query": "who won the mvp for the national league",
+    "gold_answer": "",
+    "gold_doc_id": "doc62430"
+  },
+  {
+    "query_id": "test1802",
+    "query": "what is the meaning of the song fool on the hill",
+    "gold_answer": "",
+    "gold_doc_id": "doc63445"
+  },
+  {
+    "query_id": "test568",
+    "query": "who inaugurated 'world teachers' day'",
+    "gold_answer": "",
+    "gold_doc_id": "doc20547"
+  },
+  {
+    "query_id": "test3330",
+    "query": "when did rob dyrdek's fantasy factory end",
+    "gold_answer": "",
+    "gold_doc_id": "doc113756"
+  },
+  {
+    "query_id": "test1048",
+    "query": "which layer of the meninges is connected to the brain",
+    "gold_answer": "",
+    "gold_doc_id": "doc36661"
+  },
+  {
+    "query_id": "test319",
+    "query": "who played the wicked witch in wicked on broadway",
+    "gold_answer": "",
+    "gold_doc_id": "doc12211"
+  },
+  {
+    "query_id": "test72",
+    "query": "when does the new gotham season come out",
+    "gold_answer": "",
+    "gold_doc_id": "doc2134"
+  },
+  {
+    "query_id": "test3364",
+    "query": "did the movie rocky win any academy awards",
+    "gold_answer": "",
+    "gold_doc_id": "doc114958"
+  },
+  {
+    "query_id": "test1231",
+    "query": "who sang the song one of these nights",
+    "gold_answer": "",
+    "gold_doc_id": "doc43761"
+  },
+  {
+    "query_id": "test1421",
+    "query": "when were the words under god added to the pledge",
+    "gold_answer": "",
+    "gold_doc_id": "doc50543"
+  },
+  {
+    "query_id": "test1935",
+    "query": "simple minds live in the city of light album cover",
+    "gold_answer": "",
+    "gold_doc_id": "doc67818"
+  },
+  {
+    "query_id": "test145",
+    "query": "who played big enos in smokey and the bandit",
+    "gold_answer": "",
+    "gold_doc_id": "doc5395"
+  },
+  {
+    "query_id": "test2805",
+    "query": "which mirror is used in vehicles for rear view",
+    "gold_answer": "",
+    "gold_doc_id": "doc96418"
+  },
+  {
+    "query_id": "test3369",
+    "query": "who do you play as in dragon age origins",
+    "gold_answer": "",
+    "gold_doc_id": "doc115048"
+  },
+  {
+    "query_id": "test2353",
+    "query": "where does the red wolf live in the world",
+    "gold_answer": "",
+    "gold_doc_id": "doc81441"
+  },
+  {
+    "query_id": "test964",
+    "query": "the cook the thief the wife the lover costumes",
+    "gold_answer": "",
+    "gold_doc_id": "doc34056"
+  },
+  {
+    "query_id": "test1853",
+    "query": "how many episodes of touching evil are there",
+    "gold_answer": "",
+    "gold_doc_id": "doc65324"
+  },
+  {
+    "query_id": "test2653",
+    "query": "when did men's curling start in the olympics",
+    "gold_answer": "",
+    "gold_doc_id": "doc90921"
+  },
+  {
+    "query_id": "test1075",
+    "query": "when did the last volcano erupt in iceland",
+    "gold_answer": "",
+    "gold_doc_id": "doc37322"
+  },
+  {
+    "query_id": "test2784",
+    "query": "when boy meets girl waiting for a star to fall",
+    "gold_answer": "",
+    "gold_doc_id": "doc95515"
+  },
+  {
+    "query_id": "test2320",
+    "query": "who was an early advocate for using scientific methods based on inductive reasoning",
+    "gold_answer": "",
+    "gold_doc_id": "doc80067"
+  },
+  {
+    "query_id": "test800",
+    "query": "who plays doug's brother on king of queens",
+    "gold_answer": "",
+    "gold_doc_id": "doc28470"
+  },
+  {
+    "query_id": "test2556",
+    "query": "who selects the delegates that attend the national conventions",
+    "gold_answer": "",
+    "gold_doc_id": "doc87892"
+  },
+  {
+    "query_id": "test1252",
+    "query": "when did lionel messi play his first game for barcelona",
+    "gold_answer": "",
+    "gold_doc_id": "doc44178"
+  },
+  {
+    "query_id": "test3442",
+    "query": "does niagara falls belong to us or canada",
+    "gold_answer": "",
+    "gold_doc_id": "doc117327"
+  },
+  {
+    "query_id": "test1332",
+    "query": "region of antarctica where march of the penguins filmed",
+    "gold_answer": "",
+    "gold_doc_id": "doc47180"
+  },
+  {
+    "query_id": "test414",
+    "query": "who did america declare war on in ww1",
+    "gold_answer": "",
+    "gold_doc_id": "doc15455"
+  },
+  {
+    "query_id": "test1684",
+    "query": "who painted the ceiling of the florence cathedral",
+    "gold_answer": "",
+    "gold_doc_id": "doc59696"
+  },
+  {
+    "query_id": "test801",
+    "query": "who did johnny manziel play college football for",
+    "gold_answer": "",
+    "gold_doc_id": "doc28475"
+  },
+  {
+    "query_id": "test275",
+    "query": "where did the battle of corinth take place",
+    "gold_answer": "",
+    "gold_doc_id": "doc10222"
+  },
+  {
+    "query_id": "test2649",
+    "query": "why does cooling water run through the condenser",
+    "gold_answer": "",
+    "gold_doc_id": "doc90702"
+  },
+  {
+    "query_id": "test526",
+    "query": "what is the song brown girl in the ring about",
+    "gold_answer": "",
+    "gold_doc_id": "doc19116"
+  },
+  {
+    "query_id": "test257",
+    "query": "what is the purpose of a jake brake",
+    "gold_answer": "",
+    "gold_doc_id": "doc9603"
+  },
+  {
+    "query_id": "test1263",
+    "query": "who was the aztec ruler when the spanish arrived",
+    "gold_answer": "",
+    "gold_doc_id": "doc44660"
+  },
+  {
+    "query_id": "test2814",
+    "query": "what's the average lifespan of a basset hound",
+    "gold_answer": "",
+    "gold_doc_id": "doc96633"
+  },
+  {
+    "query_id": "test272",
+    "query": "how many terms can a mayor serve in texas",
+    "gold_answer": "",
+    "gold_doc_id": "doc10079"
+  },
+  {
+    "query_id": "test2143",
+    "query": "mention the chemical change that proinsulin undergo to be able to act as mature insulin",
+    "gold_answer": "",
+    "gold_doc_id": "doc74635"
+  },
+  {
+    "query_id": "test1874",
+    "query": "the witch and the hundred knight 2 us release",
+    "gold_answer": "",
+    "gold_doc_id": "doc65860"
+  },
+  {
+    "query_id": "test2250",
+    "query": "who discovered the atom and in what year",
+    "gold_answer": "",
+    "gold_doc_id": "doc78048"
+  },
+  {
+    "query_id": "test144",
+    "query": "who was the original host of what's my line",
+    "gold_answer": "",
+    "gold_doc_id": "doc5295"
+  },
+  {
+    "query_id": "test531",
+    "query": "why is bronze preferred over copper metal for making statues",
+    "gold_answer": "",
+    "gold_doc_id": "doc19239"
+  },
+  {
+    "query_id": "test1304",
+    "query": "when was the suite life of zack and cody made",
+    "gold_answer": "",
+    "gold_doc_id": "doc46221"
+  },
+  {
+    "query_id": "test1611",
+    "query": "where was a time for choosing speech given",
+    "gold_answer": "",
+    "gold_doc_id": "doc57088"
+  },
+  {
+    "query_id": "test2733",
+    "query": "who gets first pick of fa cup games",
+    "gold_answer": "",
+    "gold_doc_id": "doc93814"
+  },
+  {
+    "query_id": "test861",
+    "query": "who did dwight howard play for last year",
+    "gold_answer": "",
+    "gold_doc_id": "doc30785"
+  },
+  {
+    "query_id": "test3044",
+    "query": "who does the voice of nelson on simpsons",
+    "gold_answer": "",
+    "gold_doc_id": "doc104324"
+  },
+  {
+    "query_id": "test1828",
+    "query": "another name for the torso is the blank region of the body",
+    "gold_answer": "",
+    "gold_doc_id": "doc64312"
+  },
+  {
+    "query_id": "test287",
+    "query": "when do river and the doctor get married",
+    "gold_answer": "",
+    "gold_doc_id": "doc10849"
+  },
+  {
+    "query_id": "test2319",
+    "query": "how many branches of reserve bank of india in india",
+    "gold_answer": "",
+    "gold_doc_id": "doc80042"
+  },
+  {
+    "query_id": "test3245",
+    "query": "when did the word of wisdom become mandatory",
+    "gold_answer": "",
+    "gold_doc_id": "doc110911"
+  },
+  {
+    "query_id": "test1122",
+    "query": "when is the running of the bulls held in spain",
+    "gold_answer": "",
+    "gold_doc_id": "doc39565"
+  },
+  {
+    "query_id": "test1435",
+    "query": "what is the main premise behind the marketing concept",
+    "gold_answer": "",
+    "gold_doc_id": "doc51034"
+  },
+  {
+    "query_id": "test3227",
+    "query": "when did the nba start playing zone defense",
+    "gold_answer": "",
+    "gold_doc_id": "doc110464"
+  },
+  {
+    "query_id": "test908",
+    "query": "where is bermuda located on the world map",
+    "gold_answer": "",
+    "gold_doc_id": "doc32357"
+  },
+  {
+    "query_id": "test1618",
+    "query": "was nightmare before christmas originally a disney movie",
+    "gold_answer": "",
+    "gold_doc_id": "doc57226"
+  },
+  {
+    "query_id": "test1165",
+    "query": "where does the pulmonary trunk receive blood from",
+    "gold_answer": "",
+    "gold_doc_id": "doc41344"
+  },
+  {
+    "query_id": "test645",
+    "query": "who scored the most points in a game nba history",
+    "gold_answer": "",
+    "gold_doc_id": "doc23018"
+  },
+  {
+    "query_id": "test30",
+    "query": "what is the meaning of the name comanche",
+    "gold_answer": "",
+    "gold_doc_id": "doc820"
+  },
+  {
+    "query_id": "test2557",
+    "query": "who won an oscar for schindler's list",
+    "gold_answer": "",
+    "gold_doc_id": "doc87895"
+  },
+  {
+    "query_id": "test1417",
+    "query": "what is the processor for google nexus 5",
+    "gold_answer": "",
+    "gold_doc_id": "doc50490"
+  },
+  {
+    "query_id": "test3047",
+    "query": "the duluth model is an intervention program that emphasizes",
+    "gold_answer": "",
+    "gold_doc_id": "doc104417"
+  },
+  {
+    "query_id": "test2506",
+    "query": "who sings the rap in baby by justin bieber",
+    "gold_answer": "",
+    "gold_doc_id": "doc86497"
+  },
+  {
+    "query_id": "test1004",
+    "query": "how many books are in the one piece series",
+    "gold_answer": "",
+    "gold_doc_id": "doc35438"
+  },
+  {
+    "query_id": "test2519",
+    "query": "when did sweet caroline start at red sox games",
+    "gold_answer": "",
+    "gold_doc_id": "doc86800"
+  },
+  {
+    "query_id": "test2648",
+    "query": "what was the lowest barometric pressure for hurricane irma",
+    "gold_answer": "",
+    "gold_doc_id": "doc90691"
+  },
+  {
+    "query_id": "test1665",
+    "query": "who performed the halftime show at super bowl 51",
+    "gold_answer": "",
+    "gold_doc_id": "doc58920"
+  },
+  {
+    "query_id": "test3376",
+    "query": "where was because i could not stop for death published",
+    "gold_answer": "",
+    "gold_doc_id": "doc115338"
+  },
+  {
+    "query_id": "test1690",
+    "query": "who was the buccaneers qb when they won the superbowl",
+    "gold_answer": "",
+    "gold_doc_id": "doc59861"
+  },
+  {
+    "query_id": "test2366",
+    "query": "who played alex cross in along came a spider",
+    "gold_answer": "",
+    "gold_doc_id": "doc81845"
+  },
+  {
+    "query_id": "test3363",
+    "query": "authorities involved in formulating accounting standard in india",
+    "gold_answer": "",
+    "gold_doc_id": "doc114950"
+  },
+  {
+    "query_id": "test2673",
+    "query": "when did the first movie of harry potter come out",
+    "gold_answer": "",
+    "gold_doc_id": "doc91536"
+  },
+  {
+    "query_id": "test125",
+    "query": "when did the prr first begin its passenger service between pittsburgh and philadelphia",
+    "gold_answer": "",
+    "gold_doc_id": "doc4644"
+  },
+  {
+    "query_id": "test2605",
+    "query": "where is the manifold absolute pressure sensor located",
+    "gold_answer": "",
+    "gold_doc_id": "doc89264"
+  },
+  {
+    "query_id": "test2863",
+    "query": "where was the ark of the covenant built",
+    "gold_answer": "",
+    "gold_doc_id": "doc97969"
+  },
+  {
+    "query_id": "test2497",
+    "query": "who is tinker air force base named after",
+    "gold_answer": "",
+    "gold_doc_id": "doc86242"
+  },
+  {
+    "query_id": "test2448",
+    "query": "what is the approximate volume of the brain",
+    "gold_answer": "",
+    "gold_doc_id": "doc84406"
+  },
+  {
+    "query_id": "test803",
+    "query": "to which groups are members of congress responsible",
+    "gold_answer": "",
+    "gold_doc_id": "doc28582"
+  },
+  {
+    "query_id": "test2809",
+    "query": "who plays poppy in the beat goes on",
+    "gold_answer": "",
+    "gold_doc_id": "doc96520"
+  },
+  {
+    "query_id": "test3114",
+    "query": "when did response to state of the union start",
+    "gold_answer": "",
+    "gold_doc_id": "doc106545"
+  },
+  {
+    "query_id": "test342",
+    "query": "when must a system of linear equations be solved algebraically",
+    "gold_answer": "",
+    "gold_doc_id": "doc12971"
+  },
+  {
+    "query_id": "test736",
+    "query": "who were some leaders during the progressive era that fought for equal rights",
+    "gold_answer": "",
+    "gold_doc_id": "doc26180"
+  },
+  {
+    "query_id": "test478",
+    "query": "what are the names of the hunger games",
+    "gold_answer": "",
+    "gold_doc_id": "doc17523"
+  },
+  {
+    "query_id": "test854",
+    "query": "where is the inscription on the statue of liberty",
+    "gold_answer": "",
+    "gold_doc_id": "doc30643"
+  },
+  {
+    "query_id": "test2593",
+    "query": "who is the young man in hawthorne's my kinsman major molineux",
+    "gold_answer": "",
+    "gold_doc_id": "doc88804"
+  },
+  {
+    "query_id": "test1943",
+    "query": "where were the soviet missiles located in cuba",
+    "gold_answer": "",
+    "gold_doc_id": "doc68093"
+  },
+  {
+    "query_id": "test1298",
+    "query": "how did leo dalton die in silent witness",
+    "gold_answer": "",
+    "gold_doc_id": "doc46102"
+  },
+  {
+    "query_id": "test2851",
+    "query": "when does thomas rhett's new album come out",
+    "gold_answer": "",
+    "gold_doc_id": "doc97656"
+  },
+  {
+    "query_id": "test1155",
+    "query": "for a reflected appraisal to be regarded as important it must be",
+    "gold_answer": "",
+    "gold_doc_id": "doc41030"
+  },
+  {
+    "query_id": "test2296",
+    "query": "what is the movie new jersey drive about",
+    "gold_answer": "",
+    "gold_doc_id": "doc79526"
+  },
+  {
+    "query_id": "test399",
+    "query": "what is the central idea of the poem the rime of ancient mariner",
+    "gold_answer": "",
+    "gold_doc_id": "doc14965"
+  },
+  {
+    "query_id": "test1166",
+    "query": "when was south african youth day first celebrated",
+    "gold_answer": "",
+    "gold_doc_id": "doc41378"
+  },
+  {
+    "query_id": "test2056",
+    "query": "when was child benefit paid for the first child",
+    "gold_answer": "",
+    "gold_doc_id": "doc71625"
+  },
+  {
+    "query_id": "test3173",
+    "query": "who is the lead singer of depeche mode",
+    "gold_answer": "",
+    "gold_doc_id": "doc108253"
+  },
+  {
+    "query_id": "test7",
+    "query": "in order to prove disparate impact you first must establish",
+    "gold_answer": "",
+    "gold_doc_id": "doc67"
+  },
+  {
+    "query_id": "test1913",
+    "query": "which animal is the carrier of the h1n1 virus",
+    "gold_answer": "",
+    "gold_doc_id": "doc67059"
+  },
+  {
+    "query_id": "test3103",
+    "query": "architectural elements forming rib vaults eg wells cathedral",
+    "gold_answer": "",
+    "gold_doc_id": "doc106209"
+  },
+  {
+    "query_id": "test2812",
+    "query": "where does the last name baca come from",
+    "gold_answer": "",
+    "gold_doc_id": "doc96599"
+  },
+  {
+    "query_id": "test3134",
+    "query": "where was thomas and the magic railroad filmed",
+    "gold_answer": "",
+    "gold_doc_id": "doc107055"
+  },
+  {
+    "query_id": "test3069",
+    "query": "the rule of the three rightly guided caliphs was called",
+    "gold_answer": "",
+    "gold_doc_id": "doc105029"
+  },
+  {
+    "query_id": "test2538",
+    "query": "where is the niger delta on a map",
+    "gold_answer": "",
+    "gold_doc_id": "doc87265"
+  },
+  {
+    "query_id": "test3116",
+    "query": "what movies have the song who let the dogs out",
+    "gold_answer": "",
+    "gold_doc_id": "doc106688"
+  },
+  {
+    "query_id": "test710",
+    "query": "created propaganda to support the war effort & encourage the sale of war bonds",
+    "gold_answer": "",
+    "gold_doc_id": "doc25371"
+  },
+  {
+    "query_id": "test650",
+    "query": "who is dylan's father in bates motel",
+    "gold_answer": "",
+    "gold_doc_id": "doc23087"
+  },
+  {
+    "query_id": "test2342",
+    "query": "what was the worst flu season in history",
+    "gold_answer": "",
+    "gold_doc_id": "doc80834"
+  },
+  {
+    "query_id": "test528",
+    "query": "who should have won the election of 1824",
+    "gold_answer": "",
+    "gold_doc_id": "doc19131"
+  },
+  {
+    "query_id": "test1120",
+    "query": "factors that lead to the war of 1812",
+    "gold_answer": "",
+    "gold_doc_id": "doc39486"
+  },
+  {
+    "query_id": "test2565",
+    "query": "when did lord howe island became a world heritage site",
+    "gold_answer": "",
+    "gold_doc_id": "doc88108"
+  },
+  {
+    "query_id": "test1969",
+    "query": "when was harry potter and the philosophers stone published",
+    "gold_answer": "",
+    "gold_doc_id": "doc69138"
+  },
+  {
+    "query_id": "test2054",
+    "query": "who destroyed the first temple and exiled the two tribes of judah to babylon",
+    "gold_answer": "",
+    "gold_doc_id": "doc71583"
+  },
+  {
+    "query_id": "test2120",
+    "query": "who is the actor that plays sneaky pete",
+    "gold_answer": "",
+    "gold_doc_id": "doc73719"
+  },
+  {
+    "query_id": "test333",
+    "query": "who plays the mayor in once upon a time",
+    "gold_answer": "",
+    "gold_doc_id": "doc12774"
+  },
+  {
+    "query_id": "test747",
+    "query": "who sang smoke gets in your eyes first",
+    "gold_answer": "",
+    "gold_doc_id": "doc26672"
+  },
+  {
+    "query_id": "test887",
+    "query": "which president supported the creation of the environmental protection agency (epa)",
+    "gold_answer": "",
+    "gold_doc_id": "doc31692"
+  },
+  {
+    "query_id": "test545",
+    "query": "where does the phrase dressed to the nines",
+    "gold_answer": "",
+    "gold_doc_id": "doc19901"
+  },
+  {
+    "query_id": "test1947",
+    "query": "when was the r10+20 summit in rio de janeiro held",
+    "gold_answer": "",
+    "gold_doc_id": "doc68279"
+  },
+  {
+    "query_id": "test883",
+    "query": "where does the coral sea meet the pacific ocean",
+    "gold_answer": "",
+    "gold_doc_id": "doc31535"
+  },
+  {
+    "query_id": "test165",
+    "query": "when did hollywood become the centre of the film industry",
+    "gold_answer": "",
+    "gold_doc_id": "doc6016"
+  },
+  {
+    "query_id": "test218",
+    "query": "the meaning of the song piece by piece",
+    "gold_answer": "",
+    "gold_doc_id": "doc7901"
+  },
+  {
+    "query_id": "test2854",
+    "query": "who was assassinated during a visit to sarajevo in bosnia",
+    "gold_answer": "",
+    "gold_doc_id": "doc97700"
   }
 ]
