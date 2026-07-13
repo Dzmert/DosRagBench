@@ -1,0 +1,197 @@
+==========================================
+DoSRAGBench run
+  Pair:     qwen-2.5-7b
+  Category: A1
+  Queries:  1000
+  Node:     k172
+  GPU:      NVIDIA L40S
+==========================================
+2026-07-06 19:41:07,882 [INFO] Environment: katana
+2026-07-06 19:41:09,320 [INFO] Loaded 1000 queries, 501000 KB docs; using 1000 queries
+2026-07-06 19:41:09,387 [INFO] Loading embedder: sentence-transformers/all-MiniLM-L6-v2 (device=cuda)
+2026-07-06 19:41:09,654 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:09,659 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/modules.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:10,274 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:10,279 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:10,280 [INFO] Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-07-06 19:41:10,507 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:10,512 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:10,729 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:10,736 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/README.md "HTTP/1.1 200 OK"
+2026-07-06 19:41:11,019 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:11,025 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/modules.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:11,248 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:11,253 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:11,484 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-07-06 19:41:11,703 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:11,708 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 16700.68it/s]
+2026-07-06 19:41:12,010 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-07-06 19:41:12,241 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-07-06 19:41:12,466 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-07-06 19:41:12,691 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-07-06 19:41:12,909 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:12,914 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:13,143 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:13,149 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:13,367 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:13,372 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:13,595 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:13,600 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:13,824 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-07-06 19:41:14,048 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-07-06 19:41:14,334 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:14,339 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:14,559 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+/home/z5419867/thesis_b/DosRagBench/src/dosragbench/pipeline/retriever.py:112: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.embedder.get_sentence_embedding_dimension()
+2026-07-06 19:41:14,664 [INFO] Loading cached index: /srv/scratch/z5419867/dosragbench_cache/index_501000_all-MiniLM-L6-v2_38fe9de8dcae.faiss
+2026-07-06 19:41:17,651 [INFO] Loaded index: 501000 vectors from /srv/scratch/z5419867/dosragbench_cache/index_501000_all-MiniLM-L6-v2_38fe9de8dcae.faiss
+2026-07-06 19:41:17,680 [INFO] ══ BASE: Qwen 2.5 7B Base ══
+2026-07-06 19:41:17,680 [INFO] Loading model: Qwen 2.5 7B Base
+2026-07-06 19:41:17,680 [INFO] Loading Qwen 2.5 7B Base (Qwen/Qwen2.5-7B)
+2026-07-06 19:41:17,896 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:17,903 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-7B/d149729398750b98c0af14eb82c78cfe92750796/config.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:18,172 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:18,181 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-7B/d149729398750b98c0af14eb82c78cfe92750796/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:18,439 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-7B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-07-06 19:41:18,664 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-7B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-07-06 19:41:19,191 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-7B "HTTP/1.1 200 OK"
+2026-07-06 19:41:19,409 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:19,414 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-7B/d149729398750b98c0af14eb82c78cfe92750796/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 1/339 [00:02<16:08,  2.87s/it]Loading weights:   1%|          | 2/339 [00:05<14:25,  2.57s/it]/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/bitsandbytes/backends/cuda/ops.py:213: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+Loading weights:   1%|          | 4/339 [00:05<05:56,  1.06s/it]Loading weights:   1%|▏         | 5/339 [00:05<04:27,  1.25it/s]Loading weights:   2%|▏         | 6/339 [00:06<03:33,  1.56it/s]Loading weights:   4%|▎         | 12/339 [00:06<01:01,  5.29it/s]Loading weights:   5%|▍         | 16/339 [00:06<00:45,  7.13it/s]Loading weights:   5%|▌         | 18/339 [00:06<00:55,  5.84it/s]Loading weights:   8%|▊         | 26/339 [00:07<00:25, 12.07it/s]Loading weights:   9%|▉         | 30/339 [00:07<00:37,  8.35it/s]Loading weights:  11%|█         | 36/339 [00:08<00:25, 12.06it/s]Loading weights:  12%|█▏        | 40/339 [00:08<00:22, 13.03it/s]Loading weights:  13%|█▎        | 43/339 [00:08<00:28, 10.26it/s]Loading weights:  14%|█▍        | 48/339 [00:08<00:20, 14.15it/s]Loading weights:  15%|█▌        | 52/339 [00:09<00:19, 14.43it/s]Loading weights:  16%|█▌        | 55/339 [00:09<00:26, 10.55it/s]Loading weights:  19%|█▉        | 64/339 [00:10<00:18, 14.83it/s]Loading weights:  20%|█▉        | 67/339 [00:10<00:24, 11.16it/s]Loading weights:  21%|██        | 72/339 [00:10<00:18, 14.43it/s]Loading weights:  22%|██▏       | 76/339 [00:11<00:19, 13.22it/s]Loading weights:  23%|██▎       | 78/339 [00:11<00:27,  9.35it/s]Loading weights:  25%|██▌       | 86/339 [00:11<00:15, 16.12it/s]Loading weights:  27%|██▋       | 90/339 [00:12<00:24, 10.32it/s]Loading weights:  29%|██▉       | 100/339 [00:12<00:15, 15.20it/s]Loading weights:  30%|███       | 103/339 [00:13<00:19, 12.01it/s]Loading weights:  33%|███▎      | 112/339 [00:13<00:14, 15.69it/s]Loading weights:  34%|███▍      | 115/339 [00:14<00:17, 12.46it/s]Loading weights:  36%|███▌      | 122/339 [00:14<00:12, 17.62it/s]Loading weights:  37%|███▋      | 126/339 [00:16<00:32,  6.52it/s]Loading weights:  38%|███▊      | 130/339 [00:16<00:26,  7.96it/s]Loading weights:  39%|███▉      | 133/339 [00:16<00:22,  9.05it/s]Loading weights:  40%|████      | 136/339 [00:17<00:27,  7.45it/s]Loading weights:  41%|████      | 138/339 [00:18<00:48,  4.15it/s]Loading weights:  42%|████▏     | 142/339 [00:18<00:33,  5.91it/s]Loading weights:  42%|████▏     | 144/339 [00:18<00:29,  6.62it/s]Loading weights:  44%|████▎     | 148/339 [00:19<00:30,  6.29it/s]Loading weights:  44%|████▍     | 150/339 [00:21<00:50,  3.72it/s]Loading weights:  45%|████▌     | 153/339 [00:21<00:36,  5.03it/s]Loading weights:  46%|████▌     | 155/339 [00:21<00:30,  6.01it/s]Loading weights:  46%|████▋     | 157/339 [00:21<00:25,  7.16it/s]Loading weights:  47%|████▋     | 160/339 [00:22<00:30,  5.90it/s]Loading weights:  48%|████▊     | 162/339 [00:23<00:53,  3.32it/s]Loading weights:  49%|████▉     | 166/339 [00:23<00:34,  5.05it/s]Loading weights:  50%|████▉     | 168/339 [00:23<00:28,  5.94it/s]Loading weights:  51%|█████     | 172/339 [00:24<00:23,  6.98it/s]Loading weights:  51%|█████▏    | 174/339 [00:25<00:34,  4.74it/s]Loading weights:  53%|█████▎    | 178/339 [00:25<00:23,  6.97it/s]Loading weights:  53%|█████▎    | 180/339 [00:25<00:20,  7.86it/s]Loading weights:  54%|█████▍    | 184/339 [00:25<00:15,  9.88it/s]Loading weights:  55%|█████▍    | 186/339 [00:26<00:19,  7.71it/s]Loading weights:  57%|█████▋    | 192/339 [00:26<00:11, 13.14it/s]Loading weights:  58%|█████▊    | 196/339 [00:26<00:10, 14.11it/s]Loading weights:  59%|█████▊    | 199/339 [00:26<00:13, 10.60it/s]Loading weights:  60%|██████    | 204/339 [00:27<00:09, 14.90it/s]Loading weights:  61%|██████▏   | 208/339 [00:27<00:08, 15.58it/s]Loading weights:  62%|██████▏   | 211/339 [00:27<00:11, 10.95it/s]Loading weights:  65%|██████▍   | 220/339 [00:28<00:07, 15.27it/s]Loading weights:  66%|██████▌   | 223/339 [00:28<00:10, 11.56it/s]Loading weights:  67%|██████▋   | 228/339 [00:28<00:07, 15.25it/s]Loading weights:  68%|██████▊   | 232/339 [00:29<00:07, 15.10it/s]Loading weights:  69%|██████▉   | 235/339 [00:29<00:09, 11.15it/s]Loading weights:  71%|███████   | 240/339 [00:29<00:06, 15.22it/s]Loading weights:  72%|███████▏  | 244/339 [00:29<00:06, 15.13it/s]Loading weights:  73%|███████▎  | 247/339 [00:30<00:08, 11.07it/s]Loading weights:  74%|███████▍  | 252/339 [00:30<00:05, 15.09it/s]Loading weights:  76%|███████▌  | 256/339 [00:30<00:05, 14.23it/s]Loading weights:  76%|███████▋  | 259/339 [00:31<00:07, 10.72it/s]Loading weights:  78%|███████▊  | 264/339 [00:31<00:05, 14.76it/s]Loading weights:  79%|███████▉  | 268/339 [00:31<00:05, 13.31it/s]Loading weights:  80%|███████▉  | 271/339 [00:32<00:07,  9.57it/s]Loading weights:  81%|████████▏ | 276/339 [00:32<00:04, 13.53it/s]Loading weights:  83%|████████▎ | 280/339 [00:32<00:04, 13.32it/s]Loading weights:  83%|████████▎ | 283/339 [00:33<00:05,  9.47it/s]Loading weights:  86%|████████▌ | 292/339 [00:33<00:03, 14.18it/s]Loading weights:  87%|████████▋ | 295/339 [00:34<00:03, 11.38it/s]Loading weights:  88%|████████▊ | 300/339 [00:34<00:02, 14.89it/s]Loading weights:  90%|████████▉ | 304/339 [00:34<00:02, 15.52it/s]Loading weights:  91%|█████████ | 307/339 [00:35<00:02, 11.21it/s]Loading weights:  92%|█████████▏| 311/339 [00:35<00:01, 14.25it/s]Loading weights:  93%|█████████▎| 316/339 [00:35<00:01, 14.66it/s]Loading weights:  94%|█████████▍| 319/339 [00:36<00:01, 11.16it/s]Loading weights:  97%|█████████▋| 328/339 [00:36<00:00, 15.79it/s]Loading weights:  98%|█████████▊| 331/339 [00:36<00:00, 11.85it/s]Loading weights: 100%|██████████| 339/339 [00:37<00:00,  9.15it/s]
+2026-07-06 19:41:58,797 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 19:41:58,803 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-7B/d149729398750b98c0af14eb82c78cfe92750796/generation_config.json "HTTP/1.1 200 OK"
+2026-07-06 19:41:59,067 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-07-06 19:41:59,068 [INFO] Loaded on cuda:0
+/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/bitsandbytes/backends/cuda/ops.py:468: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+2026-07-06 19:45:58,415 [INFO]   [25/1000] processed
+2026-07-06 19:49:46,194 [INFO]   [50/1000] processed
+2026-07-06 19:53:28,994 [INFO]   [75/1000] processed
+2026-07-06 19:57:33,999 [INFO]   [100/1000] processed
+2026-07-06 20:01:28,946 [INFO]   [125/1000] processed
+2026-07-06 20:05:30,206 [INFO]   [150/1000] processed
+2026-07-06 20:09:38,774 [INFO]   [175/1000] processed
+2026-07-06 20:13:29,107 [INFO]   [200/1000] processed
+2026-07-06 20:17:22,784 [INFO]   [225/1000] processed
+2026-07-06 20:21:27,985 [INFO]   [250/1000] processed
+2026-07-06 20:25:22,826 [INFO]   [275/1000] processed
+2026-07-06 20:29:17,633 [INFO]   [300/1000] processed
+2026-07-06 20:33:15,579 [INFO]   [325/1000] processed
+2026-07-06 20:37:05,706 [INFO]   [350/1000] processed
+2026-07-06 20:40:53,183 [INFO]   [375/1000] processed
+2026-07-06 20:44:34,540 [INFO]   [400/1000] processed
+2026-07-06 20:48:21,948 [INFO]   [425/1000] processed
+2026-07-06 20:52:18,098 [INFO]   [450/1000] processed
+2026-07-06 20:55:49,612 [INFO]   [475/1000] processed
+2026-07-06 20:59:50,030 [INFO]   [500/1000] processed
+2026-07-06 21:03:42,484 [INFO]   [525/1000] processed
+2026-07-06 21:07:39,742 [INFO]   [550/1000] processed
+2026-07-06 21:11:37,172 [INFO]   [575/1000] processed
+2026-07-06 21:15:34,735 [INFO]   [600/1000] processed
+2026-07-06 21:19:15,466 [INFO]   [625/1000] processed
+2026-07-06 21:23:16,766 [INFO]   [650/1000] processed
+2026-07-06 21:27:22,651 [INFO]   [675/1000] processed
+2026-07-06 21:31:11,690 [INFO]   [700/1000] processed
+2026-07-06 21:35:05,566 [INFO]   [725/1000] processed
+2026-07-06 21:39:02,601 [INFO]   [750/1000] processed
+2026-07-06 21:42:41,342 [INFO]   [775/1000] processed
+2026-07-06 21:46:27,584 [INFO]   [800/1000] processed
+2026-07-06 21:50:15,089 [INFO]   [825/1000] processed
+2026-07-06 21:53:42,797 [INFO]   [850/1000] processed
+2026-07-06 21:57:26,414 [INFO]   [875/1000] processed
+2026-07-06 22:01:18,918 [INFO]   [900/1000] processed
+2026-07-06 22:05:17,764 [INFO]   [925/1000] processed
+2026-07-06 22:09:19,166 [INFO]   [950/1000] processed
+2026-07-06 22:13:10,125 [INFO]   [975/1000] processed
+2026-07-06 22:17:11,044 [INFO]   [1000/1000] processed
+2026-07-06 22:17:11,081 [INFO] base done in 9353.4s
+2026-07-06 22:17:11,087 [INFO]   ASR=0.000 GDS=0.021 LIR=1.28 retrieval_LIR=1.07
+2026-07-06 22:17:11,088 [INFO] ══ ALIGNED: Qwen 2.5 7B Instruct ══
+2026-07-06 22:17:11,088 [INFO] Loading model: Qwen 2.5 7B Instruct
+2026-07-06 22:17:11,088 [INFO] Loading Qwen 2.5 7B Instruct (Qwen/Qwen2.5-7B-Instruct)
+2026-07-06 22:17:11,337 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 22:17:11,342 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-7B-Instruct/a09a35458c702b33eeacc393d103063234e8bc28/config.json "HTTP/1.1 200 OK"
+2026-07-06 22:17:11,589 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 22:17:11,597 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-7B-Instruct/a09a35458c702b33eeacc393d103063234e8bc28/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-07-06 22:17:11,832 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-7B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-07-06 22:17:12,052 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-7B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-07-06 22:17:12,553 [INFO] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-7B-Instruct "HTTP/1.1 200 OK"
+2026-07-06 22:17:12,771 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 22:17:12,776 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-7B-Instruct/a09a35458c702b33eeacc393d103063234e8bc28/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 1/339 [00:00<04:52,  1.16it/s]Loading weights:   1%|          | 2/339 [00:01<04:56,  1.14it/s]Loading weights:   1%|▏         | 5/339 [00:01<01:39,  3.37it/s]Loading weights:   3%|▎         | 10/339 [00:02<00:41,  8.02it/s]Loading weights:   5%|▍         | 16/339 [00:02<00:22, 14.16it/s]Loading weights:   6%|▌         | 20/339 [00:02<00:20, 15.56it/s]Loading weights:   8%|▊         | 28/339 [00:02<00:12, 24.03it/s]Loading weights:   9%|▉         | 32/339 [00:02<00:13, 23.00it/s]Loading weights:  12%|█▏        | 40/339 [00:02<00:09, 30.28it/s]Loading weights:  13%|█▎        | 44/339 [00:03<00:10, 27.20it/s]Loading weights:  15%|█▌        | 52/339 [00:03<00:08, 34.29it/s]Loading weights:  17%|█▋        | 57/339 [00:03<00:08, 31.40it/s]Loading weights:  19%|█▉        | 64/339 [00:03<00:07, 36.18it/s]Loading weights:  20%|██        | 69/339 [00:03<00:08, 32.56it/s]Loading weights:  22%|██▏       | 74/339 [00:03<00:07, 33.82it/s]Loading weights:  23%|██▎       | 78/339 [00:04<00:12, 20.22it/s]Loading weights:  26%|██▌       | 88/339 [00:04<00:08, 30.04it/s]Loading weights:  27%|██▋       | 93/339 [00:04<00:08, 28.41it/s]Loading weights:  29%|██▉       | 100/339 [00:04<00:07, 33.27it/s]Loading weights:  31%|███       | 105/339 [00:05<00:07, 30.86it/s]Loading weights:  33%|███▎      | 112/339 [00:05<00:06, 35.53it/s]Loading weights:  35%|███▍      | 117/339 [00:05<00:06, 32.22it/s]Loading weights:  37%|███▋      | 124/339 [00:06<00:11, 18.92it/s]Loading weights:  37%|███▋      | 127/339 [00:07<00:26,  8.15it/s]Loading weights:  38%|███▊      | 130/339 [00:07<00:22,  9.15it/s]Loading weights:  39%|███▉      | 132/339 [00:07<00:21,  9.75it/s]Loading weights:  40%|████      | 136/339 [00:08<00:25,  8.05it/s]Loading weights:  41%|████      | 138/339 [00:09<00:45,  4.43it/s]Loading weights:  42%|████▏     | 142/339 [00:09<00:31,  6.35it/s]Loading weights:  42%|████▏     | 144/339 [00:09<00:27,  7.16it/s]Loading weights:  44%|████▎     | 148/339 [00:10<00:29,  6.44it/s]Loading weights:  44%|████▍     | 150/339 [00:12<00:50,  3.75it/s]Loading weights:  45%|████▌     | 154/339 [00:12<00:34,  5.38it/s]Loading weights:  46%|████▌     | 156/339 [00:12<00:29,  6.16it/s]Loading weights:  47%|████▋     | 160/339 [00:13<00:29,  6.00it/s]Loading weights:  48%|████▊     | 162/339 [00:14<00:50,  3.53it/s]Loading weights:  49%|████▉     | 166/339 [00:14<00:32,  5.30it/s]Loading weights:  50%|████▉     | 168/339 [00:14<00:27,  6.11it/s]Loading weights:  51%|█████     | 172/339 [00:15<00:22,  7.50it/s]Loading weights:  51%|█████▏    | 174/339 [00:16<00:32,  5.07it/s]Loading weights:  53%|█████▎    | 178/339 [00:16<00:21,  7.49it/s]Loading weights:  53%|█████▎    | 180/339 [00:16<00:18,  8.47it/s]Loading weights:  55%|█████▍    | 185/339 [00:16<00:12, 11.91it/s]Loading weights:  56%|█████▌    | 190/339 [00:16<00:09, 16.43it/s]Loading weights:  58%|█████▊    | 196/339 [00:16<00:06, 22.35it/s]Loading weights:  59%|█████▉    | 200/339 [00:16<00:06, 21.91it/s]Loading weights:  61%|██████▏   | 208/339 [00:17<00:04, 30.05it/s]Loading weights:  63%|██████▎   | 212/339 [00:17<00:04, 27.14it/s]Loading weights:  65%|██████▍   | 220/339 [00:17<00:03, 34.50it/s]Loading weights:  66%|██████▋   | 225/339 [00:17<00:03, 31.56it/s]Loading weights:  68%|██████▊   | 232/339 [00:17<00:02, 36.42it/s]Loading weights:  70%|██████▉   | 237/339 [00:17<00:03, 32.78it/s]Loading weights:  72%|███████▏  | 244/339 [00:18<00:02, 37.43it/s]Loading weights:  73%|███████▎  | 249/339 [00:18<00:02, 33.41it/s]Loading weights:  76%|███████▌  | 256/339 [00:18<00:02, 37.92it/s]Loading weights:  77%|███████▋  | 261/339 [00:18<00:02, 33.68it/s]Loading weights:  79%|███████▉  | 268/339 [00:18<00:01, 38.11it/s]Loading weights:  81%|████████  | 273/339 [00:18<00:01, 33.91it/s]Loading weights:  83%|████████▎ | 280/339 [00:19<00:02, 28.05it/s]Loading weights:  84%|████████▍ | 284/339 [00:19<00:02, 25.37it/s]Loading weights:  86%|████████▌ | 292/339 [00:19<00:01, 32.23it/s]Loading weights:  87%|████████▋ | 296/339 [00:19<00:01, 28.79it/s]Loading weights:  90%|████████▉ | 304/339 [00:19<00:00, 35.46it/s]Loading weights:  91%|█████████ | 308/339 [00:20<00:01, 30.81it/s]Loading weights:  93%|█████████▎| 316/339 [00:20<00:00, 37.32it/s]Loading weights:  95%|█████████▍| 321/339 [00:20<00:00, 33.32it/s]Loading weights:  97%|█████████▋| 328/339 [00:20<00:00, 37.73it/s]Loading weights:  98%|█████████▊| 333/339 [00:20<00:00, 33.62it/s]Loading weights: 100%|██████████| 339/339 [00:20<00:00, 16.26it/s]
+2026-07-06 22:17:34,331 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 22:17:34,339 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-7B-Instruct/a09a35458c702b33eeacc393d103063234e8bc28/generation_config.json "HTTP/1.1 200 OK"
+2026-07-06 22:17:34,575 [INFO] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-07-06 22:17:34,577 [INFO] Loaded on cuda:0
+2026-07-06 22:18:21,962 [INFO]   [25/1000] processed
+2026-07-06 22:19:15,168 [INFO]   [50/1000] processed
+2026-07-06 22:20:03,917 [INFO]   [75/1000] processed
+2026-07-06 22:20:45,516 [INFO]   [100/1000] processed
+2026-07-06 22:21:32,831 [INFO]   [125/1000] processed
+2026-07-06 22:22:17,859 [INFO]   [150/1000] processed
+2026-07-06 22:23:06,137 [INFO]   [175/1000] processed
+2026-07-06 22:23:55,227 [INFO]   [200/1000] processed
+2026-07-06 22:24:43,570 [INFO]   [225/1000] processed
+2026-07-06 22:25:35,586 [INFO]   [250/1000] processed
+2026-07-06 22:26:22,434 [INFO]   [275/1000] processed
+2026-07-06 22:27:04,222 [INFO]   [300/1000] processed
+2026-07-06 22:27:52,635 [INFO]   [325/1000] processed
+2026-07-06 22:28:46,755 [INFO]   [350/1000] processed
+2026-07-06 22:29:27,123 [INFO]   [375/1000] processed
+2026-07-06 22:30:26,002 [INFO]   [400/1000] processed
+2026-07-06 22:31:14,442 [INFO]   [425/1000] processed
+2026-07-06 22:31:53,749 [INFO]   [450/1000] processed
+2026-07-06 22:32:42,703 [INFO]   [475/1000] processed
+2026-07-06 22:33:30,619 [INFO]   [500/1000] processed
+2026-07-06 22:34:03,250 [INFO]   [525/1000] processed
+2026-07-06 22:34:48,218 [INFO]   [550/1000] processed
+2026-07-06 22:35:36,227 [INFO]   [575/1000] processed
+2026-07-06 22:36:29,648 [INFO]   [600/1000] processed
+2026-07-06 22:37:15,380 [INFO]   [625/1000] processed
+2026-07-06 22:38:12,441 [INFO]   [650/1000] processed
+2026-07-06 22:39:02,518 [INFO]   [675/1000] processed
+2026-07-06 22:39:53,723 [INFO]   [700/1000] processed
+2026-07-06 22:40:35,523 [INFO]   [725/1000] processed
+2026-07-06 22:41:31,144 [INFO]   [750/1000] processed
+2026-07-06 22:42:21,158 [INFO]   [775/1000] processed
+2026-07-06 22:43:18,165 [INFO]   [800/1000] processed
+2026-07-06 22:44:09,575 [INFO]   [825/1000] processed
+2026-07-06 22:44:56,259 [INFO]   [850/1000] processed
+2026-07-06 22:45:52,339 [INFO]   [875/1000] processed
+2026-07-06 22:46:36,774 [INFO]   [900/1000] processed
+2026-07-06 22:47:19,144 [INFO]   [925/1000] processed
+2026-07-06 22:48:12,356 [INFO]   [950/1000] processed
+2026-07-06 22:49:05,751 [INFO]   [975/1000] processed
+2026-07-06 22:49:51,907 [INFO]   [1000/1000] processed
+2026-07-06 22:49:51,945 [INFO] aligned done in 1960.9s
+2026-07-06 22:49:51,951 [INFO]   ASR=0.072 GDS=0.069 LIR=1.07 retrieval_LIR=1.08
+2026-07-06 22:49:51,999 [INFO] Saved results to /home/z5419867/thesis_b/DosRagBench/results/qwen-2.5-7b_A1/
+Done. Results in results/qwen-2.5-7b_A1/
+
+================================================================================
+                     Resource Usage on 06/07/2026 22:49:56                      
+
+Job Id: 8473014 
+Queue: CSE
+Walltime: 03:08:54  (requested 12:00:00)
+Job execution was successful. Exit Status 0. 
+
+--------------------------------------------------------------------------------
+|              |             GPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node  GPU ID | Requested   Used   Efficiency | Available   Used              |
+| k172    1    |     1       0.58       58%    | 46068 MiB   9.26G             |
+--------------------------------------------------------------------------------
+|Total         |     1       0.58      58.0%   |                               |
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k172         |     8       0.99      12.0%   |  64.0gb    19.36gb    30.2%   |
+--------------------------------------------------------------------------------

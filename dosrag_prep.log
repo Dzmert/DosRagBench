@@ -1,0 +1,53 @@
+2026-07-06 12:03:28,456 [INFO] BEIR mode: dataset='nq'. This will download ~764 MB (corpus) + tiny qrels to your HuggingFace cache on first run.
+2026-07-06 12:03:28,456 [INFO] Loading qrels: BeIR/nq-qrels (split=test)
+2026-07-06 12:03:28,717 [INFO] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+2026-07-06 12:03:28,969 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq-qrels/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 12:03:28,976 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/BeIR/nq-qrels/519acd4e48bb3e5da22b2b888ce36c614f4f2bc9/README.md "HTTP/1.1 200 OK"
+2026-07-06 12:03:29,342 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq-qrels/resolve/519acd4e48bb3e5da22b2b888ce36c614f4f2bc9/nq-qrels.py "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:29,987 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/BeIR/nq-qrels/BeIR/nq-qrels.py "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:30,245 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/nq-qrels/revision/519acd4e48bb3e5da22b2b888ce36c614f4f2bc9 "HTTP/1.1 200 OK"
+2026-07-06 12:03:30,477 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq-qrels/resolve/519acd4e48bb3e5da22b2b888ce36c614f4f2bc9/.huggingface.yaml "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:30,744 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=BeIR/nq-qrels "HTTP/1.1 200 OK"
+2026-07-06 12:03:30,974 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/nq-qrels/tree/519acd4e48bb3e5da22b2b888ce36c614f4f2bc9/data?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:31,205 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/nq-qrels/tree/519acd4e48bb3e5da22b2b888ce36c614f4f2bc9?recursive=false&expand=false "HTTP/1.1 200 OK"
+2026-07-06 12:03:31,450 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq-qrels/resolve/519acd4e48bb3e5da22b2b888ce36c614f4f2bc9/dataset_infos.json "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:31,762 [INFO] Loading queries: BeIR/nq (config=queries)
+2026-07-06 12:03:31,999 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 12:03:32,005 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/BeIR/nq/b7253e6c379163d024ddb1d6948152a91a2e3b46/README.md "HTTP/1.1 200 OK"
+2026-07-06 12:03:32,259 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq/resolve/b7253e6c379163d024ddb1d6948152a91a2e3b46/nq.py "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:32,479 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/BeIR/nq/BeIR/nq.py "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:32,712 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/nq/revision/b7253e6c379163d024ddb1d6948152a91a2e3b46 "HTTP/1.1 200 OK"
+2026-07-06 12:03:32,928 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq/resolve/b7253e6c379163d024ddb1d6948152a91a2e3b46/.huggingface.yaml "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:33,172 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=BeIR/nq "HTTP/1.1 200 OK"
+2026-07-06 12:03:33,407 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/nq/tree/b7253e6c379163d024ddb1d6948152a91a2e3b46/corpus?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-07-06 12:03:33,627 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/nq/tree/b7253e6c379163d024ddb1d6948152a91a2e3b46?recursive=false&expand=false "HTTP/1.1 200 OK"
+2026-07-06 12:03:33,846 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq/resolve/b7253e6c379163d024ddb1d6948152a91a2e3b46/dataset_infos.json "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:34,074 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/nq/tree/b7253e6c379163d024ddb1d6948152a91a2e3b46/queries?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-07-06 12:03:34,164 [INFO] Loading corpus: BeIR/nq (config=corpus)
+2026-07-06 12:03:34,393 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-07-06 12:03:34,399 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/BeIR/nq/b7253e6c379163d024ddb1d6948152a91a2e3b46/README.md "HTTP/1.1 200 OK"
+2026-07-06 12:03:34,615 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq/resolve/b7253e6c379163d024ddb1d6948152a91a2e3b46/nq.py "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:34,831 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/BeIR/nq/BeIR/nq.py "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:35,058 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq/resolve/b7253e6c379163d024ddb1d6948152a91a2e3b46/.huggingface.yaml "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:35,306 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=BeIR/nq "HTTP/1.1 200 OK"
+2026-07-06 12:03:35,524 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/nq/resolve/b7253e6c379163d024ddb1d6948152a91a2e3b46/dataset_infos.json "HTTP/1.1 404 Not Found"
+2026-07-06 12:03:36,444 [INFO] Corpus has 2681468 passages; building id->position map...
+2026-07-06 12:03:57,142 [INFO] Materializing 501000 passages (1000 gold + 500000 filler)...
+2026-07-06 12:04:12,204 [INFO] Wrote 1000 queries -> /home/z5419867/thesis_b/DosRagBench/data/queries.json
+2026-07-06 12:04:12,204 [INFO] Wrote 501000 KB docs -> /home/z5419867/thesis_b/DosRagBench/data/knowledge_base.json
+2026-07-06 12:04:12,204 [INFO]   (source=beir:nq, 1000 gold docs tracked)
+
+================================================================================
+                     Resource Usage on 06/07/2026 12:04:15                      
+
+Job Id: 8473011 
+Queue: CSE
+Walltime: 00:00:47  (requested 02:00:00)
+Job execution was successful. Exit Status 0. 
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k188         |     8       0.83      10.0%   |  90.0gb    2.31gb     2.6%    |
+--------------------------------------------------------------------------------
