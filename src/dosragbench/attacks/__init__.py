@@ -8,6 +8,13 @@ from dosragbench.attacks.c0_random_baseline import RandomInjectionAttack
 from dosragbench.attacks.c1_clustering import EmbeddingClusteringAttack
 from dosragbench.attacks.c2_index_pollution import IndexPollutionAttack
 from dosragbench.attacks.c3_embedding_perturbation import EmbeddingPerturbationAttack
+from dosragbench.attacks.b1_context_saturation import ContextSaturationAttack
+from dosragbench.attacks.b2_generation_loop import GenerationLoopAttack
+from dosragbench.attacks.b3_multi_retrieval import MultiRetrievalAmplificationAttack
+from dosragbench.attacks.d1_logical_contradiction import LogicalContradictionAttack
+from dosragbench.attacks.d2_circular_reference import CircularReferenceAttack
+from dosragbench.attacks.d3_epistemic_uncertainty import EpistemicUncertaintyAttack
+from dosragbench.attacks.d4_infinite_qualification import InfiniteQualificationAttack
 from dosragbench.utils.config import AttackConfig
 
 
@@ -16,9 +23,16 @@ ATTACK_REGISTRY: dict[str, type[DoSAttack]] = {
     "A2": ContradictionFloodingAttack,
     "A3": AuthoritySpoofingAttack,
     "RAND": RandomInjectionAttack,
+    "B1": ContextSaturationAttack,
+    "B2": GenerationLoopAttack,
+    "B3": MultiRetrievalAmplificationAttack,
     "C1": EmbeddingClusteringAttack,
     "C2": IndexPollutionAttack,
     "C3": EmbeddingPerturbationAttack,
+    "D1": LogicalContradictionAttack,
+    "D2": CircularReferenceAttack,
+    "D3": EpistemicUncertaintyAttack,
+    "D4": InfiniteQualificationAttack,
 }
 
 
@@ -42,6 +56,13 @@ __all__ = [
     "EmbeddingClusteringAttack",
     "IndexPollutionAttack",
     "EmbeddingPerturbationAttack",
+    "ContextSaturationAttack",
+    "GenerationLoopAttack",
+    "MultiRetrievalAmplificationAttack",
+    "LogicalContradictionAttack",
+    "CircularReferenceAttack",
+    "EpistemicUncertaintyAttack",
+    "InfiniteQualificationAttack",
     "ATTACK_REGISTRY",
     "build_attack",
 ]
