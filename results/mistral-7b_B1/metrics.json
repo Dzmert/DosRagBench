@@ -1,0 +1,67 @@
+{
+  "base": {
+    "model_name": "Mistral 7B Base",
+    "attack_category": "B1",
+    "num_queries": 1000,
+    "asr": 0.004,
+    "gds": 0.004,
+    "asr_absolute": 0.006,
+    "gds_absolute": 0.006,
+    "baseline_denial_rate": 0.002,
+    "num_answerable": 998,
+    "lir_mean": 0.999,
+    "lir_median": 0.999,
+    "tor_mean": 1.0,
+    "tor_median": 1.0,
+    "cdr": 0.002,
+    "retrieval_lir_mean": 1.047,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.746,
+    "gold_eviction_rate": 0.018,
+    "mean_adversarial_in_topk": 0.66,
+    "refusal_breakdown": {
+      "no_refusal": 994,
+      "generation_failure": 6
+    },
+    "severity_breakdown": {
+      "L0": 994,
+      "L3": 6
+    },
+    "mean_latency_s": 5.61,
+    "mean_output_tokens": 256
+  },
+  "aligned": {
+    "model_name": "Mistral 7B Instruct",
+    "attack_category": "B1",
+    "num_queries": 1000,
+    "asr": 0.001,
+    "gds": 0.0063,
+    "asr_absolute": 0.004,
+    "gds_absolute": 0.042,
+    "baseline_denial_rate": 0.003,
+    "num_answerable": 997,
+    "lir_mean": 0.988,
+    "lir_median": 1.0,
+    "tor_mean": 0.993,
+    "tor_median": 1.0,
+    "cdr": 0.0031,
+    "retrieval_lir_mean": 1.061,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.745,
+    "gold_eviction_rate": 0.02,
+    "mean_adversarial_in_topk": 0.624,
+    "refusal_breakdown": {
+      "no_refusal": 850,
+      "epistemic": 146,
+      "explicit_safety": 4
+    },
+    "severity_breakdown": {
+      "L0": 847,
+      "L1": 146,
+      "L3": 4,
+      "L2": 3
+    },
+    "mean_latency_s": 1.138,
+    "mean_output_tokens": 50.9
+  }
+}
