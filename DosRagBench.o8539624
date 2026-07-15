@@ -1,0 +1,194 @@
+==========================================
+DoSRAGBench run
+  Pair:     llama-r1-8b
+  Category: B2
+  Queries:  1000
+  Node:     k173
+  GPU:      NVIDIA L40S
+==========================================
+2026-07-14 10:21:47,829 [INFO] Environment: katana
+2026-07-14 10:21:49,220 [INFO] Loaded 1000 queries, 501000 KB docs; using 1000 queries
+2026-07-14 10:21:49,289 [INFO] Loading embedder: sentence-transformers/all-MiniLM-L6-v2 (device=cuda)
+2026-07-14 10:21:49,540 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:49,546 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/modules.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:49,764 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:49,768 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:49,769 [INFO] Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-07-14 10:21:49,989 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:49,994 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:50,219 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:50,223 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/README.md "HTTP/1.1 200 OK"
+2026-07-14 10:21:50,461 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:50,466 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/modules.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:50,684 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:50,688 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:50,918 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-07-14 10:21:51,145 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:51,149 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 16502.28it/s]
+2026-07-14 10:21:51,455 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-07-14 10:21:51,680 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-07-14 10:21:51,906 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-07-14 10:21:52,132 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-07-14 10:21:52,358 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:52,362 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:52,580 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:52,584 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:52,803 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:52,808 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:53,023 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:53,028 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:53,260 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-07-14 10:21:53,501 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-07-14 10:21:53,756 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:21:53,761 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:53,982 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+/home/z5419867/thesis_b/DosRagBench/src/dosragbench/pipeline/retriever.py:112: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.embedder.get_sentence_embedding_dimension()
+2026-07-14 10:21:54,089 [INFO] Loading cached index: /srv/scratch/z5419867/dosragbench_cache/index_501000_all-MiniLM-L6-v2_38fe9de8dcae.faiss
+2026-07-14 10:21:55,904 [INFO] Loaded index: 501000 vectors from /srv/scratch/z5419867/dosragbench_cache/index_501000_all-MiniLM-L6-v2_38fe9de8dcae.faiss
+2026-07-14 10:21:55,933 [INFO] ══ BASE: Llama 3.1 8B Instruct ══
+2026-07-14 10:21:55,933 [INFO] Loading model: Llama 3.1 8B Instruct
+2026-07-14 10:21:55,933 [INFO] Loading Llama 3.1 8B Instruct (meta-llama/Llama-3.1-8B-Instruct)
+2026-07-14 10:21:56,156 [INFO] HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/resolve/main/config.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:56,404 [INFO] HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-07-14 10:21:56,628 [INFO] HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.1-8B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-07-14 10:21:56,855 [INFO] HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.1-8B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-07-14 10:21:57,862 [INFO] HTTP Request: GET https://huggingface.co/api/models/meta-llama/Llama-3.1-8B-Instruct "HTTP/1.1 200 OK"
+2026-07-14 10:21:58,095 [INFO] HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/resolve/main/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:32,  3.13it/s]Loading weights:   1%|          | 2/291 [00:00<01:30,  3.20it/s]/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/bitsandbytes/backends/cuda/ops.py:213: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+Loading weights:   2%|▏         | 5/291 [00:00<00:32,  8.86it/s]Loading weights:   5%|▍         | 14/291 [00:00<00:10, 25.82it/s]Loading weights:   8%|▊         | 23/291 [00:00<00:07, 38.16it/s]Loading weights:  11%|█         | 32/291 [00:01<00:05, 47.09it/s]Loading weights:  14%|█▍        | 41/291 [00:01<00:04, 53.48it/s]Loading weights:  17%|█▋        | 50/291 [00:01<00:04, 57.76it/s]Loading weights:  20%|██        | 59/291 [00:01<00:03, 60.91it/s]Loading weights:  23%|██▎       | 68/291 [00:01<00:03, 63.41it/s]Loading weights:  26%|██▋       | 77/291 [00:01<00:03, 65.29it/s]Loading weights:  30%|██▉       | 86/291 [00:01<00:03, 66.56it/s]Loading weights:  33%|███▎      | 95/291 [00:02<00:02, 67.31it/s]Loading weights:  36%|███▌      | 104/291 [00:02<00:02, 67.93it/s]Loading weights:  39%|███▉      | 113/291 [00:02<00:02, 68.36it/s]Loading weights:  42%|████▏     | 122/291 [00:02<00:02, 68.67it/s]Loading weights:  45%|████▌     | 131/291 [00:02<00:02, 68.89it/s]Loading weights:  48%|████▊     | 140/291 [00:02<00:02, 69.17it/s]Loading weights:  51%|█████     | 149/291 [00:02<00:02, 69.37it/s]Loading weights:  54%|█████▎    | 156/291 [00:02<00:01, 68.09it/s]Loading weights:  56%|█████▌    | 163/291 [00:03<00:01, 64.24it/s]Loading weights:  58%|█████▊    | 170/291 [00:03<00:01, 64.31it/s]Loading weights:  61%|██████    | 177/291 [00:03<00:01, 61.63it/s]Loading weights:  64%|██████▍   | 186/291 [00:03<00:01, 64.25it/s]Loading weights:  67%|██████▋   | 195/291 [00:03<00:01, 66.07it/s]Loading weights:  70%|███████   | 204/291 [00:03<00:01, 67.44it/s]Loading weights:  73%|███████▎  | 213/291 [00:03<00:01, 68.35it/s]Loading weights:  76%|███████▋  | 222/291 [00:03<00:01, 68.73it/s]Loading weights:  79%|███████▉  | 231/291 [00:04<00:00, 69.29it/s]Loading weights:  82%|████████▏ | 240/291 [00:04<00:00, 69.66it/s]Loading weights:  86%|████████▌ | 249/291 [00:04<00:00, 69.92it/s]Loading weights:  89%|████████▊ | 258/291 [00:04<00:00, 70.13it/s]Loading weights:  92%|█████████▏| 267/291 [00:04<00:00, 70.34it/s]Loading weights:  95%|█████████▍| 276/291 [00:04<00:00, 70.51it/s]Loading weights:  98%|█████████▊| 285/291 [00:04<00:00, 70.53it/s]Loading weights: 100%|██████████| 291/291 [00:04<00:00, 60.13it/s]
+2026-07-14 10:22:04,785 [INFO] HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/resolve/main/generation_config.json "HTTP/1.1 200 OK"
+2026-07-14 10:22:05,043 [INFO] HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-07-14 10:22:05,044 [INFO] Loaded on cuda:0
+/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/bitsandbytes/backends/cuda/ops.py:468: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+2026-07-14 10:22:44,177 [INFO]   [25/1000] processed
+2026-07-14 10:23:19,438 [INFO]   [50/1000] processed
+2026-07-14 10:23:57,575 [INFO]   [75/1000] processed
+2026-07-14 10:24:30,514 [INFO]   [100/1000] processed
+2026-07-14 10:25:04,962 [INFO]   [125/1000] processed
+2026-07-14 10:25:34,155 [INFO]   [150/1000] processed
+2026-07-14 10:26:06,521 [INFO]   [175/1000] processed
+2026-07-14 10:26:42,726 [INFO]   [200/1000] processed
+2026-07-14 10:27:19,552 [INFO]   [225/1000] processed
+2026-07-14 10:27:56,929 [INFO]   [250/1000] processed
+2026-07-14 10:28:37,250 [INFO]   [275/1000] processed
+2026-07-14 10:29:08,203 [INFO]   [300/1000] processed
+2026-07-14 10:29:47,850 [INFO]   [325/1000] processed
+2026-07-14 10:30:18,923 [INFO]   [350/1000] processed
+2026-07-14 10:30:46,125 [INFO]   [375/1000] processed
+2026-07-14 10:31:30,090 [INFO]   [400/1000] processed
+2026-07-14 10:32:09,765 [INFO]   [425/1000] processed
+2026-07-14 10:32:42,768 [INFO]   [450/1000] processed
+2026-07-14 10:33:19,426 [INFO]   [475/1000] processed
+2026-07-14 10:33:57,191 [INFO]   [500/1000] processed
+2026-07-14 10:34:25,642 [INFO]   [525/1000] processed
+2026-07-14 10:34:59,172 [INFO]   [550/1000] processed
+2026-07-14 10:35:32,925 [INFO]   [575/1000] processed
+2026-07-14 10:36:14,916 [INFO]   [600/1000] processed
+2026-07-14 10:36:46,735 [INFO]   [625/1000] processed
+2026-07-14 10:37:28,346 [INFO]   [650/1000] processed
+2026-07-14 10:38:03,404 [INFO]   [675/1000] processed
+2026-07-14 10:38:46,369 [INFO]   [700/1000] processed
+2026-07-14 10:39:15,916 [INFO]   [725/1000] processed
+2026-07-14 10:39:58,735 [INFO]   [750/1000] processed
+2026-07-14 10:40:35,770 [INFO]   [775/1000] processed
+2026-07-14 10:41:07,404 [INFO]   [800/1000] processed
+2026-07-14 10:41:46,045 [INFO]   [825/1000] processed
+2026-07-14 10:42:23,619 [INFO]   [850/1000] processed
+2026-07-14 10:43:06,237 [INFO]   [875/1000] processed
+2026-07-14 10:43:42,559 [INFO]   [900/1000] processed
+2026-07-14 10:44:10,084 [INFO]   [925/1000] processed
+2026-07-14 10:44:44,340 [INFO]   [950/1000] processed
+2026-07-14 10:45:20,428 [INFO]   [975/1000] processed
+2026-07-14 10:45:57,766 [INFO]   [1000/1000] processed
+2026-07-14 10:45:57,818 [INFO] base done in 1441.9s
+2026-07-14 10:45:57,826 [INFO]   ASR=0.014 GDS=0.037 LIR=1.04 retrieval_LIR=0.98
+2026-07-14 10:45:57,826 [INFO] ══ ALIGNED: DeepSeek R1 Distill Llama 8B ══
+2026-07-14 10:45:57,826 [INFO] Loading model: DeepSeek R1 Distill Llama 8B
+2026-07-14 10:45:57,826 [INFO] Loading DeepSeek R1 Distill Llama 8B (deepseek-ai/DeepSeek-R1-Distill-Llama-8B)
+2026-07-14 10:45:58,048 [INFO] HTTP Request: HEAD https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:45:58,052 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/6a6f4aa4197940add57724a7707d069478df56b1/config.json "HTTP/1.1 200 OK"
+2026-07-14 10:45:58,289 [INFO] HTTP Request: HEAD https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:45:58,293 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/6a6f4aa4197940add57724a7707d069478df56b1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-07-14 10:45:58,523 [INFO] HTTP Request: GET https://huggingface.co/api/models/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-07-14 10:45:58,760 [INFO] HTTP Request: GET https://huggingface.co/api/models/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-07-14 10:45:59,418 [INFO] HTTP Request: GET https://huggingface.co/api/models/deepseek-ai/DeepSeek-R1-Distill-Llama-8B "HTTP/1.1 200 OK"
+2026-07-14 10:45:59,652 [INFO] HTTP Request: HEAD https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:45:59,656 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/6a6f4aa4197940add57724a7707d069478df56b1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<01:25,  3.39it/s]Loading weights:   1%|          | 2/291 [00:00<01:25,  3.37it/s]Loading weights:   2%|▏         | 6/291 [00:00<00:25, 11.39it/s]Loading weights:   5%|▌         | 15/291 [00:00<00:09, 28.24it/s]Loading weights:   8%|▊         | 24/291 [00:00<00:06, 40.43it/s]Loading weights:  11%|█▏        | 33/291 [00:01<00:05, 49.17it/s]Loading weights:  14%|█▍        | 42/291 [00:01<00:04, 55.39it/s]Loading weights:  18%|█▊        | 51/291 [00:01<00:04, 59.84it/s]Loading weights:  21%|██        | 60/291 [00:01<00:03, 62.84it/s]Loading weights:  24%|██▎       | 69/291 [00:01<00:03, 65.06it/s]Loading weights:  27%|██▋       | 78/291 [00:01<00:03, 66.45it/s]Loading weights:  30%|██▉       | 87/291 [00:01<00:03, 67.54it/s]Loading weights:  33%|███▎      | 96/291 [00:01<00:02, 68.30it/s]Loading weights:  36%|███▌      | 105/291 [00:02<00:02, 68.86it/s]Loading weights:  39%|███▉      | 114/291 [00:02<00:02, 69.26it/s]Loading weights:  42%|████▏     | 123/291 [00:02<00:02, 69.51it/s]Loading weights:  45%|████▌     | 132/291 [00:02<00:02, 69.79it/s]Loading weights:  48%|████▊     | 141/291 [00:02<00:02, 62.27it/s]Loading weights:  52%|█████▏    | 150/291 [00:02<00:02, 64.51it/s]Loading weights:  55%|█████▍    | 159/291 [00:02<00:01, 66.19it/s]Loading weights:  58%|█████▊    | 168/291 [00:03<00:01, 67.53it/s]Loading weights:  61%|██████    | 177/291 [00:03<00:01, 68.51it/s]Loading weights:  64%|██████▍   | 186/291 [00:03<00:01, 69.20it/s]Loading weights:  67%|██████▋   | 195/291 [00:03<00:01, 69.66it/s]Loading weights:  70%|███████   | 204/291 [00:03<00:01, 70.03it/s]Loading weights:  73%|███████▎  | 213/291 [00:03<00:01, 70.27it/s]Loading weights:  76%|███████▋  | 222/291 [00:03<00:00, 70.38it/s]Loading weights:  79%|███████▉  | 231/291 [00:03<00:00, 70.51it/s]Loading weights:  82%|████████▏ | 240/291 [00:04<00:00, 70.43it/s]Loading weights:  86%|████████▌ | 249/291 [00:04<00:00, 69.17it/s]Loading weights:  89%|████████▊ | 258/291 [00:04<00:00, 69.64it/s]Loading weights:  92%|█████████▏| 267/291 [00:04<00:00, 69.97it/s]Loading weights:  95%|█████████▍| 276/291 [00:04<00:00, 70.16it/s]Loading weights:  98%|█████████▊| 285/291 [00:04<00:00, 70.32it/s]Loading weights: 100%|██████████| 291/291 [00:04<00:00, 61.35it/s]
+2026-07-14 10:46:04,803 [INFO] HTTP Request: HEAD https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-07-14 10:46:04,807 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/6a6f4aa4197940add57724a7707d069478df56b1/generation_config.json "HTTP/1.1 200 OK"
+2026-07-14 10:46:05,031 [INFO] HTTP Request: HEAD https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-07-14 10:46:05,032 [INFO] Loaded on cuda:0
+2026-07-14 10:55:20,182 [INFO]   [25/1000] processed
+2026-07-14 11:04:47,567 [INFO]   [50/1000] processed
+2026-07-14 11:14:44,099 [INFO]   [75/1000] processed
+2026-07-14 11:25:03,730 [INFO]   [100/1000] processed
+2026-07-14 11:34:05,871 [INFO]   [125/1000] processed
+2026-07-14 11:44:03,512 [INFO]   [150/1000] processed
+2026-07-14 11:53:41,689 [INFO]   [175/1000] processed
+2026-07-14 12:03:38,152 [INFO]   [200/1000] processed
+2026-07-14 12:14:23,464 [INFO]   [225/1000] processed
+2026-07-14 12:23:52,389 [INFO]   [250/1000] processed
+2026-07-14 12:32:57,925 [INFO]   [275/1000] processed
+2026-07-14 12:43:06,895 [INFO]   [300/1000] processed
+2026-07-14 12:54:13,872 [INFO]   [325/1000] processed
+2026-07-14 13:07:26,190 [INFO]   [350/1000] processed
+2026-07-14 13:19:38,491 [INFO]   [375/1000] processed
+2026-07-14 13:32:15,554 [INFO]   [400/1000] processed
+2026-07-14 13:44:29,596 [INFO]   [425/1000] processed
+2026-07-14 13:55:08,327 [INFO]   [450/1000] processed
+2026-07-14 14:07:20,673 [INFO]   [475/1000] processed
+2026-07-14 14:16:57,912 [INFO]   [500/1000] processed
+2026-07-14 14:25:33,662 [INFO]   [525/1000] processed
+2026-07-14 14:36:16,419 [INFO]   [550/1000] processed
+2026-07-14 14:45:47,031 [INFO]   [575/1000] processed
+2026-07-14 14:55:43,251 [INFO]   [600/1000] processed
+2026-07-14 15:03:41,413 [INFO]   [625/1000] processed
+2026-07-14 15:12:04,727 [INFO]   [650/1000] processed
+2026-07-14 15:22:35,486 [INFO]   [675/1000] processed
+2026-07-14 15:32:41,597 [INFO]   [700/1000] processed
+2026-07-14 15:41:54,317 [INFO]   [725/1000] processed
+2026-07-14 15:51:16,215 [INFO]   [750/1000] processed
+2026-07-14 16:01:39,087 [INFO]   [775/1000] processed
+2026-07-14 16:10:32,975 [INFO]   [800/1000] processed
+2026-07-14 16:21:08,109 [INFO]   [825/1000] processed
+2026-07-14 16:29:59,214 [INFO]   [850/1000] processed
+2026-07-14 16:39:07,683 [INFO]   [875/1000] processed
+2026-07-14 16:49:34,568 [INFO]   [900/1000] processed
+2026-07-14 17:00:49,866 [INFO]   [925/1000] processed
+2026-07-14 17:10:17,739 [INFO]   [950/1000] processed
+2026-07-14 17:19:23,455 [INFO]   [975/1000] processed
+2026-07-14 17:28:15,922 [INFO]   [1000/1000] processed
+2026-07-14 17:28:15,960 [INFO] aligned done in 24138.1s
+2026-07-14 17:28:15,966 [INFO]   ASR=0.000 GDS=0.007 LIR=1.02 retrieval_LIR=1.00
+2026-07-14 17:28:16,039 [INFO] Saved results to /home/z5419867/thesis_b/DosRagBench/results/llama-r1-8b_B2/
+Done. Results in results/llama-r1-8b_B2/
+
+================================================================================
+                     Resource Usage on 14/07/2026 17:28:33                      
+
+Job Id: 8539624 
+Queue: CSE
+Walltime: 07:06:37  (requested 12:00:00)
+Job execution was successful. Exit Status 0. 
+
+--------------------------------------------------------------------------------
+|              |             GPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node  GPU ID | Requested   Used   Efficiency | Available   Used              |
+| k173    1    |     1       0.54       54%    | 46068 MiB   9.77G             |
+--------------------------------------------------------------------------------
+|Total         |     1       0.54      54.0%   |                               |
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k173         |     8        1.0      12.0%   |  64.0gb    3.46gb     5.4%    |
+--------------------------------------------------------------------------------
