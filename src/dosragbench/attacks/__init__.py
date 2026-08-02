@@ -4,6 +4,7 @@ from dosragbench.attacks.a1_guardrail import GuardrailTriggeringAttack
 from dosragbench.attacks.a2_contradiction import ContradictionFloodingAttack
 from dosragbench.attacks.a3_authority import AuthoritySpoofingAttack
 from dosragbench.attacks.base import DoSAttack
+from dosragbench.attacks.blocker import BlockerAttack, BlockerConfig
 from dosragbench.attacks.c0_random_baseline import RandomInjectionAttack
 from dosragbench.attacks.c1_clustering import EmbeddingClusteringAttack
 from dosragbench.attacks.c2_index_pollution import IndexPollutionAttack
@@ -33,6 +34,7 @@ ATTACK_REGISTRY: dict[str, type[DoSAttack]] = {
     "D2": CircularReferenceAttack,
     "D3": EpistemicUncertaintyAttack,
     "D4": InfiniteQualificationAttack,
+    "BLOCKER": BlockerAttack,
 }
 
 
@@ -44,6 +46,11 @@ def build_attack(config: AttackConfig, **kwargs) -> DoSAttack:
             f"Attack category '{config.category}' not implemented. Available: {available}"
         )
     attack_cls = ATTACK_REGISTRY[config.category]
+    if attack_cls is BlockerAttack:
+        # Baseline, not one of ours: takes its own BlockerConfig (paper
+        # hyperparameters) rather than an AttackConfig, plus a feedback_fn
+        # bound to the target RAG. Pass those through kwargs.
+        return attack_cls(kwargs.pop("blocker_config", None), **kwargs)
     return attack_cls(config, **kwargs) if kwargs else attack_cls(config)
 
 
@@ -63,6 +70,8 @@ __all__ = [
     "CircularReferenceAttack",
     "EpistemicUncertaintyAttack",
     "InfiniteQualificationAttack",
+    "BlockerAttack",
+    "BlockerConfig",
     "ATTACK_REGISTRY",
     "build_attack",
 ]

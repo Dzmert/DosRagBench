@@ -102,6 +102,18 @@ C3:
     token_perturbations: ["zero-width space", "unicode homoglyphs"]
     max_perturbations_per_doc: 20
 
+# EXTERNAL BASELINE: blocker / jamming (Shafran et al., arXiv:2406.05870)
+# Stronger threat model than ours: needs black-box query access to the target
+# RAG. Search budget is set on the command line (--blocker-iters/-batch/-tokens)
+# because it trades directly against wall-clock, not by document count.
+
+BLOCKER:
+  name: "Blocker Baseline (Shafran et al.)"
+  num_queries: 50  # Each query costs a full black-box search; keep it small.
+  num_adversarial_docs: 1  # Construction is one blocker document per query.
+  seed: 42
+  params: {}
+
 # CATEGORY D: CHAIN-OF-THOUGHT DEADLOCKS
 
 D1:

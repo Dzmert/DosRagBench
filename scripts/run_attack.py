@@ -41,8 +41,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from dosragbench.attacks import build_attack
-from dosragbench.metrics import QueryResult, compute_metrics
+from dosragbench.attacks import BlockerAttack, BlockerConfig, build_attack
+from dosragbench.metrics import QueryResult, classify_severity, compute_metrics
 from dosragbench.models import detect_environment, load_model
 from dosragbench.pipeline import Document, HNSWRetriever, RAGPipeline
 from dosragbench.utils.config import (
@@ -132,11 +132,44 @@ def _pooled_adversarial_docs(attack, queries, num_queries, total_budget):
     return all_adv
 
 
+def make_blocker_feedback(rag, retriever):
+    """Severity oracle for the BLOCKER baseline's black-box optimisation.
+
+    Each call is one full RAG round-trip (retrieval + generation) against the
+    live target, which is what makes this baseline's threat model stronger than
+    ours: it needs query access to the deployed system. Returns the same
+    SeverityLevel our own attacks are scored with, so the comparison is on one
+    instrument. Latency is not part of the signal (lir=1.0) — the blocker
+    targets refusal, and a single probe has no baseline latency to divide by.
+
+    The returned callable carries a .calls counter so the cost is reportable.
+    """
+
+    def feedback(query: str, adv_docs: list[Document]) -> int:
+        feedback.calls += 1
+        retriever.set_adversarial(adv_docs)
+        try:
+            resp = rag.query(query)
+        finally:
+            retriever.clear_adversarial()
+        return int(classify_severity(resp.answer))
+
+    feedback.calls = 0
+    return feedback
+
+
 def run_model_side(model_config, retriever, queries, attack, top_k, num_queries):
     """MERGE MODE: baseline + attacked for one model, no per-query rebuild."""
     logger.info(f"Loading model: {model_config.name}")
     loaded = load_model(model_config)
     rag = RAGPipeline(retriever=retriever, model=loaded, top_k=top_k)
+
+    # BLOCKER optimises against the live target, so its oracle can only be
+    # bound once this side's model is loaded. Rebound per side: an adversarial
+    # document optimised against the base model is not the same attack when
+    # replayed against the aligned one.
+    if isinstance(attack, BlockerAttack):
+        attack.feedback_fn = make_blocker_feedback(rag, retriever)
 
     baseline_results, attacked_results = [], []
 
@@ -157,7 +190,16 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries)
         retriever.clear_adversarial()
 
         if (i + 1) % 25 == 0:
-            logger.info(f"  [{i+1}/{num_queries}] processed")
+            msg = f"  [{i+1}/{num_queries}] processed"
+            if isinstance(attack, BlockerAttack):
+                msg += f" ({attack.feedback_fn.calls} oracle queries so far)"
+            logger.info(msg)
+
+    if isinstance(attack, BlockerAttack):
+        logger.info(
+            f"BLOCKER used {attack.feedback_fn.calls} oracle queries against "
+            f"{model_config.name} ({attack.feedback_fn.calls / max(num_queries, 1):.1f} per query)"
+        )
 
     loaded.unload()
     return {"baseline": baseline_results, "attacked": attacked_results}
@@ -245,7 +287,22 @@ def main():
     parser.add_argument("--pollution-rate", type=float, default=None,
                         help="Total adversarial budget as a fraction of KB size "
                              "(e.g. 0.05 = 5%% of the corpus). Overrides per-query count.")
+    parser.add_argument("--blocker-iters", type=int, default=25,
+                        help="BLOCKER baseline: black-box search iterations per query. "
+                             "The paper uses 1000; the default here is cut to keep a run "
+                             "tractable (cost is iters x batch generations PER QUERY). "
+                             "Pass 1000 to reproduce the paper exactly.")
+    parser.add_argument("--blocker-batch", type=int, default=8,
+                        help="BLOCKER baseline: candidates scored per iteration (paper: 32).")
+    parser.add_argument("--blocker-tokens", type=int, default=50,
+                        help="BLOCKER baseline: length of the generation half d_j (paper: 50).")
     args = parser.parse_args()
+
+    if args.category == "BLOCKER" and args.c1_latency:
+        parser.error(
+            "--c1-latency is incompatible with BLOCKER: its optimisation needs a "
+            "loaded generator for oracle feedback, and latency mode runs retrieval only."
+        )
 
     logger.info(f"Environment: {detect_environment()}")
     pair = load_model_pair(args.model_pair)
@@ -264,6 +321,22 @@ def main():
 
     if args.category == "C1":
         attack = build_attack(attack_config, embedder_id=args.embedder, device=args.device)
+    elif args.category == "BLOCKER":
+        blocker_config = BlockerConfig(
+            n_tokens=args.blocker_tokens,
+            batch_size=args.blocker_batch,
+            max_iters=args.blocker_iters,
+            seed=attack_config.seed,
+        )
+        # feedback_fn is bound per model side in run_model_side(), once that
+        # side's generator is loaded.
+        attack = build_attack(attack_config, blocker_config=blocker_config)
+        worst_case = args.blocker_iters * args.blocker_batch * num_queries
+        logger.info(
+            f"BLOCKER baseline: up to {worst_case:,} oracle generations per model side "
+            f"({args.blocker_iters} iters x {args.blocker_batch} batch x {num_queries} queries). "
+            f"Early aborts on refusal or a {blocker_config.stall_limit}-iteration stall."
+        )
     else:
         attack = build_attack(attack_config)
 
