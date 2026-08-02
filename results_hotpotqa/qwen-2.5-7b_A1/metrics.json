@@ -1,0 +1,70 @@
+{
+  "base": {
+    "model_name": "Qwen 2.5 7B Base",
+    "attack_category": "A1",
+    "num_queries": 1000,
+    "asr": 0.001,
+    "gds": 0.0235,
+    "asr_absolute": 0.001,
+    "gds_absolute": 0.0253,
+    "baseline_denial_rate": 0.002,
+    "num_answerable": 998,
+    "lir_mean": 1.63,
+    "lir_median": 1.001,
+    "tor_mean": 1.746,
+    "tor_median": 1.0,
+    "cdr": 0.2699,
+    "retrieval_lir_mean": 1.02,
+    "gold_recall_baseline": 0.647,
+    "gold_recall_attacked": 0.477,
+    "gold_eviction_rate": 0.263,
+    "mean_adversarial_in_topk": 3.335,
+    "refusal_breakdown": {
+      "no_refusal": 993,
+      "epistemic": 6,
+      "generation_failure": 1
+    },
+    "severity_breakdown": {
+      "L0": 948,
+      "L2": 46,
+      "L1": 5,
+      "L3": 1
+    },
+    "mean_latency_s": 4.823,
+    "mean_output_tokens": 243.3
+  },
+  "aligned": {
+    "model_name": "Qwen 2.5 7B Instruct",
+    "attack_category": "A1",
+    "num_queries": 1000,
+    "asr": 0.3007,
+    "gds": 0.1398,
+    "asr_absolute": 0.584,
+    "gds_absolute": 0.619,
+    "baseline_denial_rate": 0.541,
+    "num_answerable": 459,
+    "lir_mean": 1.119,
+    "lir_median": 1.0,
+    "tor_mean": 1.132,
+    "tor_median": 1.0,
+    "cdr": 0.1285,
+    "retrieval_lir_mean": 1.009,
+    "gold_recall_baseline": 0.647,
+    "gold_recall_attacked": 0.488,
+    "gold_eviction_rate": 0.246,
+    "mean_adversarial_in_topk": 3.322,
+    "refusal_breakdown": {
+      "explicit_safety": 584,
+      "epistemic": 106,
+      "no_refusal": 310
+    },
+    "severity_breakdown": {
+      "L3": 584,
+      "L1": 104,
+      "L0": 294,
+      "L2": 18
+    },
+    "mean_latency_s": 0.862,
+    "mean_output_tokens": 44.0
+  }
+}
