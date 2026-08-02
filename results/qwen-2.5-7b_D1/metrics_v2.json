@@ -1,0 +1,82 @@
+{
+  "base": {
+    "model_name": "Qwen 2.5 7B Base",
+    "attack_category": "D1",
+    "num_queries": 1000,
+    "asr": 0.0031,
+    "gds": 0.0145,
+    "asr_absolute": 0.017,
+    "gds_absolute": 0.029,
+    "baseline_denial_rate": 0.018,
+    "num_answerable": 982,
+    "lir_mean": 1.224,
+    "lir_median": 1.001,
+    "tor_mean": 1.287,
+    "tor_median": 1.0,
+    "cdr": 0.1183,
+    "retrieval_lir_mean": 1.004,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.721,
+    "gold_eviction_rate": 0.051,
+    "mean_adversarial_in_topk": 1.16,
+    "refusal_breakdown": {
+      "no_refusal": 983,
+      "epistemic": 12,
+      "generation_failure": 5
+    },
+    "severity_breakdown": {
+      "L0": 959,
+      "L2": 24,
+      "L3": 17
+    },
+    "mean_latency_s": 5.201,
+    "mean_output_tokens": 242.5,
+    "baseline_refusal_breakdown": {
+      "no_refusal": 982,
+      "epistemic": 13,
+      "generation_failure": 5
+    },
+    "hf_id": "Qwen/Qwen2.5-7B",
+    "alignment_level": 0
+  },
+  "aligned": {
+    "model_name": "Qwen 2.5 7B Instruct",
+    "attack_category": "D1",
+    "num_queries": 1000,
+    "asr": 0.0928,
+    "gds": 0.067,
+    "asr_absolute": 0.387,
+    "gds_absolute": 0.393,
+    "baseline_denial_rate": 0.343,
+    "num_answerable": 657,
+    "lir_mean": 1.208,
+    "lir_median": 1.001,
+    "tor_mean": 1.231,
+    "tor_median": 1.0,
+    "cdr": 0.1318,
+    "retrieval_lir_mean": 1.051,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.713,
+    "gold_eviction_rate": 0.062,
+    "mean_adversarial_in_topk": 1.161,
+    "refusal_breakdown": {
+      "epistemic": 386,
+      "no_refusal": 613,
+      "unspecified_refusal": 1
+    },
+    "severity_breakdown": {
+      "L3": 387,
+      "L0": 601,
+      "L2": 12
+    },
+    "mean_latency_s": 1.168,
+    "mean_output_tokens": 54.5,
+    "baseline_refusal_breakdown": {
+      "epistemic": 342,
+      "no_refusal": 657,
+      "unspecified_refusal": 1
+    },
+    "hf_id": "Qwen/Qwen2.5-7B-Instruct",
+    "alignment_level": 2
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Base",
+    "attack_category": "A3",
+    "num_queries": 1000,
+    "asr": 0.0217,
+    "gds": 0.022,
+    "asr_absolute": 0.05,
+    "gds_absolute": 0.0515,
+    "baseline_denial_rate": 0.032,
+    "num_answerable": 968,
+    "lir_mean": 1.105,
+    "lir_median": 1.001,
+    "tor_mean": 1.279,
+    "tor_median": 1.0,
+    "cdr": 0.0901,
+    "retrieval_lir_mean": 1.012,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.725,
+    "gold_eviction_rate": 0.046,
+    "mean_adversarial_in_topk": 1.312,
+    "refusal_breakdown": {
+      "no_refusal": 950,
+      "generation_failure": 29,
+      "unspecified_refusal": 21
+    },
+    "severity_breakdown": {
+      "L0": 947,
+      "L3": 50,
+      "L2": 3
+    },
+    "mean_latency_s": 5.666,
+    "mean_output_tokens": 254.2,
+    "baseline_refusal_breakdown": {
+      "no_refusal": 968,
+      "generation_failure": 32
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B",
+    "alignment_level": 0
+  },
+  "aligned": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "A3",
+    "num_queries": 1000,
+    "asr": 0.1101,
+    "gds": 0.0725,
+    "asr_absolute": 0.411,
+    "gds_absolute": 0.4135,
+    "baseline_denial_rate": 0.364,
+    "num_answerable": 636,
+    "lir_mean": 1.07,
+    "lir_median": 1.001,
+    "tor_mean": 1.104,
+    "tor_median": 1.0,
+    "cdr": 0.0764,
+    "retrieval_lir_mean": 1.062,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.723,
+    "gold_eviction_rate": 0.049,
+    "mean_adversarial_in_topk": 1.298,
+    "refusal_breakdown": {
+      "epistemic": 372,
+      "no_refusal": 589,
+      "generation_failure": 2,
+      "unspecified_refusal": 37
+    },
+    "severity_breakdown": {
+      "L3": 411,
+      "L0": 584,
+      "L2": 5
+    },
+    "mean_latency_s": 0.657,
+    "mean_output_tokens": 28.3,
+    "baseline_refusal_breakdown": {
+      "epistemic": 361,
+      "no_refusal": 636,
+      "generation_failure": 3
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
+    "alignment_level": 2
+  }
+}

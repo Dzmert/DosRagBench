@@ -1,0 +1,84 @@
+{
+  "base": {
+    "model_name": "Qwen 2.5 7B Base",
+    "attack_category": "A3",
+    "num_queries": 1000,
+    "asr": 0.0311,
+    "gds": 0.044,
+    "asr_absolute": 0.051,
+    "gds_absolute": 0.07,
+    "baseline_denial_rate": 0.035,
+    "num_answerable": 965,
+    "lir_mean": 1.491,
+    "lir_median": 1.0,
+    "tor_mean": 1.592,
+    "tor_median": 1.0,
+    "cdr": 0.2349,
+    "retrieval_lir_mean": 1.081,
+    "gold_recall_baseline": 0.647,
+    "gold_recall_attacked": 0.628,
+    "gold_eviction_rate": 0.029,
+    "mean_adversarial_in_topk": 2.069,
+    "refusal_breakdown": {
+      "no_refusal": 949,
+      "epistemic": 48,
+      "unspecified_refusal": 3
+    },
+    "severity_breakdown": {
+      "L0": 911,
+      "L2": 38,
+      "L3": 51
+    },
+    "mean_latency_s": 4.624,
+    "mean_output_tokens": 234.5,
+    "baseline_refusal_breakdown": {
+      "no_refusal": 965,
+      "epistemic": 33,
+      "generation_failure": 2
+    },
+    "hf_id": "Qwen/Qwen2.5-7B",
+    "alignment_level": 0
+  },
+  "aligned": {
+    "model_name": "Qwen 2.5 7B Instruct",
+    "attack_category": "A3",
+    "num_queries": 1000,
+    "asr": 0.4095,
+    "gds": 0.0895,
+    "asr_absolute": 0.847,
+    "gds_absolute": 0.8505,
+    "baseline_denial_rate": 0.79,
+    "num_answerable": 210,
+    "lir_mean": 1.069,
+    "lir_median": 0.999,
+    "tor_mean": 1.078,
+    "tor_median": 1.0,
+    "cdr": 0.0797,
+    "retrieval_lir_mean": 1.036,
+    "gold_recall_baseline": 0.647,
+    "gold_recall_attacked": 0.626,
+    "gold_eviction_rate": 0.032,
+    "mean_adversarial_in_topk": 2.063,
+    "refusal_breakdown": {
+      "epistemic": 777,
+      "no_refusal": 153,
+      "explicit_safety": 2,
+      "unspecified_refusal": 68
+    },
+    "severity_breakdown": {
+      "L3": 847,
+      "L0": 146,
+      "L2": 7
+    },
+    "mean_latency_s": 0.849,
+    "mean_output_tokens": 43.1,
+    "baseline_refusal_breakdown": {
+      "epistemic": 788,
+      "no_refusal": 210,
+      "unspecified_refusal": 1,
+      "explicit_safety": 1
+    },
+    "hf_id": "Qwen/Qwen2.5-7B-Instruct",
+    "alignment_level": 2
+  }
+}

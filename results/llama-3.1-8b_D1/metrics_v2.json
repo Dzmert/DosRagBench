@@ -1,0 +1,82 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Base",
+    "attack_category": "D1",
+    "num_queries": 1000,
+    "asr": 0.0021,
+    "gds": 0.003,
+    "asr_absolute": 0.026,
+    "gds_absolute": 0.0285,
+    "baseline_denial_rate": 0.032,
+    "num_answerable": 968,
+    "lir_mean": 1.263,
+    "lir_median": 1.0,
+    "tor_mean": 1.795,
+    "tor_median": 1.0,
+    "cdr": 0.1885,
+    "retrieval_lir_mean": 1.032,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.721,
+    "gold_eviction_rate": 0.051,
+    "mean_adversarial_in_topk": 1.16,
+    "refusal_breakdown": {
+      "no_refusal": 974,
+      "generation_failure": 26
+    },
+    "severity_breakdown": {
+      "L0": 969,
+      "L3": 26,
+      "L2": 5
+    },
+    "mean_latency_s": 5.375,
+    "mean_output_tokens": 254.4,
+    "baseline_refusal_breakdown": {
+      "no_refusal": 968,
+      "generation_failure": 32
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B",
+    "alignment_level": 0
+  },
+  "aligned": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "D1",
+    "num_queries": 1000,
+    "asr": 0.2217,
+    "gds": 0.143,
+    "asr_absolute": 0.493,
+    "gds_absolute": 0.495,
+    "baseline_denial_rate": 0.364,
+    "num_answerable": 636,
+    "lir_mean": 1.215,
+    "lir_median": 1.001,
+    "tor_mean": 1.288,
+    "tor_median": 1.0,
+    "cdr": 0.1805,
+    "retrieval_lir_mean": 1.063,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.713,
+    "gold_eviction_rate": 0.062,
+    "mean_adversarial_in_topk": 1.161,
+    "refusal_breakdown": {
+      "epistemic": 486,
+      "no_refusal": 507,
+      "generation_failure": 2,
+      "unspecified_refusal": 4,
+      "explicit_safety": 1
+    },
+    "severity_breakdown": {
+      "L3": 493,
+      "L0": 503,
+      "L2": 4
+    },
+    "mean_latency_s": 0.69,
+    "mean_output_tokens": 30.9,
+    "baseline_refusal_breakdown": {
+      "epistemic": 361,
+      "no_refusal": 636,
+      "generation_failure": 3
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
+    "alignment_level": 2
+  }
+}

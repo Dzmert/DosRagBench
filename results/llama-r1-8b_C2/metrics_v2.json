@@ -1,0 +1,81 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "C2",
+    "num_queries": 1000,
+    "asr": 0.3234,
+    "gds": 0.2125,
+    "asr_absolute": 0.517,
+    "gds_absolute": 0.5245,
+    "baseline_denial_rate": 0.36,
+    "num_answerable": 640,
+    "lir_mean": 1.159,
+    "lir_median": 0.998,
+    "tor_mean": 1.179,
+    "tor_median": 1.0,
+    "cdr": 0.1835,
+    "retrieval_lir_mean": 1.287,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.281,
+    "gold_eviction_rate": 0.63,
+    "mean_adversarial_in_topk": 4.421,
+    "refusal_breakdown": {
+      "no_refusal": 483,
+      "epistemic": 516,
+      "generation_failure": 1
+    },
+    "severity_breakdown": {
+      "L0": 468,
+      "L3": 517,
+      "L2": 15
+    },
+    "mean_latency_s": 0.588,
+    "mean_output_tokens": 25.3,
+    "baseline_refusal_breakdown": {
+      "epistemic": 357,
+      "no_refusal": 640,
+      "generation_failure": 3
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
+    "alignment_level": 2
+  },
+  "aligned": {
+    "model_name": "DeepSeek R1 Distill Llama 8B",
+    "attack_category": "C2",
+    "num_queries": 1000,
+    "asr": 0.139,
+    "gds": 0.122,
+    "asr_absolute": 0.205,
+    "gds_absolute": 0.208,
+    "baseline_denial_rate": 0.144,
+    "num_answerable": 856,
+    "lir_mean": 0.958,
+    "lir_median": 0.827,
+    "tor_mean": 0.958,
+    "tor_median": 0.826,
+    "cdr": 0.061,
+    "retrieval_lir_mean": 1.293,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.289,
+    "gold_eviction_rate": 0.62,
+    "mean_adversarial_in_topk": 4.409,
+    "refusal_breakdown": {
+      "no_refusal": 795,
+      "epistemic": 205
+    },
+    "severity_breakdown": {
+      "L0": 789,
+      "L3": 205,
+      "L2": 6
+    },
+    "mean_latency_s": 9.733,
+    "mean_output_tokens": 452.5,
+    "baseline_refusal_breakdown": {
+      "no_refusal": 856,
+      "epistemic": 143,
+      "generation_failure": 1
+    },
+    "hf_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+    "alignment_level": 4
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "D3",
+    "num_queries": 1000,
+    "asr": 0.3036,
+    "gds": 0.207,
+    "asr_absolute": 0.453,
+    "gds_absolute": 0.4675,
+    "baseline_denial_rate": 0.361,
+    "num_answerable": 639,
+    "lir_mean": 1.64,
+    "lir_median": 1.015,
+    "tor_mean": 1.736,
+    "tor_median": 1.0,
+    "cdr": 0.3622,
+    "retrieval_lir_mean": 1.026,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.62,
+    "gold_eviction_rate": 0.184,
+    "mean_adversarial_in_topk": 2.363,
+    "refusal_breakdown": {
+      "no_refusal": 547,
+      "epistemic": 428,
+      "generation_failure": 1,
+      "unspecified_refusal": 23,
+      "explicit_safety": 1
+    },
+    "severity_breakdown": {
+      "L0": 518,
+      "L3": 453,
+      "L2": 29
+    },
+    "mean_latency_s": 0.766,
+    "mean_output_tokens": 34.5,
+    "baseline_refusal_breakdown": {
+      "epistemic": 358,
+      "no_refusal": 639,
+      "generation_failure": 3
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
+    "alignment_level": 2
+  },
+  "aligned": {
+    "model_name": "DeepSeek R1 Distill Llama 8B",
+    "attack_category": "D3",
+    "num_queries": 1000,
+    "asr": 0.0938,
+    "gds": 0.0885,
+    "asr_absolute": 0.146,
+    "gds_absolute": 0.1535,
+    "baseline_denial_rate": 0.136,
+    "num_answerable": 864,
+    "lir_mean": 1.148,
+    "lir_median": 0.985,
+    "tor_mean": 1.143,
+    "tor_median": 0.997,
+    "cdr": 0.1125,
+    "retrieval_lir_mean": 1.045,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.622,
+    "gold_eviction_rate": 0.182,
+    "mean_adversarial_in_topk": 2.404,
+    "refusal_breakdown": {
+      "no_refusal": 854,
+      "epistemic": 145,
+      "explicit_safety": 1
+    },
+    "severity_breakdown": {
+      "L0": 839,
+      "L3": 146,
+      "L2": 15
+    },
+    "mean_latency_s": 11.268,
+    "mean_output_tokens": 517.9,
+    "baseline_refusal_breakdown": {
+      "no_refusal": 864,
+      "epistemic": 136
+    },
+    "hf_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+    "alignment_level": 4
+  }
+}

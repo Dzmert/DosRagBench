@@ -1,0 +1,79 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Base",
+    "attack_category": "B2",
+    "num_queries": 1000,
+    "asr": 0.003,
+    "gds": 0.003,
+    "asr_absolute": 0.009,
+    "gds_absolute": 0.009,
+    "baseline_denial_rate": 0.01,
+    "num_answerable": 990,
+    "lir_mean": 0.989,
+    "lir_median": 0.997,
+    "tor_mean": 0.992,
+    "tor_median": 1.0,
+    "cdr": 0.0015,
+    "retrieval_lir_mean": 1.008,
+    "gold_recall_baseline": 0.647,
+    "gold_recall_attacked": 0.592,
+    "gold_eviction_rate": 0.085,
+    "mean_adversarial_in_topk": 2.259,
+    "refusal_breakdown": {
+      "no_refusal": 991,
+      "generation_failure": 9
+    },
+    "severity_breakdown": {
+      "L0": 991,
+      "L3": 9
+    },
+    "mean_latency_s": 5.791,
+    "mean_output_tokens": 254.1,
+    "baseline_refusal_breakdown": {
+      "no_refusal": 990,
+      "generation_failure": 10
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B",
+    "alignment_level": 0
+  },
+  "aligned": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "B2",
+    "num_queries": 1000,
+    "asr": 0.3691,
+    "gds": 0.086,
+    "asr_absolute": 0.754,
+    "gds_absolute": 0.756,
+    "baseline_denial_rate": 0.767,
+    "num_answerable": 233,
+    "lir_mean": 1.084,
+    "lir_median": 0.999,
+    "tor_mean": 1.087,
+    "tor_median": 1.0,
+    "cdr": 0.0839,
+    "retrieval_lir_mean": 0.985,
+    "gold_recall_baseline": 0.647,
+    "gold_recall_attacked": 0.59,
+    "gold_eviction_rate": 0.088,
+    "mean_adversarial_in_topk": 2.288,
+    "refusal_breakdown": {
+      "epistemic": 751,
+      "no_refusal": 246,
+      "unspecified_refusal": 3
+    },
+    "severity_breakdown": {
+      "L3": 754,
+      "L0": 242,
+      "L2": 4
+    },
+    "mean_latency_s": 0.525,
+    "mean_output_tokens": 22.4,
+    "baseline_refusal_breakdown": {
+      "epistemic": 764,
+      "no_refusal": 233,
+      "unspecified_refusal": 3
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
+    "alignment_level": 2
+  }
+}
