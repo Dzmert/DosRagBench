@@ -1,2 +1,7 @@
 .venv/
 .env
+__pycache__/
+*.py[co]
+
+# Local session notes, not part of the repo
+HANDOFF.md
