@@ -8,3 +8,14 @@ HANDOFF.md
 
 # Claude Code local session state
 .claude/
+
+# PBS job logs from Katana
+DosRagBench.o*
+DosRagBench.e*
+
+# HotpotQA corpus is 167 MB — regenerate with
+# `prepare_data.py --dataset hotpotqa` rather than committing it.
+data_hotpotqa/
+
+# Per-query dumps, ~5 MB each. Pull from the cluster with rsync when needed.
+results_hotpotqa/*/raw_results.json
