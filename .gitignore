@@ -13,9 +13,7 @@ HANDOFF.md
 DosRagBench.o*
 DosRagBench.e*
 
-# HotpotQA corpus is 167 MB — regenerate with
-# `prepare_data.py --dataset hotpotqa` rather than committing it.
+# HotpotQA corpus is 167 MB and only LFS covers data/knowledge_base.json
+# (see .gitattributes). Regenerate it with `prepare_data.py --dataset hotpotqa`
+# instead of committing it.
 data_hotpotqa/
-
-# Per-query dumps, ~5 MB each. Pull from the cluster with rsync when needed.
-results_hotpotqa/*/raw_results.json
