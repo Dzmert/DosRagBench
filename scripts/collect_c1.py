@@ -31,7 +31,12 @@ logger = logging.getLogger(__name__)
 
 
 def find_reports(results_dir: Path) -> list[dict]:
-    """Load every c1_latency*.json under results_dir."""
+    """Load every c1_latency*.json under results_dir.
+
+    The attack category is recovered from the run directory name
+    (``<model-pair>_<CATEGORY>``) because the report JSON does not record it.
+    Without it, the RAND ablation baseline would be averaged into the C1 curve.
+    """
     pattern = str(results_dir / "**" / "c1_latency*.json")
     reports = []
     for path in glob.glob(pattern, recursive=True):
@@ -39,6 +44,8 @@ def find_reports(results_dir: Path) -> list[dict]:
             with open(path) as f:
                 data = json.load(f)
             data["_path"] = path
+            run_dir = Path(path).parent.name
+            data["category"] = run_dir.rsplit("_", 1)[-1] if "_" in run_dir else run_dir
             reports.append(data)
         except Exception as exc:
             logger.warning(f"Skipping {path}: {exc}")
@@ -46,14 +53,18 @@ def find_reports(results_dir: Path) -> list[dict]:
 
 
 def aggregate(reports: list[dict]) -> list[dict]:
-    """Group by (kb_size, pollution_rate), averaging repeated runs."""
+    """Group by (category, kb_size, pollution_rate), averaging repeated runs.
+
+    Category is part of the key: C1 and its RAND control share a corpus size and
+    pollution rate, so grouping without it silently averages attack and control.
+    """
     groups: dict[tuple, list[dict]] = defaultdict(list)
     for r in reports:
-        key = (r.get("kb_size"), r.get("pollution_rate"))
+        key = (r.get("category"), r.get("kb_size"), r.get("pollution_rate"))
         groups[key].append(r)
 
     rows = []
-    for (kb_size, pr), runs in groups.items():
+    for (category, kb_size, pr), runs in groups.items():
         def col(name):
             vals = [x[name] for x in runs if name in x and x[name] is not None]
             return vals
@@ -63,6 +74,7 @@ def aggregate(reports: list[dict]) -> list[dict]:
         adv_vals = col("mean_adversarial_in_topk")
 
         rows.append({
+            "category": category,
             "kb_size": kb_size,
             "pollution_rate": pr,
             "n_runs": len(runs),
@@ -73,7 +85,8 @@ def aggregate(reports: list[dict]) -> list[dict]:
             "adv_in_topk": round(mean(adv_vals), 3) if adv_vals else None,
         })
 
-    rows.sort(key=lambda x: ((x["kb_size"] or 0), (x["pollution_rate"] or 0)))
+    rows.sort(key=lambda x: (x["category"] or "", (x["kb_size"] or 0),
+                             (x["pollution_rate"] or 0)))
     return rows
 
 
@@ -83,16 +96,16 @@ def print_table(rows: list[dict]) -> None:
         return "n/a" if v is None else str(v)
 
     print()
-    print("=" * 92)
-    print(f"{'KB size':>9} {'Pollut.':>8} {'Runs':>5} {'AdvDocs':>8} "
+    print("=" * 100)
+    print(f"{'Attack':>7} {'KB size':>9} {'Pollut.':>8} {'Runs':>5} {'AdvDocs':>8} "
           f"{'LIR':>7} {'±std':>6} {'Eviction':>9} {'Adv@k':>7}")
-    print("-" * 92)
+    print("-" * 100)
     for r in rows:
-        print(f"{s(r['kb_size']):>9} {s(r['pollution_rate']):>8} {s(r['n_runs']):>5} "
-              f"{s(r['adversarial_docs']):>8} "
+        print(f"{s(r['category']):>7} {s(r['kb_size']):>9} {s(r['pollution_rate']):>8} "
+              f"{s(r['n_runs']):>5} {s(r['adversarial_docs']):>8} "
               f"{s(r['lir_mean']):>7} {s(r['lir_std']):>6} "
               f"{s(r['eviction_rate']):>9} {s(r['adv_in_topk']):>7}")
-    print("=" * 92)
+    print("=" * 100)
     print()
 
 
@@ -113,14 +126,20 @@ def make_plot(rows: list[dict], out_path: Path) -> None:
         logger.warning("matplotlib not installed; skipping plot. pip install matplotlib")
         return
 
-    # One line per KB size, x = pollution rate
-    by_kb: dict[int, list[dict]] = defaultdict(list)
+    # One series per (category, KB size), x = pollution rate. Category must be in
+    # the key so the RAND control plots as its own series, not as part of C1.
+    by_series: dict[tuple, list[dict]] = defaultdict(list)
     for r in rows:
-        by_kb[r["kb_size"]].append(r)
+        by_series[(r["category"], r["kb_size"])].append(r)
+
+    # Validated categorical slots (light surface): C1 = blue, RAND = orange.
+    colors = {"C1": "#2a78d6", "RAND": "#eb6834"}
+    fallback = ["#1baf7a", "#eda100", "#e87ba4"]
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
-    for kb_size, group in sorted(by_kb.items(), key=lambda kv: kv[0] or 0):
+    for i, ((category, kb_size), group) in enumerate(
+            sorted(by_series.items(), key=lambda kv: (kv[0][0] or "", kv[0][1] or 0))):
         # Keep only rows with the fields the plot needs
         group = [g for g in group
                  if g["pollution_rate"] is not None
@@ -132,9 +151,13 @@ def make_plot(rows: list[dict], out_path: Path) -> None:
         prs = [g["pollution_rate"] for g in group]
         evic = [g["eviction_rate"] for g in group]
         lir = [g["lir_mean"] for g in group]
-        label = f"KB={kb_size:,}" if kb_size else "KB=?"
-        ax1.plot(prs, evic, marker="o", label=label)
-        ax2.plot(prs, lir, marker="s", label=label)
+        kb_label = f"KB={kb_size:,}" if kb_size else "KB=?"
+        label = f"{category}  {kb_label}"
+        color = colors.get(category, fallback[i % len(fallback)])
+        ax1.plot(prs, evic, marker="o", markersize=8, linewidth=2,
+                 color=color, label=label)
+        ax2.plot(prs, lir, marker="s", markersize=8, linewidth=2,
+                 color=color, label=label)
 
     ax1.set_xlabel("Pollution rate")
     ax1.set_ylabel("Gold-document eviction rate")
