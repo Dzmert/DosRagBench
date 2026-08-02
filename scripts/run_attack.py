@@ -254,6 +254,12 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
     gold_evicted = sum(
         1 for cg, pg in zip(clean_gold_ranks, polluted_gold_ranks) if cg >= 0 and pg < 0
     )
+    # Condition on queries whose gold was retrievable before the attack: a query
+    # whose gold never made the clean top-k cannot be evicted from it, so counting
+    # it in the denominator understates the attack. Same conditioning ASR already
+    # applies via answerable-query filtering, and the definition compute_metrics
+    # uses (metrics.py: gold_evicted / gold_present_baseline).
+    gold_present_baseline = sum(1 for cg in clean_gold_ranks if cg >= 0)
     return {
         "mode": "c1_latency",
         "pollution_rate": pollution_rate,
@@ -266,7 +272,11 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
         "retrieval_lir_median": round(st.median(lir), 3),
         "retrieval_lir_p90": round(sorted(lir)[int(len(lir) * 0.9)], 3),
         "gold_docs_evicted": gold_evicted,
-        "gold_eviction_rate": round(gold_evicted / len(clean_latencies), 3),
+        "gold_present_baseline": gold_present_baseline,
+        "gold_eviction_rate": round(gold_evicted / gold_present_baseline, 3)
+        if gold_present_baseline else 0.0,
+        # Retained under its old name so previously-reported figures stay traceable.
+        "gold_eviction_rate_unconditional": round(gold_evicted / len(clean_latencies), 3),
         "mean_adversarial_in_topk": round(st.mean(adv_pollution), 3),
     }
 
