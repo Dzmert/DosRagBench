@@ -5,3 +5,6 @@ __pycache__/
 
 # Local session notes, not part of the repo
 HANDOFF.md
+
+# Claude Code local session state
+.claude/
