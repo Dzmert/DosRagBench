@@ -33,13 +33,18 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 from pathlib import Path
 
 from scipy import stats
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT / "src"))
+
+from dosragbench.metrics.refusal import classify_refusal, is_denial  # noqa: E402
+
 RESULTS_DIR = REPO_ROOT / "results"
-FULL_DENIAL = 3
+HOTPOT_DIR = REPO_ROOT / "results_hotpotqa"
 
 FAMILIES = ["llama-3.1-8b", "llama-r1-8b", "mistral-7b", "qwen-2.5-7b"]
 ATTACK_ORDER = [
@@ -66,22 +71,29 @@ def wilson_ci(k: int, n: int, z: float = 1.959963985) -> tuple[float, float]:
     return (max(0.0, center - half), min(1.0, center + half))
 
 
+def denied(record: dict) -> bool:
+    """Reclassify from the answer text rather than trusting the stored label.
+
+    The severity fields in raw_results.json were written by the superseded
+    classifier, which mis-sorted epistemic refusals and could not read the
+    byte-mangled R1 answers at all. Deriving the verdict here keeps this script
+    in step with refusal.py, which is validated (holdout kappa 0.884).
+    """
+    return is_denial(classify_refusal(record.get("answer") or ""))
+
+
 def denial_counts(records_baseline: list, records_attacked: list) -> dict:
     """Recompute attributable-ASR counts and paired attack counts from raw records."""
-    n = len(records_baseline)
-    answerable = [i for i in range(n) if records_baseline[i]["severity"] != FULL_DENIAL]
-    n_ans = len(answerable)
-    broken = sum(1 for i in answerable if records_attacked[i]["severity"] == FULL_DENIAL)
+    clean = [denied(r) for r in records_baseline]
+    att = [denied(r) for r in records_attacked]
+    n = len(clean)
+    n_ans = sum(1 for d in clean if not d)
+    broken = sum(1 for c, a in zip(clean, att) if not c and a)
     # Paired discordant counts over ALL queries (for McNemar).
     #   c = clean-not-denied -> attacked-denied  (attack breaks a working query)
     #   b = clean-denied     -> attacked-not-denied (attack "fixes" a floor denial)
-    c = sum(1 for i in range(n)
-            if records_baseline[i]["severity"] != FULL_DENIAL
-            and records_attacked[i]["severity"] == FULL_DENIAL)
-    b = sum(1 for i in range(n)
-            if records_baseline[i]["severity"] == FULL_DENIAL
-            and records_attacked[i]["severity"] != FULL_DENIAL)
-    return {"n": n, "n_ans": n_ans, "broken": broken, "mcnemar_b": b, "mcnemar_c": c}
+    b = sum(1 for c, a in zip(clean, att) if c and not a)
+    return {"n": n, "n_ans": n_ans, "broken": broken, "mcnemar_b": b, "mcnemar_c": broken}
 
 
 def mcnemar_exact_p(b: int, c: int) -> float:
@@ -109,21 +121,27 @@ def bh_fdr(pvals: list[float]) -> list[float]:
 def main() -> None:
     ap = argparse.ArgumentParser(description="AVI confidence intervals + significance tests")
     ap.add_argument("--min-answerable", type=int, default=100)
+    ap.add_argument("--results-dir", action="append", type=Path,
+                    help="repeatable; defaults to results/ and results_hotpotqa/")
     ap.add_argument("--alpha", type=float, default=0.05)
     ap.add_argument("--out", type=Path, default=RESULTS_DIR / "avi_significance.md")
     args = ap.parse_args()
 
+    roots = args.results_dir or [RESULTS_DIR, HOTPOT_DIR]
+    run_dirs = [
+        d for root in roots if Path(root).is_dir()
+        for d in sorted(p for p in Path(root).iterdir() if p.is_dir())
+    ]
+
     rows = []
-    for run_dir in sorted(RESULTS_DIR.iterdir()):
-        if not run_dir.is_dir():
-            continue
+    for run_dir in run_dirs:
         raw_path = run_dir / "raw_results.json"
-        met_path = run_dir / "metrics.json"
-        if not raw_path.exists() or not met_path.exists():
+        if not raw_path.exists():
             continue
         raw = json.loads(raw_path.read_text())
         if "base" not in raw or "aligned" not in raw:
             continue
+        dataset = "HotpotQA" if run_dir.parent.name.endswith("hotpotqa") else "NQ"
         fam, attack = split_run(run_dir.name)
         sides = {}
         for side in ("base", "aligned"):
@@ -144,7 +162,7 @@ def main() -> None:
         base_asr = base["broken"] / base["n_ans"] if base["n_ans"] else 0.0
         aligned_asr = aligned["broken"] / aligned["n_ans"] if aligned["n_ans"] else 0.0
         rows.append({
-            "run": run_dir.name, "family": fam, "attack": attack,
+            "run": run_dir.name, "dataset": dataset, "family": fam, "attack": attack,
             "base_broken": base["broken"], "base_n": base["n_ans"], "base_asr": base_asr,
             "base_ci": wilson_ci(base["broken"], base["n_ans"]),
             "aligned_broken": aligned["broken"], "aligned_n": aligned["n_ans"],
@@ -165,7 +183,7 @@ def main() -> None:
     def sort_key(r):
         ai = ATTACK_ORDER.index(r["attack"]) if r["attack"] in ATTACK_ORDER else 99
         fi = FAMILIES.index(r["family"]) if r["family"] in FAMILIES else 99
-        return (ai, fi)
+        return (r["dataset"] != "NQ", ai, fi)
     rows.sort(key=sort_key)
 
     def attack_real(r):
@@ -227,12 +245,12 @@ def main() -> None:
         "significant but McNemar is not are the aligned model's intrinsic refusal floor "
         "masquerading as an attack effect.",
         "",
-        "| Attack | Model pair | Base ASR [95% CI] | Aligned ASR [95% CI] | Risk diff | AVI | Fisher p | FDR q | Aligned McNemar (c/b) | Verdict |",
-        "|--------|-----------|-------------------|----------------------|-----|----------|-------|-----------------------|---------|",
+        "| Data | Attack | Model pair | Base ASR [95% CI] | Aligned ASR [95% CI] | Risk diff | AVI | Fisher p | FDR q | Aligned McNemar (c/b) | Verdict |",
+        "|------|--------|-----------|-------------------|----------------------|-----|----------|-------|-----------------------|---------|",
     ]
     for r in rows:
         L.append(
-            f"| {r['attack']} | {r['family']} "
+            f"| {r['dataset']} | {r['attack']} | {r['family']} "
             f"| {pct(r['base_asr'])} {ci(r['base_ci'])} "
             f"| {pct(r['aligned_asr'])} {ci(r['aligned_ci'])} "
             f"| {(r['risk_diff']*100):+.1f}pp "
