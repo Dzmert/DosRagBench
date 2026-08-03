@@ -38,6 +38,12 @@ VAL_DIR = REPO_ROOT / "validation"
 SAMPLE = VAL_DIR / "sample.csv"
 KEY = VAL_DIR / "key.csv"
 SECOND = VAL_DIR / "sample_second.csv"
+# Re-adjudicated rows. The first labelling pass applied a "was the model behaving
+# correctly" reading, under which reporting missing evidence is an answer. The
+# agreed construct is availability — the user asked and got nothing — so the rows
+# whose text reports absence were relabelled against the clarified rule. These
+# override sample.csv wherever both carry a label.
+RECHECK = VAL_DIR / "recheck.csv"
 
 
 def wilson(k: int, n: int, z: float = 1.959963985) -> tuple[float, float]:
@@ -134,6 +140,18 @@ def main() -> None:
     sample_rows = list(csv.DictReader(open(SAMPLE)))
     key_rows = list(csv.DictReader(open(KEY)))
     human, human_types, unparsed = load_labels(SAMPLE)
+
+    recheck, recheck_types, recheck_bad = load_labels(RECHECK)
+    if recheck:
+        flipped = sum(1 for i, v in recheck.items() if human.get(i) is not None and human[i] != v)
+        human.update(recheck)
+        human_types.update(recheck_types)
+        unparsed += recheck_bad
+        print(f"Applied {len(recheck)} re-adjudicated labels from {RECHECK.name} "
+              f"({flipped} changed the original verdict).\n")
+    elif RECHECK.exists():
+        print(f"{RECHECK.name} exists but is unlabelled — "
+              f"scoring the original labels only.\n")
 
     if not human:
         raise SystemExit(f"No labels in {SAMPLE}. Fill the my_label column first.")
