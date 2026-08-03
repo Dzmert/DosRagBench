@@ -38,6 +38,20 @@ C1 (Embedding Clustering): AVI = 1.00 -- Alignment-independent
 ✅ Smoke test PASSED
 ```
 
+### Live demo
+
+One question, both models, before and after the attack — the whole result in
+about 30 seconds of compute:
+
+```bash
+python scripts/demo.py                 # llama-3.1-8b, attack D2
+python scripts/demo.py --no-llm        # retrieval only, no GPU required
+```
+
+Models and the FAISS index load once and stay resident, so start it before you
+need it. See [`docs/demo_runbook.md`](docs/demo_runbook.md) for the presentation
+procedure and fallbacks.
+
 ### 3. Prepare data
 
 A small local build, for checking the pipeline runs end to end:
