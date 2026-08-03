@@ -1,12 +1,14 @@
 # DoSRAGBench Prototype
 
-**A proof-of-concept benchmark for denial-of-service attacks on Retrieval-Augmented Generation systems across the safety alignment spectrum.**
+**A benchmark for denial-of-service attacks on Retrieval-Augmented Generation systems across the instruction-tuning spectrum.**
 
-This prototype validates the thesis hypothesis that safety-aligned LLMs are paradoxically *more* vulnerable to denial-of-service than their base counterparts. It implements two attack categories (A1: Semantic Jamming, C1: Algorithmic Complexity) against matched base/instruct model pairs and produces real Alignment Vulnerability Index (AVI) numbers.
+Instruction-tuned LLMs are measurably *more* vulnerable to being silenced by adversarial documents than their base counterparts — 39 genuine paradoxes across 62 runs, under FDR-corrected Fisher plus McNemar. The mechanism is **context-faithfulness training**, not safety guardrails: models taught to answer only from the retrieved passages can be denied by making the evidence merely *look* inadequate.
+
+Genuine safety refusals are 0.02% of aligned responses (22 of 100,000 on NQ). Epistemic refusals — "the context does not support an answer" — are 30%. See [`docs/reframing.md`](docs/reframing.md) for the evidence behind that claim and what it replaced.
 
 ## What's Implemented
 
-- **Category A1: Guardrail Triggering** — injects safety-trigger content into benign documents. Expected AVI >> 1 (alignment paradox).
+- **Category A1: Context-Adequacy Attack** — injects content that makes the retrieved evidence read as unreliable or contested. (Named "Guardrail Triggering" until 2026-08-03; it turned out not to work through guardrails — the attack adds 5 safety refusals and 544 epistemic ones per 10,050 responses.)
 - **Category C1: Embedding Space Clustering** — adversarial documents clustered near the query in HNSW embedding space to degrade retrieval latency. Expected AVI ≈ 1 (alignment-independent).
 - **Six-metric framework** — ASR, GDS, LIR, TOR, CDR, plus AVI for aligned-vs-base comparison.
 - **Refusal classifier** — pattern-based, tested with 18 unit tests covering safety refusal, epistemic refusal, hedged non-answers, generation failures.

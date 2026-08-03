@@ -9,14 +9,21 @@ you say. Every number traces to `results/avi_significance.md` and
 
 ## Slide 1 — Title
 
-**TITLE:** Does Safety Alignment Create a Denial-of-Service Vulnerability in RAG?
+**TITLE:** Trained to Defer: How Context-Faithfulness Creates a Denial-of-Service
+Vulnerability in RAG
 
-- DoSRAGBench: a benchmark for attack-induced denial across the alignment spectrum
+- DoSRAGBench: a benchmark for attack-induced denial across the instruction-tuning spectrum
 - [Your name] · Supervisor: Dr Bao · [date]
 
-**NOTES:** One sentence: "I built a benchmark to test whether safety-tuned LLMs
-are *more* vulnerable to being silenced by adversarial documents than their base
-counterparts — and the answer is a qualified yes, for a specific class of attack."
+**NOTES:** One sentence: "I built a benchmark to test whether instruction-tuned
+LLMs are *more* vulnerable to being silenced by adversarial documents than their
+base counterparts — the answer is yes, and the mechanism is not the one I
+expected."
+
+If asked why the title changed: the original said *safety* alignment. The data
+says otherwise — genuine safety refusals are 0.02% of aligned responses. What the
+attacks exploit is the model's trained deference to its retrieved context. See
+`docs/reframing.md`.
 
 ---
 
@@ -24,8 +31,12 @@ counterparts — and the answer is a qualified yes, for a specific class of atta
 
 **TITLE:** Hypothesis, and what I actually measured
 
-- **Original hypothesis:** safety alignment makes models *more* prone to
+- **Original hypothesis:** *safety* alignment makes models more prone to
   denial-of-service (they refuse / break where base models answer)
+- **Revised, and this is the contribution:** the vulnerability is real, but the
+  mechanism is **context-faithfulness training**, not safety guardrails. Aligned
+  models are taught to answer only from retrieved passages; the attack makes the
+  evidence *look* inadequate. Safety refusals: 0.02% of aligned responses.
 - **Metric — AVI** (Alignment Vulnerability Index) = ASR(aligned) / ASR(base)
 - **ASR = attack-attributable denial:** of queries the model answers *with no
   attack*, the fraction the attack pushes into full denial

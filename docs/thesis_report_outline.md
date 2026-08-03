@@ -22,17 +22,23 @@ doesn't, cut it.
 1. RAG systems inherit an availability risk that the security literature has not
    measured, because prior work studies *misdirection* (make the model say the
    wrong thing) rather than *denial* (make the model unable to say anything).
-2. Safety alignment plausibly makes this worse, because refusal is a trained
-   behaviour that an attacker can trigger with adversarial context.
+2. Instruction tuning plausibly makes this worse, because deferring to the
+   retrieved context is a trained behaviour an attacker can invoke by making that
+   context look inadequate.
 3. To test that, you need a matched base-vs-aligned design, a graded denial
-   metric, and — critically — a filter that separates attack-induced denial from
-   the aligned model's baseline refusal habit.
-4. Across 13 attacks × 4 model pairs, 27 of 50 runs *look* like the paradox, but
-   only 12 survive that filter. The survivors are almost entirely
-   epistemic/reasoning attacks; retrieval-space attacks are alignment-neutral.
-5. So the honest claim is narrower and more interesting than the original
-   hypothesis: alignment creates a *specific* vulnerability to epistemic
-   pressure, and the method for telling real paradoxes from floor artifacts is
+   metric, a *validated* refusal classifier, and — critically — a filter that
+   separates attack-induced denial from the aligned model's baseline refusal
+   habit.
+4. Across 13 attacks × 4 model pairs × 2 datasets, 51 of 62 runs point in the
+   paradox direction and 39 survive that filter.
+5. The mechanism is **context-faithfulness, not safety**. Genuine safety refusals
+   are 0.02% of aligned responses; epistemic refusals are 30% (NQ) to 80%
+   (HotpotQA). Three independent lines converge — composition, a monotonic
+   dose-response in retrieval quality, and a reasoning-distilled pair that
+   reverses direction. See `docs/reframing.md`.
+6. So the claim is sharper than the original hypothesis: alignment creates a
+   *specific* vulnerability to apparent evidential inadequacy, and the method for
+   telling real paradoxes from floor artifacts is
    itself a contribution.
 
 **Framing decision to settle before you write Chapter 1:** the slides
@@ -74,9 +80,11 @@ you claim.
   falsifiable claim, not a slogan.
 - **1.3 Research questions.** Three, numbered, referenced again in the
   conclusion:
-  - RQ1: Does safety alignment increase susceptibility to attack-induced denial?
-  - RQ2: Which attack mechanisms drive the effect, and which are
-    alignment-neutral?
+  - RQ1: Does instruction tuning increase susceptibility to attack-induced
+    denial?
+  - RQ2: *Which trained behaviour* drives it — safety guardrails or
+    context-faithfulness? This is the question the data answers decisively and
+    against the original hypothesis; it should carry the discussion chapter.
   - RQ3: How much of the apparent effect is an artifact of the aligned model's
     baseline refusal floor?
   RQ3 is your differentiator — it is the question that turns 27 into 12. Give it
@@ -98,8 +106,13 @@ weaker (therefore stronger as a result) than prior work's.
 - **2.1 Retrieval-augmented generation.** Dense retrieval, embedding models,
   HNSW/ANN indexes. Keep it tight — enough to justify why HNSW is the realistic
   target (Pinecone, Weaviate, Milvus, Qdrant all use it).
-- **2.2 Safety alignment.** RLHF/DPO, instruction tuning, refusal behaviour.
-  Frame refusal as a *learned response to context*, which sets up the hypothesis.
+- **2.2 Alignment and groundedness.** RLHF/DPO and instruction tuning, then split
+  refusal into its two trained sources: *safety* refusal (policy-driven) and
+  *context-faithfulness* / groundedness training ("answer only from the retrieved
+  passages", the standard defence against RAG hallucination). Cite the
+  groundedness and faithfulness literature here, not just the safety literature —
+  it is the mechanism the results identify. Framing refusal as a learned response
+  to context sets up RQ2, which asks which of the two an attacker can invoke.
 - **2.3 Attacks on RAG.** Corpus poisoning, prompt injection, jailbreaks. This is
   where `docs/positioning.md` goes almost verbatim — the PoisonedRAG /
   CorruptRAG / Zhong et al. comparison table, and the three differentiators
