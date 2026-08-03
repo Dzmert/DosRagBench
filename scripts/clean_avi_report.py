@@ -7,7 +7,7 @@ clean-run denial floor consumed almost every query leaves ``n_ans`` in the tens,
 so its ASR is dominated by sampling noise rather than the attack.
 
 This script:
-  - loads every ``results/*/metrics.json`` that has both a base and aligned side,
+  - loads every ``results*/*/metrics_v2.json`` that has both a base and aligned side,
   - drops any run where either side has fewer than ``--min-answerable`` answerable
     queries (default 100),
   - labels each row with its model-pair family,
@@ -70,14 +70,24 @@ def _ratio(num: float, denom: float, eps: float = 0.01) -> float:
     return round(num / max(denom, eps), 3)
 
 
-def load_entries(min_answerable: int) -> tuple[list[dict], list[dict]]:
-    """Return (kept, dropped) entries. Dropped rows failed the n_ans threshold."""
+def load_entries(
+    min_answerable: int,
+    roots: list[Path] | None = None,
+    metrics_name: str = "metrics_v2.json",
+) -> tuple[list[dict], list[dict]]:
+    """Return (kept, dropped) entries. Dropped rows failed the n_ans threshold.
+
+    Reads metrics_v2.json — the figures from the validated classifier. metrics.json
+    holds the superseded originals, kept so previously-reported numbers stay
+    traceable; pass metrics_name="metrics.json" to reproduce them deliberately.
+    """
     kept: list[dict] = []
     dropped: list[dict] = []
-    for run_dir in sorted(RESULTS_DIR.iterdir()):
-        if not run_dir.is_dir():
-            continue
-        metrics_path = run_dir / "metrics.json"
+    roots = roots or [RESULTS_DIR, REPO_ROOT / "results_hotpotqa"]
+    run_dirs = [d for root in roots if Path(root).is_dir()
+                for d in sorted(p for p in Path(root).iterdir() if p.is_dir())]
+    for run_dir in run_dirs:
+        metrics_path = run_dir / metrics_name
         if not metrics_path.exists():
             continue
         data = json.loads(metrics_path.read_text())
@@ -89,6 +99,9 @@ def load_entries(min_answerable: int) -> tuple[list[dict], list[dict]]:
         aligned_nans = aligned.get("num_answerable", aligned["num_queries"])
         entry = {
             "run_name": run_dir.name,
+            # No dataset component in run dir names (HANDOFF weakness 4), so the
+            # same name occurs under both roots. Tag it or the rows collide.
+            "dataset": "HotpotQA" if run_dir.parent.name.endswith("hotpotqa") else "NQ",
             "family": fam,
             "attack_category": attack,
             "attack_name": ATTACK_NAMES.get(attack, attack),
@@ -168,12 +181,12 @@ def write_report(kept: list[dict], dropped: list[dict], min_answerable: int, out
         "near-zero base ASR means *the attack only works on the aligned model*, not that "
         "the ratio itself is precise.",
         "",
-        "| Attack | Model pair | Base ASR | Aligned ASR | AVI (ASR) | AVI (GDS) | AVI (CDR) | n_ans (min) | Interpretation |",
-        "|--------|-----------|----------|-------------|-----------|-----------|-----------|-------------|----------------|",
+        "| Data | Attack | Model pair | Base ASR | Aligned ASR | AVI (ASR) | AVI (GDS) | AVI (CDR) | n_ans (min) | Interpretation |",
+        "|------|--------|-----------|----------|-------------|-----------|-----------|-----------|-------------|----------------|",
     ]
     for e in kept:
         lines.append(
-            f"| {e['attack_category']} — {e['attack_name']} "
+            f"| {e['dataset']} | {e['attack_category']} — {e['attack_name']} "
             f"| {e['family']} "
             f"| {e['base_asr']*100:.1f}% "
             f"| {e['aligned_asr']*100:.1f}% "
@@ -221,17 +234,17 @@ def write_report(kept: list[dict], dropped: list[dict], min_answerable: int, out
         "`clean-floor` = fraction fully denied with NO attack. `n_ans` = answerable "
         "queries = denominator of the conditional ASR.",
         "",
-        "| Attack | Model pair | Side | ASR (attrib.) | ASR (absolute) | clean-floor | n_ans |",
-        "|--------|-----------|------|---------------|----------------|-------------|-------|",
+        "| Data | Attack | Model pair | Side | ASR (attrib.) | ASR (absolute) | clean-floor | n_ans |",
+        "|------|--------|-----------|------|---------------|----------------|-------------|-------|",
     ]
     for e in kept:
         lines.append(
-            f"| {e['attack_category']} | {e['family']} | base "
+            f"| {e['dataset']} | {e['attack_category']} | {e['family']} | base "
             f"| {e['base_asr']*100:.1f}% | {e['base_asr_absolute']*100:.1f}% "
             f"| {e['base_clean_floor']*100:.1f}% | {e['base_num_answerable']} |"
         )
         lines.append(
-            f"| {e['attack_category']} | {e['family']} | aligned "
+            f"| {e['dataset']} | {e['attack_category']} | {e['family']} | aligned "
             f"| {e['aligned_asr']*100:.1f}% | {e['aligned_asr_absolute']*100:.1f}% "
             f"| {e['aligned_clean_floor']*100:.1f}% | {e['aligned_num_answerable']} |"
         )
@@ -244,12 +257,12 @@ def write_report(kept: list[dict], dropped: list[dict], min_answerable: int, out
         "Note: across the kept runs the attacks barely move end-to-end or retrieval "
         "latency — the denial they cause is semantic, not a compute/latency DoS.",
         "",
-        "| Attack | Model pair | Base LIR | Aligned LIR | Base TOR | Aligned TOR | Retr. LIR (base) | Retr. LIR (aligned) |",
-        "|--------|-----------|----------|-------------|----------|-------------|------------------|---------------------|",
+        "| Data | Attack | Model pair | Base LIR | Aligned LIR | Base TOR | Aligned TOR | Retr. LIR (base) | Retr. LIR (aligned) |",
+        "|------|--------|-----------|----------|-------------|----------|-------------|------------------|---------------------|",
     ]
     for e in kept:
         lines.append(
-            f"| {e['attack_category']} | {e['family']} "
+            f"| {e['dataset']} | {e['attack_category']} | {e['family']} "
             f"| {e['base_lir']:.2f}× | {e['aligned_lir']:.2f}× "
             f"| {e['base_tor']:.2f}× | {e['aligned_tor']:.2f}× "
             f"| {e['base_retrieval_lir']:.2f}× | {e['aligned_retrieval_lir']:.2f}× |"
@@ -282,9 +295,13 @@ def main() -> None:
     parser.add_argument("--min-answerable", type=int, default=100,
                         help="Minimum answerable queries on both sides to keep a run")
     parser.add_argument("--out", type=Path, default=RESULTS_DIR / "avi_report.md")
+    parser.add_argument("--results-dir", action="append", type=Path,
+                        help="repeatable; defaults to results/ and results_hotpotqa/")
+    parser.add_argument("--metrics-name", default="metrics_v2.json",
+                        help="metrics.json holds the superseded pre-validation figures")
     args = parser.parse_args()
 
-    kept, dropped = load_entries(args.min_answerable)
+    kept, dropped = load_entries(args.min_answerable, args.results_dir, args.metrics_name)
     if not kept:
         raise SystemExit("No runs survived the threshold — lower --min-answerable.")
 
