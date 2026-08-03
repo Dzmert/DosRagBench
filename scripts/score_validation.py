@@ -9,9 +9,19 @@ Reports agreement with a Wilson interval, false positive and false negative rate
 Cohen's kappa, a per-class breakdown showing where the errors concentrate, and —
 if validation/sample_second.csv is filled in — inter-annotator agreement.
 
+Two further figures are quoted in docs/findings_summary.md and produced here so
+that they are reproducible rather than computed by hand:
+
+* the dev/holdout split (validation/split.json), since the holdout kappa is the
+  figure to quote for instrument quality;
+* the population-reweighted error rate. The sample is deliberately boundary-
+  weighted, so its raw agreement is pessimistic; reweighting the per-class error
+  rates by how common each class actually is gives the corpus-level error.
+
 Usage:
     python3 scripts/score_validation.py
     python3 scripts/score_validation.py --show 25
+    python3 scripts/score_validation.py --no-reweight   # skips a ~20 s corpus scan
 """
 
 from __future__ import annotations
@@ -51,6 +61,37 @@ RECHECK = VAL_DIR / "recheck.csv"
 # Final adjudication of every row where the classifier and the labeller, or the
 # labeller's two passes, disagreed. Highest precedence: sample < recheck < this.
 ADJUDICATE = VAL_DIR / "adjudicate.csv"
+# id -> "dev" | "holdout". The dev rows were used to diagnose classifier gaps, so
+# only the holdout figure is an out-of-sample estimate of instrument quality.
+SPLIT = VAL_DIR / "split.json"
+
+# Roots scanned for the population class frequencies used to reweight the error
+# rate. Same roots the rest of the pipeline uses.
+CORPUS_ROOTS = ("results", "results_hotpotqa")
+
+
+def population_class_counts() -> tuple[dict[str, int], int, int]:
+    """Count every stored answer by sampling class. Returns (counts, total, runs).
+
+    Reuses `bucket_of` from make_validation_sample so the class rule cannot drift
+    between the sheet that was sampled and the weights applied to it.
+    """
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    from make_validation_sample import bucket_of  # noqa: E402
+
+    counts: dict[str, int] = defaultdict(int)
+    total = runs = 0
+    for root in CORPUS_ROOTS:
+        for path in sorted((REPO_ROOT / root).glob("*/raw_results.json")):
+            raw = json.loads(path.read_text())
+            runs += 1
+            for side in ("base", "aligned"):
+                for phase in ("baseline", "attacked"):
+                    for rec in (raw.get(side) or {}).get(phase, []) or []:
+                        cls, _, _ = bucket_of(rec.get("answer") or "")
+                        counts[cls] += 1
+                        total += 1
+    return counts, total, runs
 
 
 def wilson(k: int, n: int, z: float = 1.959963985) -> tuple[float, float]:
@@ -142,6 +183,8 @@ def classifier_verdicts(key_rows: list[dict]) -> dict[int, tuple[bool, str]]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--show", type=int, default=12, help="disagreements to print")
+    ap.add_argument("--no-reweight", action="store_true",
+                    help="skip the population reweighting (saves a ~20 s corpus scan)")
     args = ap.parse_args()
 
     if not SAMPLE.exists():
@@ -193,7 +236,7 @@ def main() -> None:
     tp = fp = tn = fn = 0
     disagreements = []
     per_class: dict[str, list[int]] = defaultdict(lambda: [0, 0])  # [errors, total]
-    clf_vec, hum_vec = [], []
+    clf_vec, hum_vec, scored_ids = [], [], []
 
     for i, h in sorted(human.items()):
         if i not in verdicts:
@@ -201,6 +244,7 @@ def main() -> None:
         c, ctype = verdicts[i]
         clf_vec.append(c)
         hum_vec.append(h)
+        scored_ids.append(i)
         cls = key_by_id[i]["sampled_class"]
         per_class[cls][1] += 1
         if c and h:
@@ -240,6 +284,46 @@ def main() -> None:
     for cls in sorted(per_class, key=lambda c: -per_class[c][0]):
         err, tot = per_class[cls]
         print(f"{cls:26}{err:>8}{tot:>6}{err / tot * 100:>7.1f}%")
+
+    # Out-of-sample estimate. The dev rows informed the classifier's patterns, so
+    # only the holdout number is an unbiased read on instrument quality.
+    if SPLIT.exists():
+        split = json.loads(SPLIT.read_text())
+        print(f"\n{'split':10}{'n':>5}{'agreement':>12}{'kappa':>8}")
+        for part in ("dev", "holdout"):
+            idx = [j for j, i in enumerate(scored_ids) if split.get(str(i)) == part]
+            if not idx:
+                continue
+            h = [hum_vec[j] for j in idx]
+            c = [clf_vec[j] for j in idx]
+            same = sum(1 for x, y in zip(h, c) if x == y)
+            print(f"{part:10}{len(idx):>5}{same / len(idx) * 100:>11.1f}%"
+                  f"{kappa_of(c, h):>8.3f}")
+        print("           quote the holdout figure for instrument quality")
+    elif not args.no_reweight:
+        print(f"\n{SPLIT.name} not found — no dev/holdout breakdown.")
+
+    # The sample oversamples the decision boundary on purpose, so its raw error
+    # rate is not the corpus error rate. Reweight by how common each class is.
+    if not args.no_reweight:
+        pop, total_recs, n_runs = population_class_counts()
+        print(f"\nPopulation reweighting over {total_recs:,} records in {n_runs} runs")
+        print(f"{'sampled class':26}{'pop share':>11}{'sample n':>10}"
+              f"{'err rate':>10}{'contrib':>10}")
+        weighted = 0.0
+        for cls in sorted(pop, key=lambda c: -pop[c]):
+            share = pop[cls] / total_recs
+            err, tot = per_class.get(cls, [0, 0])
+            rate = err / tot if tot else 0.0
+            weighted += share * rate
+            print(f"{cls:26}{share * 100:>10.2f}%{tot:>10}"
+                  f"{rate * 100:>9.1f}%{share * rate * 100:>9.3f}pp")
+        unsampled = [c for c in pop if c not in per_class]
+        print(f"\nReweighted error {weighted * 100:.2f}%   "
+              f"agreement {100 - weighted * 100:.2f}%")
+        if unsampled:
+            print(f"  note: {', '.join(sorted(unsampled))} carry no sampled rows and "
+                  f"are counted as error-free")
 
     # If the labeller gave refusal types rather than the binary, score that too —
     # it says where the *mechanism* breakdown is wrong, which the binary cannot.
