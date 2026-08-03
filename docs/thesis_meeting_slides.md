@@ -156,6 +156,8 @@ measured ratio rather than a floored one (Slide 7).
 
 - Base models stay flat near zero across the same bins (0.007 → 0.025)
 
+*Figure: `results/retrieval_gradient.png` — put this one on the slide, not the table*
+
 **NOTES:** This is the mechanistic story, and it is *stronger* than the one I had.
 Retrieval sensitivity is an aligned-model property — the gap grows monotonically as
 retrieval degrades, with no exceptions in any group, while base models don't move.

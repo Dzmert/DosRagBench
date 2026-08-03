@@ -165,6 +165,11 @@ def main() -> None:
                 pooled_rd = (pooled["aligned"]["broken"] / pooled["aligned"]["answerable"]
                              - pooled["base"]["broken"] / pooled["base"]["answerable"])
             aln_clean = rate(pooled["aligned"]["clean_denied"], pooled["aligned"]["n"])
+            # The base side's clean rate is the control the mechanism claim needs:
+            # if retrieval sensitivity were a property of RAG rather than of
+            # alignment, both sides would rise across the bins. Only the aligned
+            # side does. Emitted so the figure can show it without a second script.
+            base_clean = rate(pooled["base"]["clean_denied"], pooled["base"]["n"])
             unc = {s: rate(pooled[s]["attacked_denied"], pooled[s]["n"]) for s in SIDES}
             unc_gap = (unc["aligned"] - unc["base"]) if all(v is not None for v in unc.values()) else None
             fmt = lambda v: f"{v:+.3f}" if v is not None else "  n/a"
@@ -178,6 +183,7 @@ def main() -> None:
                 "macro_sd": round(stdev(per_run), 4) if len(per_run) > 1 else None,
                 "pooled_risk_diff": None if pooled_rd is None else round(pooled_rd, 4),
                 "aligned_clean_denial": None if aln_clean is None else round(aln_clean, 4),
+                "base_clean_denial": None if base_clean is None else round(base_clean, 4),
                 "pooled_answerable_aligned": pooled["aligned"]["answerable"],
                 "uncond_attacked_denial_base": None if unc["base"] is None else round(unc["base"], 4),
                 "uncond_attacked_denial_aligned": None if unc["aligned"] is None else round(unc["aligned"], 4),

@@ -422,11 +422,14 @@ writing the chapter they sit in.
 - Pipeline architecture diagram (§4.1) — does not exist yet.
 - Attack taxonomy tree, 4 families × 13 attacks (§4.2) — does not exist yet.
 - Annotated version of `avi_summary.png` marking the 39 genuine cells (§6.1).
-- **Retrieval-quality gradient (§7.3) — does not exist yet, and it is now the
-  most important figure in the thesis.** Aligned clean-denial rate and the
-  unconditional gap against clean gold rank, base and aligned as separate series,
-  from `results/retrieval_binning.csv`. It carries the mechanism argument on its
-  own; everything else is a table.
+- ~~Retrieval-quality gradient (§7.3)~~ — **done**:
+  `results/retrieval_gradient.png`, from `scripts/plot_retrieval_gradient.py`.
+  Three panels (NQ, HotpotQA, R1 pair as control); colour is the model side, line
+  style is attack/no-attack. **It is the most important figure in the thesis** —
+  it carries the mechanism argument on its own, because the gap is visible in the
+  dashed *no-attack* lines. Lead §7.3 with it. The R1 panel is the control: both
+  sides are instruction-tuned and both climb, which is what the mechanism predicts
+  and what "base models are simply different" does not.
 - ~~Verdict breakdown~~ — **done**: `results/verdict_breakdown.png`, from
   `scripts/plot_verdicts.py`.
 - ~~Forest plot of the genuine runs~~ — **done**:

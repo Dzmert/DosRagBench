@@ -329,6 +329,8 @@ the attack, then measures the alignment gap within each bin. This tests the
 epistemic mechanism without needing a third corpus. 62 runs, ~2 s.
 Source: `results/retrieval_binning.csv`.
 
+Figure: `results/retrieval_gradient.png` (`scripts/plot_retrieval_gradient.py`).
+
 **NQ, 37 runs (excl. `llama-r1`):**
 
 | clean gold rank | attributable risk_diff | aligned clean denial | uncond. gap under attack |
