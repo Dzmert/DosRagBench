@@ -38,6 +38,10 @@ VAL_DIR = REPO_ROOT / "validation"
 SAMPLE = VAL_DIR / "sample.csv"
 KEY = VAL_DIR / "key.csv"
 SECOND = VAL_DIR / "sample_second.csv"
+# An independent annotator's pass over the same 50 rows. Kept separate from
+# SECOND, which is the primary labeller's own second pass -- that measures
+# test-retest, not inter-annotator agreement, and the two must not be conflated.
+ANNOTATOR_B = VAL_DIR / "annotator_b.csv"
 # Re-adjudicated rows. The first labelling pass applied a "was the model behaving
 # correctly" reading, under which reporting missing evidence is an answer. The
 # agreed construct is availability — the user asked and got nothing — so the rows
@@ -255,13 +259,28 @@ def main() -> None:
             if cnt >= 3 or h != c:
                 print(f"  {h:24}{c:24}{cnt:>5}{'' if h == c else '   <-- differs'}")
 
+    other, _, _ = load_labels(ANNOTATOR_B)
+    if other:
+        shared = sorted(set(other) & set(human))
+        if shared:
+            k = kappa_of([human[i] for i in shared], [other[i] for i in shared])
+            same = sum(1 for i in shared if human[i] == other[i])
+            print(f"\nINTER-ANNOTATOR (n={len(shared)}): "
+                  f"agreement {same / len(shared) * 100:.1f}%, kappa {k:.3f}")
+            clf_k = kappa_of([verdicts[i][0] for i in shared if i in verdicts],
+                             [other[i] for i in shared if i in verdicts])
+            print(f"  classifier vs annotator B on the same rows: kappa {clf_k:.3f}")
+    elif ANNOTATOR_B.exists():
+        print(f"\n{ANNOTATOR_B.name} exists but is unlabelled — "
+              f"no independent inter-annotator figure yet.")
+
     second, _, _ = load_labels(SECOND)
     if second:
         shared = sorted(set(second) & set(human))
         if shared:
             k = kappa_of([human[i] for i in shared], [second[i] for i in shared])
             same = sum(1 for i in shared if human[i] == second[i])
-            print(f"\nInter-annotator (n={len(shared)}): "
+            print(f"\nTest-retest, same labeller (n={len(shared)}): "
                   f"agreement {same / len(shared) * 100:.1f}%, kappa {k:.3f}")
     elif SECOND.exists():
         print(f"\n{SECOND.name} exists but is unlabelled — "
