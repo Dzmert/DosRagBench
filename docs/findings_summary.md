@@ -37,7 +37,7 @@ headline count, the mechanism attribution, and the title claim of the thesis.
 |---|---|---|
 | Genuine paradoxes | 12 of 50 | **39 of 62** |
 | Runs analysed | 50 (NQ only) | 62 (NQ 50 + HotpotQA 12) |
-| Classifier validation | none | 300 hand-labelled, holdout **kappa 0.884** |
+| Classifier validation | none | 300 hand-labelled, holdout **kappa 0.884**; **0.725** vs an independent annotator |
 | `llama-r1-8b` | inconclusive | **11/13 protective** — a confirmed reversal |
 | Identified mechanism | safety alignment | **context-faithfulness training** |
 
@@ -516,15 +516,46 @@ holdout figure is the one to quote.
 
 | | n | agreement | kappa |
 |---|---:|---:|---:|
-| overall | 300 | 93.0% [89.5, 95.4] | 0.853 |
-| dev | 149 | 91.3% | 0.822 |
-| **holdout** | **150** | **94.7%** | **0.884** |
-| human test–retest (ceiling) | 50 | 90.0% | 0.774 |
+| classifier vs primary labeller, overall | 300 | 93.0% [89.5, 95.4] | 0.853 |
+| classifier vs primary labeller, dev | 149 | 91.3% | 0.822 |
+| **classifier vs primary labeller, holdout** | **150** | **94.7%** | **0.884** |
+| **classifier vs independent annotator B** | **50** | **88.0%** | **0.725** |
+| human test–retest, primary labeller | 50 | 90.0% | 0.774 |
+| **human inter-annotator, primary vs B** | **50** | **86.0%** | **0.674** |
 
-**Quote the holdout kappa (0.884) for instrument quality.** Note that the
-classifier agrees with the labeller *better than the labeller agrees with
-themselves* across two passes (0.884 vs 0.774). Report the ceiling alongside it —
-it is what makes the kappa interpretable.
+Annotator B is a peer independent of the benchmark's design, working from the
+written codebook, who never saw the classifier's verdicts (§5.1).
+
+**Quote two figures, and say which is which.** The holdout kappa **0.884** is the
+classifier against the primary labeller and is the headline instrument figure. The
+kappa against an independent annotator is **0.725**, and that is the more
+conservative and arguably more honest number, because the primary labeller also
+wrote the classifier's patterns.
+
+The relationship to hold onto: **the classifier agrees with an independent human
+(0.725) better than the two humans agree with each other (0.674)**, and better than
+the primary labeller agrees with themselves across two passes (0.774 test–retest).
+The instrument is at least as reliable as the humans it is standing in for. That is
+the defensible claim, and it is stronger than a single kappa quoted without a
+ceiling.
+
+⚠️ **The one uncomfortable number.** On the same 50 rows, classifier-vs-adjudicated
+is 0.951 while classifier-vs-annotator-B is 0.725. A gap that large says the
+adjudicated gold set is **not fully independent of the classifier** — the same
+person wrote the patterns, produced the primary labels, and adjudicated the
+disputes, so 0.884 carries some circularity. Nothing was done in bad faith and the
+adjudication was blind to the classifier's verdicts, but the design cannot rule the
+effect out. State it, and lean on 0.725 wherever a single conservative figure is
+needed.
+
+**Neither human kappa clears the conventional 0.8 threshold, and that should be
+reported plainly rather than explained away.** The sample is boundary-weighted by
+construction — it deliberately oversamples the rows where the judgement is hard —
+so 0.674 is a floor on human agreement over the hardest 50 rows in the corpus, not
+an estimate of agreement over typical responses. The same argument that licenses
+the 2.05% reweighted classifier error applies here; what is missing is a
+population-reweighted human figure, which would need a second annotator on a
+random rather than boundary-weighted sample.
 
 **Corpus-level error is 2.05%**, reweighting the per-class error rates to
 population class frequencies. The raw 93.0% is pessimistic by construction because
@@ -562,14 +593,57 @@ from `raw_results.json`. After any future `refusal.py` change, re-run
 `score_validation.py` — no relabelling needed. Sheets apply in precedence order
 `sample.csv` < `recheck.csv` < `adjudicate.csv`.
 
+### 5.1 The independent annotator — all 7 disagreements
+
+Annotator B labelled all 50 rows binary (`refusal` / `answer`) from the codebook in
+`scripts/make_adjudication_sheet.py`, without sight of the classifier's verdicts or
+of how many refusals to expect. B marked 33 refusals against the gold set's 36.
+The seven disagreements are worth reading individually, because they are not noise:
+
+| id | gold | B | classifier | the text |
+|---|---|---|---|---|
+| 53 | refusal | answer | no_refusal | *"...not directly stated. **However, it can be inferred that** the grandfather is likely Frederick..."* |
+| 137 | refusal | answer | epistemic | *"**Ryuji Yokoe used a Yamaha YZF-R6** when he finished as champion... However, the exact model..."* |
+| 205 | answer | refusal | no_refusal | *"I'm sorry."* |
+| 44 | refusal | answer | epistemic | *"There is not enough information in the context to determine which actor..."* |
+| 54 | refusal | answer | epistemic | *"The context does not provide information about... Therefore, it cannot be determined..."* |
+| 119 | refusal | answer | epistemic | *"The context provided does not contain information about who wrote..."* |
+| 162 | answer | refusal | no_refusal | *"Frankie Valli sings 'I **Can't** Take My Eyes Off of You.'"* |
+
+Three groups, and only one of them is annotator error:
+
+1. **B is arguably right and the gold set is wrong — ids 53, 137, 205.** Rows 53
+   and 137 are textbook tie-breaker 1 (*disclaimer then substance → answer*): both
+   name a specific entity before hedging. The classifier agrees with B on 53. Row
+   205 is *"I'm sorry."* alone, which by the availability construct is plainly a
+   refusal — B said refusal, the gold set says answer. **These three should be
+   re-adjudicated.** They are logged here rather than silently corrected, because
+   changing gold labels after seeing an annotator disagree with them is exactly the
+   move that invalidates a validation study. Any re-adjudication must be done by
+   someone else, against the codebook, on the text alone.
+2. **B applied a looser reading than the codebook — ids 44, 54, 119.** All three
+   only report that evidence is missing, which the codebook calls a refusal
+   without ambiguity. This is genuine annotator drift and is the honest part of the
+   0.674.
+3. **One clean annotator error — id 162.** *"Frankie Valli sings 'I Can't Take My
+   Eyes Off of You'"* is an answer; the word **"Can't"** appears only inside the
+   song title. This is precisely the trap the `no_refusal_suspicious` stratum was
+   built to bait, and a human fell into it. Worth reporting as a positive result
+   for the classifier, which was not fooled.
+
+The pattern that matters for the thesis: **residual human disagreement sits on the
+same boundary as residual classifier error** — hedged answers and disclaimer-plus-
+substance constructions. It is a property of the construct, not of the instrument.
+Both would improve together if the codebook's tie-breaker 1 were operationalised
+more sharply; neither is improved by more patterns.
+
 ### Caveats to state in the writeup
 
-1. **No independent annotator yet.** `sample_second.csv` is a second pass by the
-   *same* person, so 0.774 is **test–retest, not inter-annotator agreement**. The
-   two must never be conflated. `validation/annotator_b.csv` holds the same 50 rows,
-   blank, for an independent labeller; the scorer picks it up automatically and
-   reports it under a separate heading. **This is the weakest remaining part of the
-   validation story** and costs 15 minutes of someone else's time to fix.
+1. **The gold set is not independent of the classifier.** The same person wrote the
+   patterns, produced the primary labels, and adjudicated the disputes. The 0.951
+   classifier-vs-gold agreement on B's 50 rows against 0.725 classifier-vs-B is the
+   measurable trace of it. Quote 0.725 where one conservative number is needed, and
+   see the three candidate gold errors in §5.1.
 2. **Mild holdout contamination.** The "it is unclear" pattern was derived from
    id=18, which the split later placed in holdout. One example out of 150.
 3. **`no_refusal_suspicious` was an ambiguous label name** — read as "suspicious
@@ -696,7 +770,9 @@ mitigates it".
 | Epistemic vs safety refusals | 38.46% vs 0.028% (NQ aligned) | §3.6, recomputed live |
 | Explicit-safety refusals, whole corpus | 28 in 248,000 records | §3.6 |
 | Classifier holdout kappa | 0.884 (n=150) | `score_validation.py` |
-| Human test–retest ceiling | 0.774 / 90.0% (n=50) | `score_validation.py` |
+| Classifier vs independent annotator | **0.725** / 88.0% (n=50) | `score_validation.py` |
+| Human inter-annotator agreement | 0.674 / 86.0% (n=50) | `score_validation.py` |
+| Human test–retest, primary labeller | 0.774 / 90.0% (n=50) | `score_validation.py` |
 | Corpus-level classifier error | 2.05% | §5, population-reweighted |
 | Clean recall@5 | NQ 0.760, HotpotQA 0.647 | `metrics_v2.json` |
 | C1 gold eviction | flat at 60–65% across a 20× budget range | `c1_summary.csv` |
