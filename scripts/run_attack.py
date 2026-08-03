@@ -158,11 +158,13 @@ def make_blocker_feedback(rag, retriever):
     return feedback
 
 
-def run_model_side(model_config, retriever, queries, attack, top_k, num_queries):
+def run_model_side(model_config, retriever, queries, attack, top_k, num_queries,
+                   prompt_style="auto"):
     """MERGE MODE: baseline + attacked for one model, no per-query rebuild."""
     logger.info(f"Loading model: {model_config.name}")
     loaded = load_model(model_config)
-    rag = RAGPipeline(retriever=retriever, model=loaded, top_k=top_k)
+    rag = RAGPipeline(retriever=retriever, model=loaded, top_k=top_k,
+                      prompt_style=prompt_style)
 
     # BLOCKER optimises against the live target, so its oracle can only be
     # bound once this side's model is loaded. Rebound per side: an adversarial
@@ -306,7 +308,25 @@ def main():
                         help="BLOCKER baseline: candidates scored per iteration (paper: 32).")
     parser.add_argument("--blocker-tokens", type=int, default=50,
                         help="BLOCKER baseline: length of the generation half d_j (paper: 50).")
+    parser.add_argument("--prompt-style", default="auto",
+                        choices=["auto", "chat", "chat-no-refusal", "base"],
+                        help="Force a RAG prompt regardless of the model's chat_template "
+                             "flag. 'auto' reproduces every run recorded before "
+                             "2026-08-03. Anything else is a prompt-confound ablation "
+                             "and MUST be written to a separate --results-root.")
+    parser.add_argument("--results-root", type=Path, default=None,
+                        help="Where to write the run directory (default: results/). "
+                             "Use results_promptablation/ for --prompt-style runs so the "
+                             "62-run headline grid stays untouched — the collectors "
+                             "scan results/ and results_hotpotqa/ only.")
     args = parser.parse_args()
+
+    if args.prompt_style != "auto" and args.results_root is None:
+        parser.error(
+            "--prompt-style is an ablation and would overwrite the canonical run "
+            f"directory results/{args.model_pair}_{args.category}. Pass an explicit "
+            "--results-root (e.g. results_promptablation)."
+        )
 
     if args.category == "BLOCKER" and args.c1_latency:
         parser.error(
@@ -350,8 +370,16 @@ def main():
     else:
         attack = build_attack(attack_config)
 
-    out_dir = RESULTS_DIR / f"{args.model_pair}_{args.category}"
+    # Ablation runs carry the arm in the directory name, so several prompt styles
+    # (and single-side arms) coexist under one root without overwriting each other.
+    run_name = f"{args.model_pair}_{args.category}"
+    if args.prompt_style != "auto":
+        run_name += f"_prompt-{args.prompt_style}"
+        if args.side != "both":
+            run_name += f"_{args.side}"
+    out_dir = (args.results_root or RESULTS_DIR) / run_name
     out_dir.mkdir(parents=True, exist_ok=True)
+    logger.info(f"Writing to {out_dir}/ (prompt_style={args.prompt_style})")
 
     if args.c1_latency:
         report = run_c1_latency(
@@ -379,7 +407,8 @@ def main():
     for side_name, model_cfg in sides:
         logger.info(f"══ {side_name.upper()}: {model_cfg.name} ══")
         t0 = time.perf_counter()
-        results = run_model_side(model_cfg, retriever, queries, attack, args.top_k, num_queries)
+        results = run_model_side(model_cfg, retriever, queries, attack, args.top_k,
+                                 num_queries, prompt_style=args.prompt_style)
         logger.info(f"{side_name} done in {time.perf_counter()-t0:.1f}s")
 
         all_results[side_name] = {
@@ -393,6 +422,19 @@ def main():
         metrics_reports[side_name] = report.to_dict()
         logger.info(f"  ASR={report.asr:.3f} GDS={report.gds:.3f} "
                     f"LIR={report.lir_mean:.2f} retrieval_LIR={report.retrieval_lir_mean:.2f}")
+
+    # Kept out of raw_results.json: the collectors iterate that file's top-level
+    # keys as model sides, so an extra key there would be read as a third side.
+    with open(out_dir / "run_config.json", "w") as f:
+        json.dump({
+            "model_pair": args.model_pair,
+            "category": args.category,
+            "side": args.side,
+            "prompt_style": args.prompt_style,
+            "num_queries": num_queries,
+            "top_k": args.top_k,
+            "embedder": args.embedder,
+        }, f, indent=2)
 
     with open(out_dir / "raw_results.json", "w") as f:
         json.dump(all_results, f, indent=2)
