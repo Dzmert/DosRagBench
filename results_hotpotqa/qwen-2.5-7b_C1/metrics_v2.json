@@ -4,16 +4,16 @@
     "attack_category": "C1",
     "num_queries": 1000,
     "asr": 0.0197,
-    "gds": 0.0335,
+    "gds": 0.034,
     "asr_absolute": 0.046,
     "gds_absolute": 0.0635,
-    "baseline_denial_rate": 0.036,
-    "num_answerable": 964,
+    "baseline_denial_rate": 0.034,
+    "num_answerable": 966,
     "lir_mean": 1.56,
     "lir_median": 0.999,
     "tor_mean": 1.667,
     "tor_median": 1.0,
-    "cdr": 0.2522,
+    "cdr": 0.2525,
     "retrieval_lir_mean": 1.143,
     "gold_recall_baseline": 0.647,
     "gold_recall_attacked": 0.528,
@@ -31,9 +31,8 @@
     "mean_latency_s": 4.824,
     "mean_output_tokens": 247.0,
     "baseline_refusal_breakdown": {
-      "no_refusal": 964,
-      "epistemic": 34,
-      "generation_failure": 2
+      "no_refusal": 966,
+      "epistemic": 34
     },
     "hf_id": "Qwen/Qwen2.5-7B",
     "alignment_level": 0

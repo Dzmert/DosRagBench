@@ -3,12 +3,12 @@
     "model_name": "Qwen 2.5 7B Base",
     "attack_category": "C2",
     "num_queries": 1000,
-    "asr": 0.0214,
+    "asr": 0.0213,
     "gds": 0.0505,
-    "asr_absolute": 0.029,
-    "gds_absolute": 0.061,
-    "baseline_denial_rate": 0.018,
-    "num_answerable": 982,
+    "asr_absolute": 0.027,
+    "gds_absolute": 0.059,
+    "baseline_denial_rate": 0.013,
+    "num_answerable": 987,
     "lir_mean": 1.498,
     "lir_median": 1.001,
     "tor_mean": 1.585,
@@ -20,21 +20,19 @@
     "gold_eviction_rate": 0.637,
     "mean_adversarial_in_topk": 4.398,
     "refusal_breakdown": {
-      "no_refusal": 971,
-      "epistemic": 25,
-      "generation_failure": 4
+      "no_refusal": 973,
+      "epistemic": 27
     },
     "severity_breakdown": {
-      "L0": 907,
+      "L0": 909,
       "L2": 64,
-      "L3": 29
+      "L3": 27
     },
     "mean_latency_s": 5.351,
     "mean_output_tokens": 252.3,
     "baseline_refusal_breakdown": {
-      "no_refusal": 982,
-      "epistemic": 13,
-      "generation_failure": 5
+      "no_refusal": 987,
+      "epistemic": 13
     },
     "hf_id": "Qwen/Qwen2.5-7B",
     "alignment_level": 0
@@ -43,36 +41,36 @@
     "model_name": "Qwen 2.5 7B Instruct",
     "attack_category": "C2",
     "num_queries": 1000,
-    "asr": 0.2116,
-    "gds": 0.1415,
-    "asr_absolute": 0.413,
-    "gds_absolute": 0.4155,
-    "baseline_denial_rate": 0.343,
-    "num_answerable": 657,
+    "asr": 0.211,
+    "gds": 0.1405,
+    "asr_absolute": 0.414,
+    "gds_absolute": 0.4165,
+    "baseline_denial_rate": 0.346,
+    "num_answerable": 654,
     "lir_mean": 1.094,
     "lir_median": 0.999,
     "tor_mean": 1.12,
     "tor_median": 1.0,
-    "cdr": 0.1204,
+    "cdr": 0.1199,
     "retrieval_lir_mean": 1.297,
     "gold_recall_baseline": 0.76,
     "gold_recall_attacked": 0.282,
     "gold_eviction_rate": 0.629,
     "mean_adversarial_in_topk": 4.389,
     "refusal_breakdown": {
-      "no_refusal": 587,
-      "epistemic": 413
+      "no_refusal": 586,
+      "epistemic": 414
     },
     "severity_breakdown": {
-      "L0": 582,
-      "L3": 413,
+      "L0": 581,
+      "L3": 414,
       "L2": 5
     },
     "mean_latency_s": 0.976,
     "mean_output_tokens": 44.7,
     "baseline_refusal_breakdown": {
-      "epistemic": 342,
-      "no_refusal": 657,
+      "epistemic": 345,
+      "no_refusal": 654,
       "unspecified_refusal": 1
     },
     "hf_id": "Qwen/Qwen2.5-7B-Instruct",

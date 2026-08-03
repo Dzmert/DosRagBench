@@ -3,35 +3,35 @@
     "model_name": "Mistral 7B Base",
     "attack_category": "C2",
     "num_queries": 1000,
-    "asr": 0.002,
-    "gds": 0.002,
-    "asr_absolute": 0.022,
-    "gds_absolute": 0.022,
-    "baseline_denial_rate": 0.024,
-    "num_answerable": 976,
+    "asr": 0.001,
+    "gds": 0.001,
+    "asr_absolute": 0.001,
+    "gds_absolute": 0.001,
+    "baseline_denial_rate": 0.001,
+    "num_answerable": 999,
     "lir_mean": 1.002,
     "lir_median": 1.002,
     "tor_mean": 1.0,
     "tor_median": 1.0,
-    "cdr": 0.0015,
+    "cdr": 0.001,
     "retrieval_lir_mean": 1.214,
     "gold_recall_baseline": 0.76,
     "gold_recall_attacked": 0.276,
     "gold_eviction_rate": 0.637,
     "mean_adversarial_in_topk": 4.398,
     "refusal_breakdown": {
-      "no_refusal": 978,
-      "generation_failure": 22
+      "no_refusal": 999,
+      "generation_failure": 1
     },
     "severity_breakdown": {
-      "L0": 978,
-      "L3": 22
+      "L0": 999,
+      "L3": 1
     },
     "mean_latency_s": 5.419,
     "mean_output_tokens": 256,
     "baseline_refusal_breakdown": {
-      "no_refusal": 976,
-      "generation_failure": 24
+      "no_refusal": 999,
+      "generation_failure": 1
     },
     "hf_id": "mistralai/Mistral-7B-v0.3",
     "alignment_level": 0
@@ -40,36 +40,36 @@
     "model_name": "Mistral 7B Instruct",
     "attack_category": "C2",
     "num_queries": 1000,
-    "asr": 0.1576,
-    "gds": 0.128,
-    "asr_absolute": 0.235,
-    "gds_absolute": 0.2425,
-    "baseline_denial_rate": 0.226,
-    "num_answerable": 774,
+    "asr": 0.2394,
+    "gds": 0.174,
+    "asr_absolute": 0.377,
+    "gds_absolute": 0.382,
+    "baseline_denial_rate": 0.294,
+    "num_answerable": 706,
     "lir_mean": 1.005,
     "lir_median": 0.968,
     "tor_mean": 1.023,
     "tor_median": 0.966,
-    "cdr": 0.0702,
+    "cdr": 0.0932,
     "retrieval_lir_mean": 1.299,
     "gold_recall_baseline": 0.76,
     "gold_recall_attacked": 0.282,
     "gold_eviction_rate": 0.629,
     "mean_adversarial_in_topk": 4.389,
     "refusal_breakdown": {
-      "no_refusal": 765,
-      "epistemic": 235
+      "no_refusal": 623,
+      "epistemic": 377
     },
     "severity_breakdown": {
-      "L0": 750,
-      "L3": 235,
-      "L2": 15
+      "L0": 613,
+      "L3": 377,
+      "L2": 10
     },
     "mean_latency_s": 0.914,
     "mean_output_tokens": 43.2,
     "baseline_refusal_breakdown": {
-      "no_refusal": 774,
-      "epistemic": 226
+      "no_refusal": 706,
+      "epistemic": 294
     },
     "hf_id": "mistralai/Mistral-7B-Instruct-v0.3",
     "alignment_level": 1

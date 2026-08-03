@@ -7,8 +7,8 @@
     "gds": 0.0,
     "asr_absolute": 0.0,
     "gds_absolute": 0.0,
-    "baseline_denial_rate": 0.02,
-    "num_answerable": 49,
+    "baseline_denial_rate": 0.0,
+    "num_answerable": 50,
     "lir_mean": 1.605,
     "lir_median": 1.308,
     "tor_mean": 1.616,
@@ -28,8 +28,7 @@
     "mean_latency_s": 15.988,
     "mean_output_tokens": 256,
     "baseline_refusal_breakdown": {
-      "no_refusal": 49,
-      "generation_failure": 1
+      "no_refusal": 50
     },
     "hf_id": "mistralai/Mistral-7B-v0.3",
     "alignment_level": 0

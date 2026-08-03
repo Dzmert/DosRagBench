@@ -4,16 +4,16 @@
     "attack_category": "A3",
     "num_queries": 1000,
     "asr": 0.0311,
-    "gds": 0.044,
+    "gds": 0.0445,
     "asr_absolute": 0.051,
     "gds_absolute": 0.07,
-    "baseline_denial_rate": 0.035,
-    "num_answerable": 965,
+    "baseline_denial_rate": 0.034,
+    "num_answerable": 966,
     "lir_mean": 1.491,
     "lir_median": 1.0,
     "tor_mean": 1.592,
     "tor_median": 1.0,
-    "cdr": 0.2349,
+    "cdr": 0.2351,
     "retrieval_lir_mean": 1.081,
     "gold_recall_baseline": 0.647,
     "gold_recall_attacked": 0.628,
@@ -32,9 +32,8 @@
     "mean_latency_s": 4.624,
     "mean_output_tokens": 234.5,
     "baseline_refusal_breakdown": {
-      "no_refusal": 965,
-      "epistemic": 33,
-      "generation_failure": 2
+      "no_refusal": 966,
+      "epistemic": 34
     },
     "hf_id": "Qwen/Qwen2.5-7B",
     "alignment_level": 0
@@ -73,9 +72,8 @@
     "mean_latency_s": 0.849,
     "mean_output_tokens": 43.1,
     "baseline_refusal_breakdown": {
-      "epistemic": 788,
+      "epistemic": 789,
       "no_refusal": 210,
-      "unspecified_refusal": 1,
       "explicit_safety": 1
     },
     "hf_id": "Qwen/Qwen2.5-7B-Instruct",

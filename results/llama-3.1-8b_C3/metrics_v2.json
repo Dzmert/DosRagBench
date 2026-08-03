@@ -3,36 +3,36 @@
     "model_name": "Llama 3.1 8B Base",
     "attack_category": "C3",
     "num_queries": 1000,
-    "asr": 0.0114,
-    "gds": 0.0135,
-    "asr_absolute": 0.038,
-    "gds_absolute": 0.041,
-    "baseline_denial_rate": 0.032,
-    "num_answerable": 968,
+    "asr": 0.008,
+    "gds": 0.0105,
+    "asr_absolute": 0.011,
+    "gds_absolute": 0.014,
+    "baseline_denial_rate": 0.004,
+    "num_answerable": 996,
     "lir_mean": 1.134,
     "lir_median": 1.001,
     "tor_mean": 1.318,
     "tor_median": 1.0,
-    "cdr": 0.0997,
+    "cdr": 0.0982,
     "retrieval_lir_mean": 1.033,
     "gold_recall_baseline": 0.76,
     "gold_recall_attacked": 0.646,
     "gold_eviction_rate": 0.15,
     "mean_adversarial_in_topk": 2.598,
     "refusal_breakdown": {
-      "no_refusal": 962,
-      "generation_failure": 38
+      "no_refusal": 989,
+      "generation_failure": 11
     },
     "severity_breakdown": {
-      "L0": 956,
-      "L3": 38,
+      "L0": 983,
+      "L3": 11,
       "L2": 6
     },
     "mean_latency_s": 5.868,
     "mean_output_tokens": 252.8,
     "baseline_refusal_breakdown": {
-      "no_refusal": 968,
-      "generation_failure": 32
+      "no_refusal": 996,
+      "generation_failure": 4
     },
     "hf_id": "meta-llama/Llama-3.1-8B",
     "alignment_level": 0
@@ -41,37 +41,36 @@
     "model_name": "Llama 3.1 8B Instruct",
     "attack_category": "C3",
     "num_queries": 1000,
-    "asr": 0.1745,
-    "gds": 0.116,
-    "asr_absolute": 0.433,
-    "gds_absolute": 0.4385,
-    "baseline_denial_rate": 0.364,
-    "num_answerable": 636,
+    "asr": 0.1685,
+    "gds": 0.1105,
+    "asr_absolute": 0.439,
+    "gds_absolute": 0.444,
+    "baseline_denial_rate": 0.371,
+    "num_answerable": 629,
     "lir_mean": 1.137,
     "lir_median": 1.004,
     "tor_mean": 1.182,
     "tor_median": 1.0,
-    "cdr": 0.13,
+    "cdr": 0.1273,
     "retrieval_lir_mean": 1.071,
     "gold_recall_baseline": 0.76,
     "gold_recall_attacked": 0.641,
     "gold_eviction_rate": 0.157,
     "mean_adversarial_in_topk": 2.579,
     "refusal_breakdown": {
-      "no_refusal": 567,
-      "epistemic": 433
+      "no_refusal": 561,
+      "epistemic": 439
     },
     "severity_breakdown": {
-      "L0": 556,
-      "L3": 433,
-      "L2": 11
+      "L0": 551,
+      "L3": 439,
+      "L2": 10
     },
     "mean_latency_s": 0.689,
     "mean_output_tokens": 28.2,
     "baseline_refusal_breakdown": {
-      "epistemic": 361,
-      "no_refusal": 636,
-      "generation_failure": 3
+      "epistemic": 371,
+      "no_refusal": 629
     },
     "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
     "alignment_level": 2

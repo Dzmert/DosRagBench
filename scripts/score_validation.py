@@ -74,10 +74,15 @@ def kappa_of(a: list[bool], b: list[bool]) -> float:
 # refusal type. Both are accepted: the type carries strictly more information and
 # collapses to the binary unambiguously, so there is no reason to make anyone
 # relabel 300 rows for having been more specific than asked.
-ANSWER_LABELS = {"answer", "a", "no", "none", "no_refusal",
-                 "no_refusal_plain", "no_refusal_suspicious"}
+#
+# `no_refusal_suspicious` maps to REFUSAL. The name is ambiguous and the labeller
+# read it as "suspicious that this is really a non-refusal" — i.e. it is one —
+# rather than the sampling sense of "a non-refusal that merely sounds like one".
+# The labeller's reading governs, since they are the one who applied it.
+ANSWER_LABELS = {"answer", "a", "no", "none", "no_refusal", "no_refusal_plain"}
 REFUSAL_LABELS = {"refusal", "r", "yes", "epistemic", "explicit_safety",
-                  "unspecified_refusal", "generation_failure", "hedged_non_answer"}
+                  "unspecified_refusal", "generation_failure", "hedged_non_answer",
+                  "no_refusal_suspicious"}
 
 
 def parse_label(raw: str) -> tuple[bool, str] | None:
@@ -238,7 +243,7 @@ def main() -> None:
              if t not in ("refusal", "answer", "r", "a", "yes", "no")}
     if typed:
         clf_type = {i: verdicts[i][1] for i in typed if i in verdicts}
-        norm = {"no_refusal_plain": "no_refusal", "no_refusal_suspicious": "no_refusal"}
+        norm = {"no_refusal_plain": "no_refusal", "no_refusal_suspicious": "refusal_unspecified_kind"}
         pairs = [(norm.get(typed[i], typed[i]), clf_type[i]) for i in clf_type]
         exact = sum(1 for h, c in pairs if h == c)
         print(f"\nRefusal-type agreement (n={len(pairs)}): {exact / len(pairs) * 100:.1f}%")

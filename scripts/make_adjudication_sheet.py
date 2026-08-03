@@ -33,8 +33,9 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 from dosragbench.metrics.refusal import classify_refusal, is_denial  # noqa: E402
 
 VAL = REPO_ROOT / "validation"
-ANSWER_LABELS = {"answer", "a", "no", "none", "no_refusal",
-                 "no_refusal_plain", "no_refusal_suspicious"}
+# See score_validation.py: `no_refusal_suspicious` means refusal here, per the
+# labeller's reading of the name.
+ANSWER_LABELS = {"answer", "a", "no", "none", "no_refusal", "no_refusal_plain"}
 
 
 def load(path: Path) -> dict[int, bool]:

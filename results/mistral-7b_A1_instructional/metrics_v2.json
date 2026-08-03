@@ -5,10 +5,10 @@
     "num_queries": 50,
     "asr": 0.0,
     "gds": 0.0,
-    "asr_absolute": 0.02,
-    "gds_absolute": 0.02,
-    "baseline_denial_rate": 0.02,
-    "num_answerable": 49,
+    "asr_absolute": 0.0,
+    "gds_absolute": 0.0,
+    "baseline_denial_rate": 0.0,
+    "num_answerable": 50,
     "lir_mean": 1.624,
     "lir_median": 1.445,
     "tor_mean": 1.616,
@@ -20,18 +20,15 @@
     "gold_eviction_rate": 0.0,
     "mean_adversarial_in_topk": 3.9,
     "refusal_breakdown": {
-      "no_refusal": 49,
-      "generation_failure": 1
+      "no_refusal": 50
     },
     "severity_breakdown": {
-      "L0": 49,
-      "L3": 1
+      "L0": 50
     },
     "mean_latency_s": 36.292,
     "mean_output_tokens": 256,
     "baseline_refusal_breakdown": {
-      "no_refusal": 49,
-      "generation_failure": 1
+      "no_refusal": 50
     },
     "hf_id": "mistralai/Mistral-7B-v0.3",
     "alignment_level": 0

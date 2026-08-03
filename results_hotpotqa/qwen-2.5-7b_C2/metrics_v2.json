@@ -3,37 +3,36 @@
     "model_name": "Qwen 2.5 7B Base",
     "attack_category": "C2",
     "num_queries": 1000,
-    "asr": 0.027,
-    "gds": 0.049,
-    "asr_absolute": 0.04,
-    "gds_absolute": 0.071,
-    "baseline_denial_rate": 0.038,
-    "num_answerable": 962,
+    "asr": 0.029,
+    "gds": 0.0515,
+    "asr_absolute": 0.042,
+    "gds_absolute": 0.073,
+    "baseline_denial_rate": 0.036,
+    "num_answerable": 964,
     "lir_mean": 1.862,
     "lir_median": 1.001,
     "tor_mean": 1.963,
     "tor_median": 1.0,
-    "cdr": 0.3459,
+    "cdr": 0.3471,
     "retrieval_lir_mean": 1.198,
     "gold_recall_baseline": 0.647,
     "gold_recall_attacked": 0.298,
     "gold_eviction_rate": 0.539,
     "mean_adversarial_in_topk": 4.468,
     "refusal_breakdown": {
-      "no_refusal": 960,
-      "epistemic": 40
+      "no_refusal": 958,
+      "epistemic": 42
     },
     "severity_breakdown": {
-      "L0": 898,
+      "L0": 896,
       "L2": 62,
-      "L3": 40
+      "L3": 42
     },
     "mean_latency_s": 5.273,
     "mean_output_tokens": 253.5,
     "baseline_refusal_breakdown": {
-      "no_refusal": 962,
-      "epistemic": 36,
-      "generation_failure": 2
+      "no_refusal": 964,
+      "epistemic": 36
     },
     "hf_id": "Qwen/Qwen2.5-7B",
     "alignment_level": 0

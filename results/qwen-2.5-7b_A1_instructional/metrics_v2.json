@@ -39,8 +39,8 @@
     "num_queries": 50,
     "asr": 0.0938,
     "gds": 0.08,
-    "asr_absolute": 0.24,
-    "gds_absolute": 0.26,
+    "asr_absolute": 0.22,
+    "gds_absolute": 0.24,
     "baseline_denial_rate": 0.36,
     "num_answerable": 32,
     "lir_mean": 1.657,
@@ -54,13 +54,12 @@
     "gold_eviction_rate": 0.0,
     "mean_adversarial_in_topk": 3.94,
     "refusal_breakdown": {
-      "no_refusal": 38,
-      "epistemic": 11,
-      "generation_failure": 1
+      "no_refusal": 39,
+      "epistemic": 11
     },
     "severity_breakdown": {
-      "L0": 36,
-      "L3": 12,
+      "L0": 37,
+      "L3": 11,
       "L2": 2
     },
     "mean_latency_s": 1.472,
