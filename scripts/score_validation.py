@@ -276,10 +276,15 @@ def main() -> None:
 
     second, _, _ = load_labels(SECOND)
     if second:
-        shared = sorted(set(second) & set(human))
+        # Compare the two ORIGINAL passes. Scoring pass 2 against the adjudicated
+        # labels would inflate this: adjudication already corrected part of pass 1,
+        # so it would no longer measure how consistent the labeller was with
+        # themselves.
+        pass1, _, _ = load_labels(SAMPLE)
+        shared = sorted(set(second) & set(pass1))
         if shared:
-            k = kappa_of([human[i] for i in shared], [second[i] for i in shared])
-            same = sum(1 for i in shared if human[i] == second[i])
+            k = kappa_of([pass1[i] for i in shared], [second[i] for i in shared])
+            same = sum(1 for i in shared if pass1[i] == second[i])
             print(f"\nTest-retest, same labeller (n={len(shared)}): "
                   f"agreement {same / len(shared) * 100:.1f}%, kappa {k:.3f}")
     elif SECOND.exists():
