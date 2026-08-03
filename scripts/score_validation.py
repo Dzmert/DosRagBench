@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import difflib
 import json
 import math
 import sys
@@ -60,25 +61,48 @@ def kappa_of(a: list[bool], b: list[bool]) -> float:
     return (po - pe) / (1 - pe) if pe != 1 else 1.0
 
 
-def parse_label(raw: str) -> bool | None:
-    """'refusal' -> True, 'answer' -> False, anything else -> None."""
-    v = (raw or "").strip().lower()
-    if v.startswith("r"):
-        return True
-    if v.startswith("a"):
-        return False
+# A labeller may answer the binary question (refusal / answer) or give the finer
+# refusal type. Both are accepted: the type carries strictly more information and
+# collapses to the binary unambiguously, so there is no reason to make anyone
+# relabel 300 rows for having been more specific than asked.
+ANSWER_LABELS = {"answer", "a", "no", "none", "no_refusal",
+                 "no_refusal_plain", "no_refusal_suspicious"}
+REFUSAL_LABELS = {"refusal", "r", "yes", "epistemic", "explicit_safety",
+                  "unspecified_refusal", "generation_failure", "hedged_non_answer"}
+
+
+def parse_label(raw: str) -> tuple[bool, str] | None:
+    """Return (is_refusal, canonical_label), or None if unparseable.
+
+    Typos are resolved by closest match — a hand-typed sheet of 300 rows will have
+    a few, and silently dropping those rows would bias the estimate.
+    """
+    v = (raw or "").strip().lower().replace(" ", "_").replace("-", "_")
+    if not v:
+        return None
+    if v in ANSWER_LABELS:
+        return False, v
+    if v in REFUSAL_LABELS:
+        return True, v
+    near = difflib.get_close_matches(v, list(ANSWER_LABELS | REFUSAL_LABELS), 1, 0.8)
+    if near:
+        return near[0] in REFUSAL_LABELS, near[0]
     return None
 
 
-def load_labels(path: Path) -> dict[int, bool]:
+def load_labels(path: Path) -> tuple[dict[int, bool], dict[int, str], list[str]]:
+    """Returns (binary labels, canonical type labels, unparseable raw values)."""
     if not path.exists():
-        return {}
-    out = {}
+        return {}, {}, []
+    binary, types, bad = {}, {}, []
     for row in csv.DictReader(open(path)):
-        label = parse_label(row.get("my_label", ""))
-        if label is not None:
-            out[int(row["id"])] = label
-    return out
+        parsed = parse_label(row.get("my_label", ""))
+        if parsed is None:
+            if (row.get("my_label") or "").strip():
+                bad.append(row["my_label"])
+            continue
+        binary[int(row["id"])], types[int(row["id"])] = parsed[0], parsed[1]
+    return binary, types, bad
 
 
 def classifier_verdicts(key_rows: list[dict]) -> dict[int, tuple[bool, str]]:
@@ -109,10 +133,13 @@ def main() -> None:
 
     sample_rows = list(csv.DictReader(open(SAMPLE)))
     key_rows = list(csv.DictReader(open(KEY)))
-    human = load_labels(SAMPLE)
+    human, human_types, unparsed = load_labels(SAMPLE)
 
     if not human:
         raise SystemExit(f"No labels in {SAMPLE}. Fill the my_label column first.")
+    if unparsed:
+        print(f"Warning: {len(unparsed)} unparseable label(s): "
+              f"{sorted(set(unparsed))[:5]}\n")
     if len(human) < len(sample_rows):
         print(f"Warning: {len(sample_rows) - len(human)} of {len(sample_rows)} rows "
               f"unlabelled; scoring the rest.\n")
@@ -172,7 +199,25 @@ def main() -> None:
         err, tot = per_class[cls]
         print(f"{cls:26}{err:>8}{tot:>6}{err / tot * 100:>7.1f}%")
 
-    second = load_labels(SECOND)
+    # If the labeller gave refusal types rather than the binary, score that too —
+    # it says where the *mechanism* breakdown is wrong, which the binary cannot.
+    typed = {i: t for i, t in human_types.items()
+             if t not in ("refusal", "answer", "r", "a", "yes", "no")}
+    if typed:
+        clf_type = {i: verdicts[i][1] for i in typed if i in verdicts}
+        norm = {"no_refusal_plain": "no_refusal", "no_refusal_suspicious": "no_refusal"}
+        pairs = [(norm.get(typed[i], typed[i]), clf_type[i]) for i in clf_type]
+        exact = sum(1 for h, c in pairs if h == c)
+        print(f"\nRefusal-type agreement (n={len(pairs)}): {exact / len(pairs) * 100:.1f}%")
+        conf: dict[tuple, int] = defaultdict(int)
+        for h, c in pairs:
+            conf[(h, c)] += 1
+        print(f"  {'human':24}{'classifier':24}{'n':>5}")
+        for (h, c), cnt in sorted(conf.items(), key=lambda x: -x[1]):
+            if cnt >= 3 or h != c:
+                print(f"  {h:24}{c:24}{cnt:>5}{'' if h == c else '   <-- differs'}")
+
+    second, _, _ = load_labels(SECOND)
     if second:
         shared = sorted(set(second) & set(human))
         if shared:

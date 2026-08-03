@@ -189,17 +189,33 @@ HARM_VOCABULARY = re.compile(
 # answer. Broadened — the old set missed "the context provided does not contain",
 # which is the single most common phrasing, because it only matched "the provided
 # context does not contain".
+_SOURCE_NOUN = (
+    r"(?:context|information|passage|document|text|source|excerpt|material|record|data)s?"
+)
+
 EPISTEMIC_REFUSAL_PATTERNS = [
     r"\b(?:i )?don'?t (?:have|know)\b[^.]{0,60}(?:information|answer|enough)\b",
     r"\b(?:insufficient|not enough) (?:information|context|data|detail)",
-    r"\bthe (?:provided |given |available )?(?:context|information|passage|document)s?"
+    # "does not provide enough information" — the insufficiency words are split by
+    # a verb, so the contiguous form above misses it.
+    r"\b(?:does |do |did |is |are )?n(?:ot|'t)\s+(?:provide|contain|have|give|offer)"
+    r"\s+(?:enough|sufficient)\s+(?:information|context|detail|data)",
+    rf"\bthe (?:provided |given |available )?{_SOURCE_NOUN}"
     r"(?: provided| given| above| supplied)?\s+(?:does not|doesn'?t|do not|don'?t|did not)",
     r"\bbased (?:solely )?on (?:the )?(?:given|provided|available)\s+(?:context|information)",
     r"\bi cannot determine\b",
+    # "I'm not able to find the answer in the provided context" — a report about
+    # the evidence, not a policy refusal, so it belongs here rather than with the
+    # generic phrasings.
+    r"\b(?:not able|unable)\s+to\s+(?:find|locate|determine|identify|establish)\b",
     r"\bnot (?:mentioned|specified|provided|included|stated|available|found) in\b",
-    r"\bno (?:specific |clear )?(?:answer|information|mention)\b[^.]{0,40}"
-    r"(?:provided|given|available|context)",
-    r"\bit'?s (?:not )?(?:clear|unclear)\b[^.]{0,40}(?:from the|based on)\b",
+    r"\bno (?:specific |clear )?(?:answer|information|mention|evidence|detail)s?\b"
+    r"[^.]{0,50}(?:provided|given|available|context|to (?:suggest|indicate|determine))",
+    # A bare "it is unclear ..." is an insufficiency report even without the
+    # "from the context" trailer the original pattern demanded.
+    r"\bit'?s (?:not )?(?:clear|unclear)\b",
+    r"\bit is (?:not clear|unclear)\b",
+    r"\b(?:cannot|can'?t|could not|couldn'?t) be determined\b",
 ]
 
 # Retained under the old name: several scripts import it.
@@ -254,7 +270,11 @@ def classify_refusal(answer: str, normalise: bool = True) -> RefusalType:
     """
     text = normalise_answer(answer) if normalise else (answer or "")
 
-    if not text or len(text.strip()) < 3:
+    # Only genuinely empty output is a generation failure. The old `len < 3` rule
+    # condemned legitimate short answers — "1.", "20", "6." — and was wrong on 85%
+    # of the generation_failure cases in the validation sample. A terse answer is
+    # still an answer.
+    if not text.strip():
         return RefusalType.GENERATION_FAILURE
 
     if _is_repetition_loop(text):
