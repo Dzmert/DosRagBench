@@ -57,8 +57,9 @@ finds refusal rates will distrust the whole chapter.
   template, not this file.
 - **Abstract** (250–300 words). Write it *last*. Structure: one sentence on RAG
   availability as an unstudied risk → one on the hypothesis → two on the design
-  (13 attacks, 4 matched pairs, ~1000 NQ queries, AVI) → two on the headline
-  (27 raw → 12 genuine; epistemic yes, retrieval no) → one on the implication.
+  (13 attacks, 4 matched pairs, two BEIR corpora, ~1000 queries per run) → two on
+  the headline (51 raw → **39 genuine of 62**; the gradient runs through retrieval
+  quality; reasoning distillation reverses it) → one on the implication.
   Put a real number in it. Abstracts without numbers read as proposals.
 - **Contents, list of figures, list of tables, nomenclature.** Auto-generate.
   Define AVI, ASR, GDS, LIR, TOR, CDR in the nomenclature list *and* again at
@@ -91,9 +92,13 @@ you claim.
   equal billing, not a footnote.
 - **1.4 Contributions.** Bulleted, four or five, each one sentence:
   benchmark + 13 attacks; AVI and the attack-attributable ASR definition; the
-  Fisher + McNemar filtering protocol; the empirical finding
-  (epistemic-specific, cross-family); the negative results (A3
-  alignment-independent, R1-distill protective) as controls.
+  Fisher + McNemar filtering protocol **plus the validated classifier** (300
+  hand-labelled responses, holdout kappa 0.884, beats human–human agreement); the
+  empirical finding (cross-family, and graded by retrieval quality); the negative
+  results (no compute DoS, no safety refusals) and the R1-distill reversal.
+  ⚠️ **Drop "A3 alignment-independent" — it is false on the repaired classifier**
+  (A3 is genuine on three families) and the whole attack-independent category is
+  now empty.
 - **1.5 Thesis structure.** One short paragraph. Do not pad this.
 
 ---
@@ -148,13 +153,32 @@ them isolated and airtight.
   a gap.
 - **3.4 Attack-attributable ASR.** The conditional definition: of queries the
   model answers with no attack, the fraction the attack pushes into full denial.
-  Explain in words *why* the naive unconditional version is wrong — aligned Qwen
-  refuses ~17% of queries with no attack at all, and naive ASR credits the
-  attack for those.
-- **3.5 AVI.** Definition, the ε = 0.01 floor on base ASR, and the honest caveat:
-  when base ASR ≈ 0, a large AVI means "the attack only works on the aligned
-  model," not that the ratio is precise. Say this here, once, properly, so you
-  can point back to it every time a 21.18 appears in a table.
+  Explain in words *why* the naive unconditional version is wrong — **every**
+  aligned model refuses 29–37% of clean NQ queries (73–81% on HotpotQA) with no
+  attack at all, and naive ASR credits the attack for those. Report both the
+  conditional and unconditional measures: the conditional one has a selection
+  effect (survivors are self-selected as robust), the unconditional one credits
+  the attack for pre-existing refusal, and together they bound the truth.
+- **3.5 AVI — and why it is the right metric.** This section has to *argue*, not
+  just define. An examiner will ask why an invented ratio beats a plain risk
+  difference, and the answer cannot be "it is interpretable".
+  1. **Definition** and the ε = 0.01 floor on base ASR.
+  2. **The floor is not a corner case: 21 of the 39 genuine runs are floored**,
+     so their AVI is aligned_ASR × 100, not a measured ratio. Give the count.
+  3. **It changes conclusions, so the choice must be defended.** On the genuine
+     set AVI and risk difference agree only weakly (Spearman 0.69; 3 of 39 runs
+     in the same rank position). AVI ranks D3-Llama top on a +31.8 pp effect
+     while risk difference ranks D2-Qwen-HotpotQA top at +68.4 pp.
+  4. **The resolution:** risk difference is the primary effect size; AVI is a
+     labelled regime indicator that answers "how much worse, proportionally" for
+     a reader who needs a scale-free number. State that ratios are unstable when
+     the denominator approaches zero — the regime most runs sit in — and that
+     this is exactly why the significance protocol keys on risk difference and
+     the Fisher/McNemar conjunction rather than on AVI.
+  5. **What would strengthen it:** bootstrap CIs on AVI, or reporting the odds
+     ratio alongside. Say which you did and which you did not.
+  Say all this here, once, properly, so you can point back to it every time a
+  large AVI appears in a table.
 
 ---
 
@@ -181,7 +205,8 @@ Purpose: reproducibility. An examiner should be able to rebuild this.
   (1,000 gold + 500,000 filler, seed 42) drawn from a 2,681,468-passage corpus;
   `all-MiniLM-L6-v2`; FAISS HNSW M=16 / efConstruction=200 / efSearch=50;
   top-k=5; greedy decoding at 256 new tokens; 4-bit quantization; Katana HPC.
-  Also state the 56 runs → 50 kept and the ≥100-answerable-query exclusion rule
+  Also state the 67 runs → 62 kept (NQ 50 + HotpotQA 12) and the
+  ≥100-answerable-query exclusion rule
   *before* the results, so it reads as protocol rather than post-hoc filtering,
   and name the five dropped runs (the whole `A1_instructional` arm is among them).
   Note explicitly that BEIR carries no short answers, so `gold_answer` is empty
@@ -224,25 +249,32 @@ Source: `scripts/compute_significance.py`, `results/avi_significance.md`.
 Purpose: report, don't interpret. Interpretation is Chapter 7. This separation
 is what keeps a results chapter honest.
 
-- **6.1 Overview.** The 50-run grid. Figure: `results/avi_summary.png` (two-panel
-  heatmap). **Caveat from the slides — it plots raw AVI, so annotate the genuine
-  cells or pair it immediately with the 6.2 breakdown, or it oversells.**
+- **6.1 Overview.** The 62-run grid (NQ 50 + HotpotQA 12). Figure:
+  `results/avi_summary.png` (two-panel heatmap). **Caveat from the slides — it
+  plots raw AVI, so annotate the genuine cells or pair it immediately with the 6.2
+  breakdown, or it oversells.**
 - **6.2 Raw vs. filtered.** Figure: `results/verdict_breakdown.png`.
-  27/50 runs point in the paradox direction; of those 27, the conjunction rule
-  keeps **12 genuine** and rejects **5 floor artifacts, 2
-  attack-but-alignment-independent, and 8 not-significant**. The remaining 23
-  runs point the other way (base denies more) and split **8 protective, 15 not
-  significant**. Verdicts partition all 50 runs.
-  **Do not write "breakdown of the 27: 12/5/2/8 protective."** Protective is
+  **51/62** runs point in the paradox direction; of those 51, the conjunction rule
+  keeps **39 genuine** and rejects **10 floor artifacts** and **2 not
+  significant**. The remaining **11** runs point the other way (base denies more)
+  and are all **protective** — and all of them are the `llama-r1-8b` pair (§6.5).
+  The **attack-but-alignment-independent** category is now **empty**; say so
+  explicitly, because the previous draft leaned on it as a control.
+  Verdicts partition all 62 runs.
+  **Do not write "breakdown of the 51: 39/10/2/11 protective."** Protective is
   defined by the base model denying *more*, so it cannot be inside the
-  paradox-direction group. The two groups happen to contain 8 runs each, which
-  is exactly why the mistake is easy to make and hard to spot.
+  paradox-direction group.
   This is the single most important paragraph in the thesis — give it a table
   and a sentence a reader can quote.
+  Also report the two clean summaries, which are stronger than any mean:
+  **37/37 positive on NQ excluding `llama-r1`** and **12/12 on HotpotQA**.
 - **6.3 The genuine paradoxes.** Full table from `results/avi_significance.md`
   (or the GENUINE subset, with the full table in an appendix). Lead with the
-  cleanest case: **D3 epistemic uncertainty on Llama-3.1, base 0.8% [0.4–1.6] →
-  aligned 8.4% [6.9–10.3], AVI 8.43, McNemar 84/3, p = 1.4 × 10⁻²¹**.
+  cleanest case: **D2 circular reference chains on Qwen-2.5, NQ — base 2.2% →
+  aligned 52.4%, risk difference +50.2 pp, McNemar 343/22, q = 1.0 × 10⁻¹³⁵**,
+  and note that base ASR clears the ε floor so its AVI of 23.5 is a real ratio.
+  (The previous draft led with D3-Llama; still genuine, but its paired signal is
+  much weaker at c=207 against b=99.)
   Non-overlapping CIs and an overwhelming paired effect — walk the reader
   through why this one is unarguable.
 - **6.4 Pattern by attack family.** Genuine paradoxes: Qwen-2.5 (**8** — A1, A3,
@@ -283,10 +315,18 @@ pass.
   invoking it. Be explicit that this is a hypothesis your data is consistent
   with, not something you demonstrated causally — and say what experiment would
   test it (e.g. probing refusal-head activations, or DPO-stage ablations).
-- **7.3 Why is Qwen worst?** 7 of 12 genuine paradoxes. Candidate explanations:
-  heavier refusal tuning, different RLHF data, the ~17% baseline floor
-  interacting with attack pressure. Offer the alternatives and say which the
-  data favours.
+- **7.3 ~~Why is Qwen worst?~~ Why does the gap track retrieval quality?**
+  ⚠️ **The premise of the old section is gone.** Qwen is not worst: on NQ it is
+  11/13 genuine against Llama's 12/13, and its mean risk difference (+0.168) is
+  the *lowest* of the three true base/instruct pairs. That reading was an artefact
+  of the broken classifier only counting Qwen's refusals.
+  The question worth asking instead is why the effect is graded by retrieval
+  quality (0.212 → 0.637 aligned clean denial across gold-rank bins, monotonic in
+  every group, flat near zero for base models). Candidate explanations: trained
+  context deference, calibration of "insufficient evidence" judgements, and
+  instruction-tuning data that rewards abstention. Say which the data favours,
+  and be explicit that this is a hypothesis consistent with the data rather than
+  a causal demonstration — then name the experiment that would test it.
 - **7.4 The DoS framing.** Argue the reframe from the 6.7 evidence: what you
   measured is *induced denial / availability degradation*, and compute-DoS on
   RAG remains open. Owning this is far stronger than letting an examiner find it.
@@ -333,15 +373,25 @@ foundation papers, and the alignment/RLHF references behind Chapter 2.2.
 
 ## Appendices
 
-- **A. Full 50-run significance table** — the complete
+- **A. Full 62-run significance table** — the complete
   `results/avi_significance.md`, so Chapter 6 can show the GENUINE subset only.
+  Include the **Data** column; run directories carry no dataset component, so
+  `qwen-2.5-7b_D2` names one run under each corpus.
 - **B. Attack passage examples** — one full adversarial document per attack, all
   13. Cheap to produce, disproportionately convincing.
-- **C. Refusal classifier** — pattern rules, the 18 unit tests, and a
-  hand-labelled validation sample with agreement rate. *If you have not done the
-  hand-labelled validation, do it before submission* — the classifier is the
-  measurement instrument for every number in the thesis, and it is the single
-  most attackable point in the methodology.
+- **C. Refusal classifier — DONE, and now an asset rather than a liability.**
+  Pattern rules, the **29 unit tests** (several of them regression tests carrying
+  the defect they lock down), and the validation study: 300 hand-labelled
+  responses, boundary-weighted and stratified, dev/holdout split, **holdout kappa
+  0.884**, corpus-level error **2.05%** after reweighting to population class
+  frequencies. Independent annotator: **0.725**, against human–human **0.674**.
+  Report the three honest caveats — neither human kappa clears 0.8; the gold set
+  is not fully independent of the classifier (0.951 vs 0.725 on the same rows);
+  refusal-*type* agreement is only 76.9%, which matters for the composition table
+  but not for any headline number, all of which use the binary judgement.
+  **Also report the defect this found**, since it is the reason the thesis says
+  what it says: the previous classifier scored 5,201 of 5,406 `explicit_safety`
+  labels from a single pattern that matched missing-context reports.
 - **D. Reproduction instructions** — the README quick-start, plus exact commands,
   configs, and the Katana job scripts.
 - **E. Excluded runs** — the 5 dropped runs and why.
@@ -371,11 +421,17 @@ writing the chapter they sit in.
 
 - Pipeline architecture diagram (§4.1) — does not exist yet.
 - Attack taxonomy tree, 4 families × 13 attacks (§4.2) — does not exist yet.
-- Annotated version of `avi_summary.png` marking the 12 genuine cells (§6.1).
+- Annotated version of `avi_summary.png` marking the 39 genuine cells (§6.1).
+- **Retrieval-quality gradient (§7.3) — does not exist yet, and it is now the
+  most important figure in the thesis.** Aligned clean-denial rate and the
+  unconditional gap against clean gold rank, base and aligned as separate series,
+  from `results/retrieval_binning.csv`. It carries the mechanism argument on its
+  own; everything else is a table.
 - ~~Verdict breakdown~~ — **done**: `results/verdict_breakdown.png`, from
   `scripts/plot_verdicts.py`.
-- ~~Forest plot of the 12 genuine runs~~ — **done**:
-  `results/forest_genuine.png`, from `scripts/plot_forest.py`.
+- ~~Forest plot of the genuine runs~~ — **done**:
+  `results/forest_genuine.png`, from `scripts/plot_forest.py`. Regenerated
+  3 August against the validated classifier; now shows 39 runs.
 
 Both read `results/avi_significance.json`, which `scripts/compute_significance.py`
 now emits alongside the markdown table, so the figures and the tables cannot

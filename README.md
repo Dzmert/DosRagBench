@@ -9,9 +9,9 @@ Genuine safety refusals are 0.02% of aligned responses (22 of 100,000 on NQ). Ep
 ## What's Implemented
 
 - **Category A1: Context-Adequacy Attack** — injects content that makes the retrieved evidence read as unreliable or contested. (Named "Guardrail Triggering" until 2026-08-03; it turned out not to work through guardrails — the attack adds 5 safety refusals and 544 epistemic ones per 10,050 responses.)
-- **Category C1: Embedding Space Clustering** — adversarial documents clustered near the query in HNSW embedding space to degrade retrieval latency. Expected AVI ≈ 1 (alignment-independent).
-- **Six-metric framework** — ASR, GDS, LIR, TOR, CDR, plus AVI for aligned-vs-base comparison.
-- **Refusal classifier** — pattern-based, tested with 18 unit tests covering safety refusal, epistemic refusal, hedged non-answers, generation failures.
+- **Category C1: Embedding Space Clustering** — adversarial documents clustered near the query in HNSW embedding space. It evicts gold passages efficiently (1% corpus pollution already evicts ~60%, versus 1.5% for random injection at the same budget) and is a genuine paradox on three model families. It does **not** degrade retrieval latency: retrieval gets roughly twice as *fast* under attack, because greedy HNSW descent converges sooner once a dense adversarial cluster sits near the query.
+- **Six-metric framework** — ASR, GDS, LIR, TOR, CDR, plus AVI. Note that AVI floors at ε = 0.01 on base ASR, so **risk difference is the primary effect size** and AVI is reported as a regime indicator; 21 of the 39 genuine runs are floored.
+- **Refusal classifier** — pattern-based, 29 unit tests including regression tests for three fixed defects, and validated against 300 hand-labelled responses (holdout kappa 0.884; 0.725 against an independent annotator, which exceeds the 0.674 the two humans achieve with each other).
 - **FAISS HNSW retriever** — matches production vector DBs (Pinecone, Weaviate, Milvus, Qdrant all use HNSW).
 - **Matched model pair support** — Llama 3.1 8B base vs instruct by default; Qwen, Mistral, and DeepSeek-R1 pairs also configured.
 - **Local + Katana HPC** — 4-bit quantization for RTX 4070; SLURM template included for 70B models.
@@ -40,11 +40,25 @@ C1 (Embedding Clustering): AVI = 1.00 -- Alignment-independent
 
 ### 3. Prepare data
 
+A small local build, for checking the pipeline runs end to end:
+
 ```bash
 python scripts/prepare_data.py --num-queries 50 --kb-size 1000
 ```
 
-This downloads a Natural Questions subset (or falls back to synthetic data if HuggingFace is unreachable).
+**The published results do not use that.** Every reported run is built from a BEIR
+corpus at ~500k passages:
+
+```bash
+python scripts/prepare_data.py --corpus beir --dataset {nq|hotpotqa} \
+    --num-queries 1000 --kb-size 500000
+```
+
+NQ materialises 501,000 passages (1,000 gold + 500,000 filler) from a 2,681,468
+passage corpus; HotpotQA materialises 500,995 (five gold ids are missing from the
+corpus and are dropped). Seed 42. Filler is sampled rather than taken as a corpus
+prefix, because BEIR corpora are not randomly ordered and a prefix would bias the
+embedding neighbourhood the C-family attacks operate on.
 
 ### 4. Run your first real experiment
 
@@ -54,24 +68,34 @@ python scripts/run_attack.py --category A1 --model-pair llama-3.1-8b --num-queri
 python scripts/run_attack.py --category C1 --model-pair llama-3.1-8b --num-queries 20
 ```
 
+Reported runs use `--num-queries 1000`. Note that `configs/attacks.yaml` carries
+`num_queries: 1000`, but the command line still wins if you pass the flag.
+
 ### 5. Generate the alignment paradox report
 
 ```bash
-python scripts/compute_avi.py
+python scripts/recompute_metrics.py    # writes metrics_v2.json per run
+python scripts/compute_significance.py # verdicts + figures
+python scripts/compute_avi.py && python scripts/clean_avi_report.py
 ```
 
-This produces a table like:
+`clean_avi_report.py` writes the canonical `results/avi_report.md` — it applies the
+minimum-answerable filter. `compute_avi.py` writes `avi_report_raw.*` and is
+deliberately unfiltered, so the two disagree on run counts by design.
 
-```
-┌────────┬──────────┬─────────────┬───────────┬────────────────────────┐
-│ Attack │ Base ASR │ Aligned ASR │ AVI (ASR) │ Interpretation         │
-├────────┼──────────┼─────────────┼───────────┼────────────────────────┤
-│ A1     │   5.0%   │    47.0%    │   9.40    │ Strong paradox         │
-│ C1     │  12.0%   │    14.0%    │   1.17    │ Alignment-independent  │
-└────────┴──────────┴─────────────┴───────────┴────────────────────────┘
-```
+**Headline results** (62 retained runs, NQ 50 + HotpotQA 12), against a refusal
+classifier validated on 300 hand-labelled responses (holdout kappa 0.884):
 
-Plus `results/avi_report.md` for inclusion in your seminar/thesis.
+| | value |
+|---|---|
+| Genuine paradoxes | **39 of 62** |
+| Mean risk difference, NQ excl. `llama-r1` | +0.189 (37/37 positive) |
+| Mean risk difference, HotpotQA | +0.449 (12/12 positive) |
+| `llama-r1-8b` (reasoning distillation) | −0.122, **11/13 protective** |
+
+A run counts as a genuine paradox only if it passes **both** FDR-corrected Fisher
+and within-model McNemar. See [`docs/findings_summary.md`](docs/findings_summary.md)
+for the full result set and an explicit list of superseded numbers not to quote.
 
 ## Project Structure
 
@@ -145,23 +169,41 @@ qsub -v PAIR=llama-3.1-8b,CATEGORY=A1,NUM_QUERIES=50 scripts/submit_katana.sh
 pytest tests/ -v
 ```
 
-## Extending for Thesis B
+## Adding an attack
 
-To add a new attack category (e.g., B1 Context Saturation or D1 Logic Traps):
+All 13 attacks in the taxonomy (A1–A3, B1–B3, C1–C3, D1–D4) are implemented and
+have run. To add a fourteenth:
 
-1. Create `src/dosragbench/attacks/b1_saturation.py` subclassing `DoSAttack`
+1. Create `src/dosragbench/attacks/<name>.py` subclassing `DoSAttack`
 2. Implement `generate_adversarial_docs(query, clean_docs)`
 3. Register in `src/dosragbench/attacks/__init__.py` → `ATTACK_REGISTRY`
 4. Add config to `configs/attacks.yaml`
 
 The experiment runner, metrics, and AVI reporter require no changes.
 
-## Known Limitations (Prototype Scope)
+## Known limitations
 
-- **HNSW rebuild after attack:** FAISS HNSW doesn't support deletion, so we rebuild the index per query. For Thesis B, switch to a deletion-friendly backend (e.g., Weaviate with tombstones) for faster cycles.
-- **Single embedder:** Currently uses `all-MiniLM-L6-v2`. Thesis B should test multiple embedders to validate embedder-independence.
-- **No defence evaluation:** Phase 4 (perplexity filtering, NLI detection) not yet implemented — this is Thesis B scope.
-- **Adversarial optimization is template-based:** C1 uses sampling + similarity filtering, not gradient-based optimization. For grey-box attacks against specific embedders, gradient methods should give tighter clusters (Thesis B).
+- **No defence evaluation.** The Blocker baseline (Shafran et al.) is implemented
+  in `attacks/blocker.py` but has not been run as a defence experiment. This is
+  the largest gap.
+- **HotpotQA is 12 of 52 cells.** A targeted probe, not a replication.
+- **Base and aligned models receive different prompts.** `rag.py` selects the
+  template on `chat_template`, which is exactly what distinguishes the two sides,
+  so the comparison carries a prompt-wording difference. A `--prompt-style` flag
+  now decouples the two and the ablation is pre-registered in
+  [`docs/prompt_confound_preregistration.md`](docs/prompt_confound_preregistration.md);
+  the runs are outstanding.
+- **No answer-correctness ground truth.** BEIR supplies qrels but no answer
+  strings, so every number measures whether the model *declined*, never whether
+  it was right.
+- **Single embedder** (`all-MiniLM-L6-v2`) and a **single seed per condition**.
+  Generation is greedy and deterministic; the one run-to-run estimate available
+  is 1.5 pp, on the C1 5% condition.
+- **HNSW rebuild after attack:** FAISS HNSW doesn't support deletion, so the index
+  is rebuilt per query. A deletion-friendly backend would cut cycle time.
+- **C1 optimisation is template-based** — sampling plus similarity filtering, not
+  gradient-based. Gradient methods should give tighter clusters against a known
+  embedder.
 
 ## Citing
 

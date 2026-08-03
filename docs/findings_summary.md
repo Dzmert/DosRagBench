@@ -93,14 +93,15 @@ only check on the instrument, which is why it had to be done properly.
 with `git lfs install && git lfs pull` — needs `sudo apt install git-lfs` first on
 this machine.
 
-### Documentation discrepancy — still unresolved
+### Documentation discrepancy — RESOLVED 2026-08-04
 
-`docs/positioning.md` ("BEIR NQ, ~500k passages") is **correct**. `README.md` is
-**stale**: its quick-start still describes a Natural Questions subset with
-`--num-queries 50 --kb-size 1000` and a synthetic fallback (`README.md:44,47`), and
-its "Expected Output" AVI table (A1 = 9.40, C1 = 1.17, `README.md:69-70`) is
-prototype placeholder data, not the real results. Update or delete it — an examiner
-who reads the README first will start from the wrong numbers.
+`docs/positioning.md` ("BEIR NQ, ~500k passages") was already correct. `README.md`
+was not: its quick-start described only a 50-query/1,000-passage build, and its
+"Expected Output" AVI table (A1 = 9.40, C1 = 1.17) was prototype placeholder data
+presented as results. Both replaced — the README now gives the real BEIR build
+command alongside the small local one, and carries the actual headline figures
+with a pointer here. Its "Known limitations" section was also prototype-era and
+claimed B1/D1 were unimplemented; all 13 attacks have run.
 
 ---
 
@@ -143,10 +144,13 @@ cannot be pooled.
 Adversarial documents injected per query, from `configs/attacks.yaml`: 3 (A3),
 5 (A1, B1, B2, D1, D3, D4), 6 (D2), 8 (A2), 10 (B3, C3), 200 (C1, C2, RAND).
 
-⚠️ `configs/attacks.yaml` still declares `num_queries: 200` (or 50 for C2/C3), but
-the real runs used **1,000**, overridden at the command line. The config values are
-misleading as committed — fix them or the thesis methodology section will
-contradict the config an examiner reads.
+✅ **Fixed 2026-08-04.** `configs/attacks.yaml` previously declared
+`num_queries: 200` (50 for C2/C3) while every reported run used **1,000**,
+overridden at the command line — so the committed config contradicted the
+methodology. All 13 attack categories now declare 1,000. Two deliberate
+exceptions, both annotated in the file: `RAND` stays at 200 to match the C1
+latency sweep it controls, and `BLOCKER` stays at 50 because each query costs a
+full black-box search.
 
 ---
 

@@ -4,7 +4,7 @@
 
 A1:
   name: "Guardrail Triggering"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 5
   seed: 42
   params:
@@ -19,7 +19,7 @@ A1:
 
 A2:
   name: "Contradiction Flooding"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 8
   seed: 42
   params:
@@ -28,7 +28,7 @@ A2:
 
 A3:
   name: "Authority Spoofing"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 3
   seed: 42
   params:
@@ -41,7 +41,7 @@ A3:
 
 B1:
   name: "Context Window Saturation"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 5
   seed: 42
   params:
@@ -49,7 +49,7 @@ B1:
 
 B2:
   name: "Generation Loop Induction"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 5
   seed: 42
   params:
@@ -57,7 +57,7 @@ B2:
 
 B3:
   name: "Multi-Retrieval Amplification"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 10
   seed: 42
   params:
@@ -67,7 +67,7 @@ B3:
 
 RAND:
   name: "Random Injection Baseline"
-  num_queries: 200
+  num_queries: 200  # ablation control; ran at 200 to match the C1 latency sweep
   num_adversarial_docs: 200  # matched to C1 so budgets are comparable
   seed: 42
   params: {}
@@ -76,7 +76,7 @@ RAND:
 
 C1:
   name: "Embedding Space Clustering"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 200  # Need more docs for clustering effect
   seed: 42
   params:
@@ -86,7 +86,7 @@ C1:
 
 C2:
   name: "Index Pollution"
-  num_queries: 50
+  num_queries: 1000
   num_adversarial_docs: 200  # Large-scale pollution
   seed: 42
   params:
@@ -95,7 +95,7 @@ C2:
 
 C3:
   name: "Adversarial Embedding Perturbation"
-  num_queries: 50
+  num_queries: 1000
   num_adversarial_docs: 10
   seed: 42
   params:
@@ -118,7 +118,7 @@ BLOCKER:
 
 D1:
   name: "Logical Contradiction Traps"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 5
   seed: 42
   params:
@@ -126,7 +126,7 @@ D1:
 
 D2:
   name: "Circular Reference Chains"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 6
   seed: 42
   params:
@@ -134,7 +134,7 @@ D2:
 
 D3:
   name: "Epistemic Uncertainty Amplification"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 5
   seed: 42
   params:
@@ -142,7 +142,7 @@ D3:
 
 D4:
   name: "Infinite Qualification Traps"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 5
   seed: 42
   params:
