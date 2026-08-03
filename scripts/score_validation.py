@@ -44,6 +44,9 @@ SECOND = VAL_DIR / "sample_second.csv"
 # whose text reports absence were relabelled against the clarified rule. These
 # override sample.csv wherever both carry a label.
 RECHECK = VAL_DIR / "recheck.csv"
+# Final adjudication of every row where the classifier and the labeller, or the
+# labeller's two passes, disagreed. Highest precedence: sample < recheck < this.
+ADJUDICATE = VAL_DIR / "adjudicate.csv"
 
 
 def wilson(k: int, n: int, z: float = 1.959963985) -> tuple[float, float]:
@@ -152,6 +155,18 @@ def main() -> None:
     elif RECHECK.exists():
         print(f"{RECHECK.name} exists but is unlabelled — "
               f"scoring the original labels only.\n")
+
+    adj, adj_types, adj_bad = load_labels(ADJUDICATE)
+    if adj:
+        flipped = sum(1 for i, v in adj.items() if human.get(i) is not None and human[i] != v)
+        human.update(adj)
+        human_types.update(adj_types)
+        unparsed += adj_bad
+        print(f"Applied {len(adj)} adjudicated labels from {ADJUDICATE.name} "
+              f"({flipped} changed the prior verdict).\n")
+    elif ADJUDICATE.exists():
+        print(f"{ADJUDICATE.name} exists but is unlabelled — "
+              f"conflicts not yet adjudicated.\n")
 
     if not human:
         raise SystemExit(f"No labels in {SAMPLE}. Fill the my_label column first.")
