@@ -1,9 +1,8 @@
 # DoSRAGBench — What the experiments actually used, found, and failed to find
 
-*Companion to [`thesis_report_outline.md`](thesis_report_outline.md). Everything
-here is traced to a file in this repo; nothing is inferred from documentation
-alone. Where the documentation and the data disagree, the data wins and the
-disagreement is flagged.*
+*The canonical result document. Everything here is traced to a file in this repo;
+nothing is inferred from documentation alone. Where the documentation and the
+data disagree, the data wins and the disagreement is flagged.*
 
 **Recompiled 3 August 2026** against `metrics_v2.json` and the validated refusal
 classifier, over the **62 retained runs** (NQ 50 + HotpotQA 12). Every figure below

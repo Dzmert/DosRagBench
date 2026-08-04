@@ -49,8 +49,7 @@ python scripts/demo.py --no-llm        # retrieval only, no GPU required
 ```
 
 Models and the FAISS index load once and stay resident, so start it before you
-need it. See [`docs/demo_runbook.md`](docs/demo_runbook.md) for the presentation
-procedure and fallbacks.
+need it. `:help` at the prompt lists the commands; `--no-llm` needs no GPU.
 
 ### 3. Prepare data
 
