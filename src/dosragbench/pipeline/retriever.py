@@ -20,7 +20,7 @@ from __future__ import annotations
 import logging
 import time
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Sequence, Union
 
 import faiss
 import numpy as np
@@ -77,8 +77,16 @@ class RetrievalResult:
     scores: list[float]
     latency_s: float
     adversarial_in_topk: int = 0
+    # True only when EVERY required gold passage is in top-k. For single-gold
+    # corpora (NQ) that is the old meaning unchanged. For complementary-evidence
+    # corpora (HotpotQA, where a query needs both hops) partial retrieval is not
+    # answerable, so it must not count as gold-present.
     gold_in_topk: bool = False
-    gold_rank: int = -1  # position of gold doc in results, -1 if absent
+    # Rank at which the query becomes answerable: the WORST rank among the
+    # required passages, since the last one to arrive is the binding constraint.
+    # -1 if any required passage is absent. Equals the gold's rank for single-gold.
+    gold_rank: int = -1
+    gold_ranks: list[int] = field(default_factory=list)  # per required passage, in order
 
 
 class HNSWRetriever:
@@ -179,13 +187,18 @@ class HNSWRetriever:
         self,
         query: str,
         top_k: int = 5,
-        gold_doc_id: Optional[str] = None,
+        gold_doc_id: Optional[Union[str, Sequence[str]]] = None,
     ) -> RetrievalResult:
         """Retrieve top-k from clean index merged with any adversarial docs.
 
         Latency measured covers the clean HNSW search plus (if present) the
         adversarial brute-force search and merge. When no adversarial docs are
         set, this is a pure clean-index search = the baseline measurement.
+
+        `gold_doc_id` accepts a single id or a sequence of them. A sequence means
+        the query needs ALL of those passages to be answerable (multi-hop), so
+        `gold_in_topk` is True only when every one is retrieved. Passing a single
+        id behaves exactly as before.
         """
         if self.index is None:
             raise RuntimeError("Index not built. Call build_index() or load_index().")
@@ -221,12 +234,17 @@ class HNSWRetriever:
         adv_in_topk = sum(1 for d in documents if d.is_adversarial)
         gold_in_topk = False
         gold_rank = -1
+        gold_ranks: list[int] = []
         if gold_doc_id is not None:
-            for rank, d in enumerate(documents):
-                if d.doc_id == gold_doc_id:
-                    gold_in_topk = True
-                    gold_rank = rank
-                    break
+            required = [gold_doc_id] if isinstance(gold_doc_id, str) else list(gold_doc_id)
+            position = {d.doc_id: rank for rank, d in enumerate(documents)}
+            gold_ranks = [position.get(g, -1) for g in required]
+            # Answerable only if every required passage arrived. The worst rank is
+            # the binding one -- a 2-hop query with hops at ranks 0 and 4 is not
+            # answerable until rank 4.
+            if required and all(r >= 0 for r in gold_ranks):
+                gold_in_topk = True
+                gold_rank = max(gold_ranks)
 
         return RetrievalResult(
             query=query,
@@ -236,6 +254,7 @@ class HNSWRetriever:
             adversarial_in_topk=adv_in_topk,
             gold_in_topk=gold_in_topk,
             gold_rank=gold_rank,
+            gold_ranks=gold_ranks,
         )
 
     # ─── Helpers ─────────────────────────────────────────────────────

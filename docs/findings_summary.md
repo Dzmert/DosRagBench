@@ -108,6 +108,25 @@ Reporting this as a negative result is itself defensible and costs nothing: it
 demonstrates the benchmark can audit its own instruments, which is now the second
 time doing so has changed a headline.
 
+## 0.2 The prompt confound was measured, and it is large (5 August 2026)
+
+The third audit, and the only one whose outcome was predicted in advance. Full
+result in §3.11; §6.1 is downgraded accordingly.
+
+| | |
+|---|---|
+| Aligned clean floor, chat prompt (A0) | 0.371 |
+| Aligned clean floor, base prompt (A2) | **0.138** |
+| Share of the floor attributable to prompt wording | **~63%** |
+| Pre-registered prediction for A2 | 0.20–0.30 — **wrong** |
+| Prompt-matched alignment effect (floor) | **+0.134** against +0.367 under `auto` |
+| Prompt-matched alignment effect (ASR) | **+0.204** against +0.318 under `auto` |
+
+**Every figure in this document outside §3.11 uses `auto` prompts and is therefore
+an upper bound on the alignment effect.** The mechanism survives — a 34× floor
+ratio with wording held constant — but at roughly 40–60% of the reported magnitude.
+Lead with the prompt-matched numbers.
+
 ---
 
 ## 1. The datasets
@@ -228,6 +247,14 @@ full black-box search.
 ### 3.1 The headline
 **39 genuine paradoxes across 62 retained runs**, on 3 of 4 model families and both
 datasets. Source: `results/avi_significance.json`, `scripts/compute_significance.py`.
+
+> **Two corrections apply to everything below.** The 12 HotpotQA runs are withdrawn
+> (§0.1) — they are 12 of the 62 and 6 of the 39. And every figure here uses `auto`
+> prompts, so the base-versus-aligned contrasts are **upper bounds**: §3.11 measures
+> the prompt component at ~63% of the aligned clean floor, leaving a prompt-matched
+> effect of +0.134 on the floor and +0.204 on ASR. The *verdicts* below are less
+> affected than the *magnitudes*, since significance survives a smaller effect at
+> n=1,000, but no magnitude here should be quoted without the §3.11 caveat.
 
 | verdict | n |
 |---|---:|
@@ -575,6 +602,76 @@ entirely.
 means *one of two required hops* was retrieved, which is still not enough to
 answer. See §0.1.
 
+**These figures use `auto` prompts and are therefore inflated by the prompt
+confound** measured in §3.11. Read them as an upper bound; the prompt-matched
+estimate is roughly 40–60% of the stated size.
+
+### 3.11 The prompt confound, measured
+
+Run 5 August 2026 against the predictions committed at `766c117` **before any arm
+executed**. Scored by `scripts/prompt_ablation_report.py`; llama-3.1-8b, D3, 1,000
+queries per arm.
+
+| arm | side | prompt | clean floor | ASR | answerable |
+|---|---|---|---:|---:|---:|
+| A0 | aligned | chat (`auto`) | 0.371 | 0.329 | 629 |
+| A1 | aligned | chat, no refusal licence | 0.243 | 0.395 | 757 |
+| A2 | aligned | base | **0.138** | 0.215 | 862 |
+| A3 | base | chat | *outstanding* | | |
+
+**The pre-registered prediction was wrong.** A2's floor was predicted to land at
+0.20–0.30 and came in at **0.138**, in the "partial" band. Recorded here rather
+than renegotiated, per the terms of the pre-registration.
+
+**Decomposition of the 0.371 aligned clean floor:**
+
+| component | Δ floor | share |
+|---|---:|---:|
+| refusal licence — *"if the context doesn't contain the answer, say so briefly"* | 0.128 | 34% |
+| few-shot exemplars | 0.105 | 28% |
+| **training** | **0.138** | **37%** |
+
+So **about 63% of the aligned clean-denial floor is prompt wording.** That is a
+much larger confound than predicted and it must be disclosed as such.
+
+**The prompt-matched effect is the number to lead with.** Base models already
+receive the base prompt (no chat template), so A2 against the existing base side is
+a like-for-like comparison — same wording, different training:
+
+| | clean floor | ASR |
+|---|---:|---:|
+| base, base prompt | 0.004 | 0.011 |
+| **aligned, base prompt (A2)** | **0.138** | **0.215** |
+| **prompt-matched effect** | **+0.134** | **+0.204** |
+| *(`auto`-prompt effect, for comparison)* | *+0.367* | *+0.318* |
+
+The effect is **40–65% smaller than reported and unambiguously still present**. A
+34× floor ratio with the prompt held constant is not a wording artefact. Quote
++0.134 and +0.204, not the `auto` figures.
+
+**Secondary expectations.** (1) A1 sits between A0 and A2 on the floor — confirmed,
+0.371 > 0.243 > 0.138, so the refusal licence and the exemplars each carry roughly
+half the prompt effect and neither dominates. (3) The answerable denominator rose
+629 → 862 as predicted, mechanically shrinking the §6.2 selection artifact.
+
+**One artefact to understand before being asked about it.** A1's ASR (0.395)
+*exceeds* A0's (0.329) even though its floor is lower. That is the conditioning,
+not a stronger attack: the denominator grew 629 → 757, and the queries newly
+admitted are ones the aligned model previously refused even when clean, which are
+disproportionately attackable. ASR rose because the denominator got harder. This is
+the clearest available demonstration of why the clean floor is the primary endpoint
+and attributable ASR is not.
+
+**A3 is still outstanding and is interpretively decisive**, not merely a
+falsification check. Falsification required A2 < 0.10 *and* A3 > 0.20; A2 is 0.138,
+so **this experiment cannot refute the mechanism claim**. But A3 determines how the
+mechanism is described:
+
+- A3 floor near 0 → the refusal licence only works on a model *trained* to honour
+  it. That is an interaction effect and a stronger claim than the original.
+- A3 floor near 0.14 → the licence alone reproduces the aligned floor, and the
+  training account weakens sharply.
+
 ---
 
 ## 4. What did not work
@@ -846,29 +943,40 @@ more sharply; neither is improved by more patterns.
 
 Ordered worst first. §6.1 is the one an examiner will find.
 
-### 6.1 Base and aligned models receive different prompts
+### 6.1 Base and aligned models receive different prompts — MEASURED, and larger than predicted
 `rag.py:80-83` selects `RAG_PROMPT_CHAT` for models with a chat template and
 `RAG_PROMPT_BASE` for those without. Chat-template availability is precisely what
-distinguishes base from instruct, so **every comparison confounds the alignment
-effect with a prompt-wording effect.**
+distinguishes base from instruct, so **every `auto`-prompt comparison in this
+document confounds the alignment effect with a prompt-wording effect.**
 
 The templates are not merely formatting variants. The chat version (`rag.py:14`)
 includes *"If the context doesn't contain the answer, say so briefly"* — close to an
-instruction to refuse. The base version (`rag.py:26`) does not.
+instruction to refuse. The base version (`rag.py:26`) does not, and adds two
+few-shot exemplars that both answer directly.
 
-This is the most attackable point in the methodology and it aims directly at the
-dependent variable. **The reframe raises the stakes:** if the mechanism is
-context-faithfulness, a prompt that says "say so if the context lacks the answer"
-is a *direct instruction to exhibit the measured behaviour*. Minimum: disclose it.
-Better: run one aligned model with the base prompt to bound the effect size — this
-is cheap (a single run) and it converts the strongest objection into a measured
-quantity.
+**This is no longer an open threat: it was run.** See §3.11 for the ablation. The
+short version is that the confound is **real and large — about 63% of the aligned
+clean-denial floor is prompt wording** — and that the alignment effect survives it
+at roughly 40–60% of its reported magnitude. The pre-registered prediction that
+A2's floor would land at 0.20–0.30 was **wrong**; it landed at 0.138.
 
-Two things blunt it, and both should be stated: (a) `llama-r1-8b` compares two
-models that **both** have chat templates and therefore both get the chat prompt,
-and it still shows a large effect — in the opposite direction (§3.4); (b) the
-binning result (§3.7) is a *within-aligned-model* dose-response across retrieval
-quality, which no prompt-wording difference can explain.
+**Consequence for the rest of this document.** Every figure computed under `auto`
+prompts — which is every figure outside §3.11 — carries an upward prompt bias on
+the base-versus-aligned contrast. That includes the §3.1 headline risk differences
+and the §3.10 gold-present conditioning. Those should be read as **upper bounds on
+the alignment effect**, with §3.11's prompt-matched numbers as the defensible
+estimate, until a prompt-matched re-run exists.
+
+Two things still blunt the objection, and both should be stated: (a) `llama-r1-8b`
+compares two models that **both** have chat templates and therefore both get the
+chat prompt, and it still shows a large effect — in the opposite direction (§3.4);
+(b) the binning result (§3.7) is a *within-aligned-model* dose-response across
+retrieval quality under a **fixed** prompt, which no wording difference can explain.
+Both were immune to this confound before the ablation and remain so.
+
+**Status: downgraded from "the most attackable point in the methodology" to a
+measured and bounded caveat** — but a caveat with a large coefficient, which must
+be disclosed rather than buried.
 
 ### 6.2 Shrinking denominators
 Counting epistemic refusals as denials pushes aligned clean-denial rates high —

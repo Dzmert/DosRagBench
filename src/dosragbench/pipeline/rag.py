@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Sequence, Union
 
 from dosragbench.models.loader import LoadedModel
 from dosragbench.pipeline.retriever import HNSWRetriever
@@ -109,7 +109,10 @@ class RAGPipeline:
                 prompt_style, model.config.name, model.config.chat_template,
             )
 
-    def query(self, query: str, gold_doc_id: Optional[str] = None) -> RAGResponse:
+    def query(self, query: str,
+              gold_doc_id: Optional[Union[str, Sequence[str]]] = None) -> RAGResponse:
+        # A sequence means every listed passage is required (multi-hop); the
+        # retriever reports gold_in_topk only when all of them arrive.
         retrieval = self.retriever.retrieve(query, top_k=self.top_k, gold_doc_id=gold_doc_id)
 
         context_parts, total_len = [], 0
