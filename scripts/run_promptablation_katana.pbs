@@ -1,0 +1,60 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────────────────────
+# DoSRAGBench prompt-template confound ablation — one arm per job.
+#
+# Tests whether the base/aligned denial gap is an artefact of the prompt
+# template rather than of alignment. Predictions were committed at 766c117
+# BEFORE any arm was run; do NOT revise docs/prompt_confound_preregistration.md
+# after seeing these results — record what happened instead.
+#
+# Submit all three arms:
+#   qsub -v STYLE=chat-no-refusal,SIDE=aligned scripts/run_promptablation_katana.pbs
+#   qsub -v STYLE=base,SIDE=aligned            scripts/run_promptablation_katana.pbs
+#   qsub -v STYLE=chat,SIDE=base               scripts/run_promptablation_katana.pbs
+#
+# Watch:  qstat -u $USER        (logs land in promptabl_<STYLE>_<SIDE>.log)
+# ─────────────────────────────────────────────────────────────────────────────
+#PBS -N dosrag_promptabl
+#PBS -l select=1:ncpus=8:ngpus=1:mem=90gb
+#PBS -l walltime=04:00:00
+#PBS -j oe
+
+set -euo pipefail
+
+STYLE=${STYLE:?"Must set STYLE (chat-no-refusal | base | chat)"}
+SIDE=${SIDE:?"Must set SIDE (base | aligned)"}
+
+#PBS -o is fixed at submit time, so name the log ourselves from the arm.
+PROJECT="$HOME/thesis_b/DosRagBench"
+cd "$PROJECT"
+
+# Load secrets (HF_TOKEN, etc.) from .env — venv activation does NOT do this.
+if [ -f .env ]; then
+    set -a; source .env; set +a
+fi
+
+# Keep the HuggingFace cache and datasets on scratch, not the home quota.
+export HF_HOME="/srv/scratch/$USER/hf_cache"
+export HF_DATASETS_CACHE="/srv/scratch/$USER/hf_cache/datasets"
+export DOSRAGBENCH_CACHE="/srv/scratch/$USER/dosragbench_cache"
+mkdir -p "$HF_HOME" "$HF_DATASETS_CACHE" "$DOSRAGBENCH_CACHE"
+
+module load python/3.11
+source .venv/bin/activate
+
+echo "=========================================="
+echo "Prompt-ablation arm: style=$STYLE side=$SIDE"
+echo "Node:    $(hostname)"
+echo "Started: $(date)"
+echo "Python:  $(python3 --version)"
+echo "=========================================="
+
+python3 scripts/run_attack.py \
+    --category D3 \
+    --model-pair llama-3.1-8b \
+    --num-queries 1000 \
+    --side "$SIDE" \
+    --prompt-style "$STYLE" \
+    --results-root results_promptablation
+
+echo "Finished: $(date)"
