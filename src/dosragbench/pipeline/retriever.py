@@ -68,6 +68,32 @@ class Document:
         return f"Document({marker} {self.doc_id}: {self.text[:60]}...)"
 
 
+def score_gold(
+    documents: list["Document"],
+    gold_doc_id: Optional[Union[str, Sequence[str]]],
+) -> tuple[bool, int, list[int]]:
+    """Locate the required gold passage(s) in a ranked result list.
+
+    Returns (all_present, binding_rank, per_passage_ranks). A sequence of ids means
+    the query needs ALL of them -- HotpotQA is 2-hop, so retrieving one passage
+    leaves the question unanswerable and must not count as gold-present. The
+    binding rank is the worst of the required ranks, since the query only becomes
+    answerable once the last one arrives; it is -1 if any is missing.
+
+    Pulled out of `retrieve` so the semantics are unit-testable without an index.
+    """
+    if gold_doc_id is None:
+        return False, -1, []
+    required = [gold_doc_id] if isinstance(gold_doc_id, str) else list(gold_doc_id)
+    if not required:
+        return False, -1, []
+    position = {d.doc_id: rank for rank, d in enumerate(documents)}
+    ranks = [position.get(g, -1) for g in required]
+    if all(r >= 0 for r in ranks):
+        return True, max(ranks), ranks
+    return False, -1, ranks
+
+
 @dataclass
 class RetrievalResult:
     """Output of a retrieval, with timing info."""
@@ -232,19 +258,7 @@ class HNSWRetriever:
 
         # Analytics for Category C displacement metrics
         adv_in_topk = sum(1 for d in documents if d.is_adversarial)
-        gold_in_topk = False
-        gold_rank = -1
-        gold_ranks: list[int] = []
-        if gold_doc_id is not None:
-            required = [gold_doc_id] if isinstance(gold_doc_id, str) else list(gold_doc_id)
-            position = {d.doc_id: rank for rank, d in enumerate(documents)}
-            gold_ranks = [position.get(g, -1) for g in required]
-            # Answerable only if every required passage arrived. The worst rank is
-            # the binding one -- a 2-hop query with hops at ranks 0 and 4 is not
-            # answerable until rank 4.
-            if required and all(r >= 0 for r in gold_ranks):
-                gold_in_topk = True
-                gold_rank = max(gold_ranks)
+        gold_in_topk, gold_rank, gold_ranks = score_gold(documents, gold_doc_id)
 
         return RetrievalResult(
             query=query,

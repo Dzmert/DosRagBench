@@ -132,6 +132,20 @@ def _pooled_adversarial_docs(attack, queries, num_queries, total_budget):
     return all_adv
 
 
+def gold_spec(q: dict):
+    """The gold passage(s) a query needs, as the retriever wants them.
+
+    Corpora built with `prepare_data.py --keep-all-gold` carry `gold_doc_ids`: the
+    full set of passages the query requires. HotpotQA needs both hops, so partial
+    retrieval is not answerable and the retriever must be told to demand all of
+    them. Single-gold corpora (NQ) carry only `gold_doc_id` and behave as before.
+    """
+    ids = q.get("gold_doc_ids")
+    if ids:
+        return list(ids)
+    return q.get("gold_doc_id")
+
+
 def make_blocker_feedback(rag, retriever):
     """Severity oracle for the BLOCKER baseline's black-box optimisation.
 
@@ -177,7 +191,7 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries,
 
     for i, q in enumerate(queries[:num_queries]):
         query_text = q["query"]
-        gold_doc_id = q.get("gold_doc_id")
+        gold_doc_id = gold_spec(q)
 
         retriever.clear_adversarial()
         baseline_resp = rag.query(query_text, gold_doc_id=gold_doc_id)
@@ -216,7 +230,7 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
     retriever.clear_adversarial()
     clean_latencies, clean_gold_ranks = [], []
     for q in queries[:num_queries]:
-        r = retriever.retrieve(q["query"], top_k=top_k, gold_doc_id=q.get("gold_doc_id"))
+        r = retriever.retrieve(q["query"], top_k=top_k, gold_doc_id=gold_spec(q))
         clean_latencies.append(r.latency_s)
         clean_gold_ranks.append(r.gold_rank)
 
@@ -246,7 +260,7 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
 
     polluted_latencies, polluted_gold_ranks, adv_pollution = [], [], []
     for q in queries[:num_queries]:
-        r = polluted.retrieve(q["query"], top_k=top_k, gold_doc_id=q.get("gold_doc_id"))
+        r = polluted.retrieve(q["query"], top_k=top_k, gold_doc_id=gold_spec(q))
         polluted_latencies.append(r.latency_s)
         polluted_gold_ranks.append(r.gold_rank)
         adv_pollution.append(r.adversarial_in_topk)
