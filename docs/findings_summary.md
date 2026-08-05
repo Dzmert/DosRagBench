@@ -10,6 +10,19 @@ was recomputed from the result files for this revision — the previous version 
 this document was compiled on 26 July against `metrics.json` and a refusal
 classifier that has since been shown to be wrong. **Do not quote the old numbers.**
 
+> ### ⛔ HotpotQA is withdrawn as of 5 August 2026
+>
+> The corpus builder keeps one gold passage per query. HotpotQA labels **exactly
+> two** for every query and needs both, so **every HotpotQA query was indexed
+> without half the evidence required to answer it** (§0.1). A model declining to
+> answer under those conditions is largely *correct*, not over-abstaining.
+>
+> **Do not quote the +0.449 HotpotQA risk difference or any HotpotQA figure in
+> this document as an alignment effect.** They are struck through below rather
+> than deleted, so the record stays traceable. NQ is unaffected — its multiple
+> gold labels are redundant, not complementary, so the kept passage still answers
+> the query.
+
 Regeneration order after any change to `src/dosragbench/metrics/refusal.py`:
 
 ```bash
@@ -46,6 +59,55 @@ absent from the corpus (§3.6), so the vulnerability cannot be a safety-alignmen
 effect. `metrics.json` files are left untouched, so every superseded figure stays
 traceable.
 
+## 0.1 The second instrument defect — the corpus builder (5 August 2026)
+
+The classifier was the first measurement instrument to fail an audit. The corpus
+builder is the second, and it invalidates the HotpotQA arm.
+
+`prepare_data.py` reduces qrels to a single gold passage per query — `best_gold`
+at line 167 keeps the highest-scoring row and discards the rest. Checked against
+the qrels with `scripts/check_gold_multiplicity.py`:
+
+| | gold per query | distribution | discarded | what the discards were |
+|---|---|---|---:|---|
+| **NQ** | mean 1.22 | ragged: 2,786×1, 587×2, 75×3, 4×4 | 17.8% | **redundant** — several passages each answer the query alone |
+| **HotpotQA** | **exactly 2, all 7,405 queries** | uniform | **50.0%** | **complementary** — the query needs both |
+
+The shape of the distribution is what distinguishes the two cases. A ragged
+spread is the signature of annotators marking several independently sufficient
+passages, so dropping all but the best-scoring one costs nothing. A count that is
+uniformly 2 across every single query is structural: it is how HotpotQA is
+constructed, and both passages are required.
+
+**Consequence.** Every HotpotQA query in `data_hotpotqa/` is missing one of its
+two required passages, and the missing one is not in the 500,995-passage corpus
+at all. Clean recall@5 of 0.647 measures whether the *one indexed* gold was
+retrieved; even a perfect retrieval leaves the question unanswerable. So the 73–81%
+aligned clean denial on HotpotQA is substantially **correct refusal**, and the
++0.449 risk difference is confounded with missing evidence.
+
+This also disarms the gold-present conditioning that answers the circularity
+objection (§3.10). On HotpotQA, conditioning on `gold_in_topk` selects for *one*
+hop being retrieved, which is still not enough to answer, so the conditioned
+number means nothing there.
+
+**On NQ the same conditioning works and the finding survives** — see §3.10. That
+is the difference between a dataset that can be audited into shape and one that
+cannot.
+
+Two options, neither yet taken:
+
+1. **Rebuild** with all gold passages retained (`--keep-all-gold`, added alongside
+   this note), then re-run the 12 cells. Retrieval must then be scored on whether
+   *all* required passages reached top-k, not just one.
+2. **Replace** with a natively single-hop, non-Wikipedia corpus. Screen candidates
+   with `check_gold_multiplicity.py` *before* building — it prints a
+   complementary/redundant verdict for exactly this purpose.
+
+Reporting this as a negative result is itself defensible and costs nothing: it
+demonstrates the benchmark can audit its own instruments, which is now the second
+time doing so has changed a headline.
+
 ---
 
 ## 1. The datasets
@@ -54,21 +116,29 @@ Two BEIR corpora. Both built by `scripts/prepare_data.py` with seed 42; filler i
 **sampled, not a corpus prefix**, because BEIR corpora are not randomly ordered and
 a prefix would bias the embedding neighbourhood the C-family attacks operate on.
 
-| | BEIR NQ | BEIR HotpotQA |
+| | BEIR NQ | BEIR HotpotQA ⛔ |
 |---|---|---|
 | Full corpus | 2,681,468 passages | 5,233,329 passages |
 | Materialised | **501,000** (1,000 gold + 500,000 filler) | **500,995** (995 gold) |
 | Queries | 1,000, all with a qrels gold label | 1,000 |
-| Clean recall@5 | **0.760** | **0.647** |
-| Retained runs | 50 | 12 |
+| Gold passages the query needs | **1** | **2** |
+| Gold passages actually indexed | **1** ✅ | **1** ⛔ |
+| Clean recall@5 | **0.760** | 0.647 *(of one hop)* |
+| Retained runs | 50 | 12 (withdrawn, §0.1) |
 
 Five HotpotQA gold ids are missing from the corpus and were dropped, hence 995.
 
 Clean recall@5 is constant across every retained run within a dataset (verified:
 0.760 in all 50 NQ runs, 0.647 in all 12 HotpotQA runs) — as expected, since it is
 a property of the corpus, embedder and top-k, not of the attack. **Do not use
-0.647 for NQ.** The gap between the two is the live explanatory variable for the
-dataset effect (§3.5).
+0.647 for NQ.**
+
+**The two are not comparable.** NQ's 0.760 is the probability that the passage
+answering the query was retrieved. HotpotQA's 0.647 is the probability that *one
+of the two required passages* was retrieved — and the other was never indexed, so
+the answerable rate there is not 0.647 but effectively zero. Treating the gap
+between them as a retrieval-quality axis (as §3.5 previously did) compares two
+different quantities.
 
 Build command:
 
@@ -189,17 +259,22 @@ Effect sizes, from the same file:
 |---|---:|---:|---|
 | NQ, all retained | 50 | +0.108 | 39/50 |
 | **NQ, excl. `llama-r1`** | 37 | **+0.189** | **37/37** |
-| **HotpotQA** | 12 | **+0.449** | **12/12** |
+| ~~HotpotQA~~ ⛔ | ~~12~~ | ~~+0.449~~ | ~~12/12~~ |
 | NQ `llama-3.1-8b` | 13 | +0.213 | 13/13 |
 | NQ `mistral-7b` | 11 | +0.186 | 11/11 |
 | NQ `qwen-2.5-7b` | 13 | +0.168 | 13/13 |
 | NQ `llama-r1-8b` | 13 | **−0.122** | **2/13** |
-| HotpotQA `mistral-7b` | 1 | +0.728 | 1/1 |
-| HotpotQA `llama-3.1-8b` | 3 | +0.514 | 3/3 |
-| HotpotQA `qwen-2.5-7b` | 8 | +0.390 | 8/8 |
+| ~~HotpotQA `mistral-7b`~~ ⛔ | ~~1~~ | ~~+0.728~~ | ~~1/1~~ |
+| ~~HotpotQA `llama-3.1-8b`~~ ⛔ | ~~3~~ | ~~+0.514~~ | ~~3/3~~ |
+| ~~HotpotQA `qwen-2.5-7b`~~ ⛔ | ~~8~~ | ~~+0.390~~ | ~~8/8~~ |
 
-**37/37 positive on NQ excluding `llama-r1`, and 12/12 on HotpotQA**, is a stronger
-statement than the mean. No run in either group goes the other way.
+**37/37 positive on NQ excluding `llama-r1`** is a stronger statement than the
+mean. No retained NQ run goes the other way.
+
+The HotpotQA rows are struck through per §0.1 — they are confounded with missing
+evidence and must not be quoted. Note that they were the *largest* effects in the
+table, which is the expected direction for the defect: a corpus where the answer
+was never indexed produces near-total aligned denial and so an inflated gap.
 
 ### 3.2 Which attacks do anything at all
 Aggregated McNemar discordant counts — `c` = queries the attack broke that worked
@@ -279,17 +354,37 @@ vulnerability, rather than a foregone conclusion that all alignment does. It als
 supplies the natural defence direction (§7). Do not bury it, and do not pool it
 into the headline mean.
 
-### 3.5 The dataset effect tracks retrieval quality
-Mean risk difference is +0.189 on NQ (excl. `llama-r1`) and **+0.449 on HotpotQA**
-— 2.4× larger. The corresponding clean recall@5 is 0.760 and 0.647. Aligned clean
-denial is ~1/3 and ~4/5.
+### 3.5 ⛔ WITHDRAWN — "the dataset effect tracks retrieval quality"
 
-This is the predicted direction if the mechanism is context-faithfulness: multi-hop
-questions retrieve worse, worse retrieval means the context genuinely supports the
-answer less often, and a model trained to answer only from context declines. It is
-also why **a third dataset is not needed** — the live axis is retrieval quality, and
-§3.7 measures it *within* both datasets, which is a stronger design than adding a
-third corpus.
+*Superseded 5 August 2026 by §0.1. Kept for traceability; the argument does not
+hold and must not be reused.*
+
+~~Mean risk difference is +0.189 on NQ (excl. `llama-r1`) and **+0.449 on
+HotpotQA** — 2.4× larger. The corresponding clean recall@5 is 0.760 and 0.647.
+This is the predicted direction if the mechanism is context-faithfulness:
+multi-hop questions retrieve worse, worse retrieval means the context genuinely
+supports the answer less often, and a model trained to answer only from context
+declines.~~
+
+**Why it fails.** The argument treats HotpotQA's lower recall as *degraded*
+retrieval of sufficient evidence. It was not — the evidence was **absent by
+construction**. Half of every HotpotQA query's required passages were never
+indexed (§0.1), so the aligned model's refusals there are largely correct. The
++0.449 measures a corpus-build defect, not an alignment effect, and the
+2.4× ratio is an artefact of comparing an answerable corpus to an unanswerable
+one.
+
+**This also reverses the third-dataset conclusion.** The claim that "a third
+dataset is not needed" rested on having two corpora spanning a retrieval-quality
+axis. There is effectively **one usable corpus** (NQ), so a second is now needed
+for any generalisation claim at all — and it should be non-Wikipedia, since NQ and
+HotpotQA are both Wikipedia and never supported a domain-generalisation claim
+even when both were believed sound.
+
+**What survives.** §3.7's within-corpus retrieval-quality binning on NQ is
+untouched: it varies retrieval quality while holding the corpus fixed, so it never
+depended on the cross-dataset comparison. That, plus the gold-present conditioning
+in §3.10, is where the mechanism evidence now lives.
 
 ### 3.6 Genuine safety refusals are effectively absent
 Refusal-type composition over all 62 retained runs, baseline and attacked pooled
@@ -415,6 +510,71 @@ is decisively ruled out as the mechanism. This belongs in the results chapter as
 headline control, not in an appendix, and `docs/positioning.md` should cite these
 numbers directly instead of pointing at the script.
 
+### 3.10 The circularity objection, and the answer to it
+
+This is the strongest available attack on the thesis and it must be pre-empted in
+the report rather than left for an examiner:
+
+> Context-faithfulness means *do not answer when the context does not support an
+> answer*. You then degraded the context. A model declining to answer is behaving
+> **correctly**. You have defined the vulnerability into existence.
+
+The objection is **valid wherever the gold passage was evicted from top-k** — the
+evidence really is gone there, and refusing really is right. It does **not** apply
+where the gold passage is still in the retrieved context, because a faithful model
+would answer from it. `gold_in_topk` splits the two populations.
+
+From `scripts/gold_present_conditioning.py`, pooled over the 55 NQ runs with labels
+recomputed live from the answer text:
+
+**Gold passage present in top-k** — refusing is never correct:
+
+| | clean | attacked | attack effect |
+|---|---:|---:|---:|
+| Base | 0.075 | 0.090 | +0.015 |
+| Aligned | **0.201** | **0.228** | +0.026 |
+| **alignment effect** | **+0.126** | **+0.138** | |
+
+n = 38,000 clean and ~30,230 attacked per side.
+
+**Two things follow, and the second is the more interesting.**
+
+1. **The finding is not circular.** On 30,229 attacked queries the answer-bearing
+   passage was in the model's context and the aligned model refused anyway, at
+   2.5× the base rate. Faithfulness does not predict that gap; miscalibrated
+   abstention does.
+
+2. **The attack is not where the damage comes from.** The attack moves aligned
+   denial by +0.026. *Alignment alone*, with zero adversarial text, moves it by
+   **+0.126** — roughly five times as much. The vulnerability is a **standing
+   property of the aligned models**, and the attack is an amplifier rather than a
+   cause.
+
+That reframes the contribution honestly: a weaker claim about the attack, a much
+stronger and more surprising claim about alignment. It is also consistent with
+§3.3's clean refusal floor and with the 21.2% NQ false-refusal rate measured with
+gold at **rank 0**, which is the same effect with retrieval difficulty removed
+entirely.
+
+**Caveats, all of which belong in the report:**
+
+- Pooled **unweighted** across attacks and pairs, and *not* conditioned on
+  clean-answerability the way the headline ASR is. Treat it as a robustness check,
+  not a replacement effect size. A per-cell version with the McNemar conjunction is
+  the next step.
+- **Base's low denial is not proof of correct answering.** With `gold_answer`
+  empty (§1) there is no answer-correctness ground truth, so a base model that
+  answers may be answering *wrongly*. The gold-evicted panel makes this concrete:
+  base still answers ~80% of the time with the evidence removed, which is very
+  likely hallucination. The right reading of the base rate is a **floor on
+  abstention**, not a ceiling on accuracy.
+- The comparison is therefore "aligned abstains far more than base on identical
+  context", not "aligned is wrong and base is right".
+
+**On HotpotQA this conditioning cannot rescue anything** — `gold_in_topk` there
+means *one of two required hops* was retrieved, which is still not enough to
+answer. See §0.1.
+
 ---
 
 ## 4. What did not work
@@ -490,14 +650,33 @@ after the classifier was fixed, so no one can claim it was tuned to the result.
 condition has zero coverage. Either re-run it or remove it from the methodology
 description.
 
-### 4.4 HotpotQA is 12 of 52 cells
+### 4.4 ⛔ HotpotQA is confounded, and separately only 12 of 52 cells
 Runs completed: `llama-3.1-8b` × {B2, D1, D3}, `mistral-7b` × {D2}, `qwen-2.5-7b` ×
 {A1, A3, B1, B2, B3, C1, C2, D2}. No `llama-r1-8b` coverage at all (blocked on a
 tokenizer path issue).
 
-At 23% complete this is a **targeted probe, not a replication**, and it must be
-described that way. It is also the first thing an examiner will notice. Either
-complete the grid (~40 runs, 40–60 GPU h) or state the limitation plainly.
+**Completing the grid would not fix it.** The incompleteness was the visible
+problem; §0.1 is the disqualifying one. Running the remaining 40 cells against a
+corpus that is missing half of every query's required evidence would produce 40
+more confounded numbers. **Do not spend GPU hours here before the corpus is
+rebuilt.**
+
+Sequence, if HotpotQA is kept at all:
+
+```bash
+python scripts/prepare_data.py --corpus beir --dataset hotpotqa \
+    --num-queries 1000 --kb-size 500000 --keep-all-gold \
+    --output-dir data_hotpotqa
+```
+
+then update retrieval scoring to require **all** of `gold_doc_ids` in top-k before
+calling a query answerable, then re-run. Recall@5 will drop sharply — that is the
+honest number, and the current 0.647 was never measuring the same thing.
+
+The alternative is to drop HotpotQA and report §0.1 as a negative result. Given
+the demo is mandatory and the prompt ablation is still outstanding, **the negative
+result is the better use of the remaining time**, and it is a real contribution:
+it is the second instrument this benchmark has audited into failure.
 
 ### 4.5 Compute losses
 70 jobs exited status 0; 8 failed (4 × exit 2, 4 × exit 1) with 9 tracebacks across
@@ -590,7 +769,7 @@ the important result — the headline findings were not resting on classifier de
 | | before validation | after |
 |---|---:|---:|
 | NQ excl. `llama-r1` | +0.177 | **+0.189** |
-| HotpotQA | +0.449 | **+0.449** |
+| ~~HotpotQA~~ ⛔ | ~~+0.449~~ | ~~+0.449~~ |
 | NQ `llama-r1` | −0.126 | **−0.122** |
 
 Labels are stored as *judgements*, not scores, and the scorer reclassifies live
@@ -767,10 +946,10 @@ mitigates it".
 |---|---|---|
 | Genuine paradoxes | 39 of 62 retained runs | `avi_significance.json` |
 | Mean risk diff, NQ excl. `llama-r1` | +0.189 (37/37 positive) | `avi_significance.json` |
-| Mean risk diff, HotpotQA | +0.449 (12/12 positive) | `avi_significance.json` |
+| ~~Mean risk diff, HotpotQA~~ ⛔ | ~~+0.449 (12/12 positive)~~ — withdrawn, §0.1 | `avi_significance.json` |
 | `llama-r1` reversal | −0.122, 11/13 protective, q → 6.7e-36 | `avi_significance.json` |
 | Aligned clean denial, NQ | 29–37% by family (excl. `llama-r1`, 13%) | `avi_report_clean.json` |
-| Aligned clean denial, HotpotQA | 73–81% by family | `avi_report_clean.json` |
+| ~~Aligned clean denial, HotpotQA~~ ⛔ | ~~73–81% by family~~ — largely correct refusal, §0.1 | `avi_report_clean.json` |
 | Base clean denial | 0.0–3.6% (true base models) | `avi_report_clean.json` |
 | Epistemic vs safety refusals | 38.46% vs 0.028% (NQ aligned) | §3.6, recomputed live |
 | Explicit-safety refusals, whole corpus | 28 in 248,000 records | §3.6 |
@@ -779,7 +958,7 @@ mitigates it".
 | Human inter-annotator agreement | 0.674 / 86.0% (n=50) | `score_validation.py` |
 | Human test–retest, primary labeller | 0.774 / 90.0% (n=50) | `score_validation.py` |
 | Corpus-level classifier error | 2.05% | §5, population-reweighted |
-| Clean recall@5 | NQ 0.760, HotpotQA 0.647 | `metrics_v2.json` |
+| Clean recall@5 | NQ **0.760**; HotpotQA 0.647 measures one of two required hops, §0.1 | `metrics_v2.json` |
 | C1 gold eviction | flat at 60–65% across a 20× budget range | `c1_summary.csv` |
 | C1 vs RAND at equal budget | 62.0% vs 1.5% eviction | `ablation_katana.log` |
 | Median latency inflation | 1.09 aligned / 1.19 base | `avi_report_clean.json` |

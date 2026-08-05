@@ -79,15 +79,43 @@ def main() -> None:
     # number of passages, so the discarded ones are required evidence. A ragged
     # spread means annotators marked several passages that each answer the query
     # on their own, so dropping all but the best-scoring one costs nothing.
+    print()
+    blockers: list[str] = []
+
     if len(counts) == 1 and next(iter(counts)) > 1:
-        print("\nVERDICT: uniform gold count -> COMPLEMENTARY evidence (multi-hop).")
-        print("  Every query loses required evidence. Denial here is largely")
-        print("  CORRECT refusal, not over-abstention. Not usable as-is.")
-    elif max(counts) > 1:
-        print("\nVERDICT: ragged gold counts -> REDUNDANT annotation.")
-        print("  The kept passage still answers the query. Safe to use as-is.")
+        blockers.append(
+            f"COMPLEMENTARY evidence: a uniform {next(iter(counts))} gold passages for "
+            "every query is the multi-hop signature, so the discarded ones are\n"
+            "  required. Denial would be largely CORRECT refusal, not over-abstention."
+        )
+
+    # A ragged spread means redundant annotation, but that alone does not make a
+    # corpus usable. TREC-COVID is ragged and still unusable: 50 topics with ~1,300
+    # "gold" each is a document-ranking benchmark, where gold means topically
+    # relevant rather than answer-bearing. Denial is not measurable against that.
+    mean_gold = total_gold / max(n_queries, 1)
+    if mean_gold > 20:
+        blockers.append(
+            f"RANKING BENCHMARK, not QA: {mean_gold:.0f} gold passages per query means "
+            "'gold' marks\n  topical relevance, not an answer. A refusal cannot be "
+            "scored as wrong against it."
+        )
+    if n_queries < 500:
+        blockers.append(
+            f"TOO FEW QUERIES: {n_queries} with qrels, against the 1,000 the existing "
+            "runs use.\n  Cells would not be comparable to the NQ grid."
+        )
+
+    if blockers:
+        print("VERDICT: NOT usable as-is --")
+        for b in blockers:
+            print(f"  - {b}")
     else:
-        print("\nVERDICT: single gold throughout. Safe to use as-is.")
+        print("VERDICT: usable. Redundant annotation and enough queries; the kept")
+        print("  passage still answers the query.")
+
+    print("\nStructure is necessary but not sufficient -- also confirm the queries are")
+    print("questions with answers in the corpus, not claims to verify or topics to rank.")
 
     qpath = args.queries or pathlib.Path(f"data_{args.dataset}/queries.json")
     if args.dataset == "nq" and args.queries is None:

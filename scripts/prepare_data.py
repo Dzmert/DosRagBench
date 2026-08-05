@@ -146,7 +146,8 @@ def _passage_text(row: dict) -> str:
     return f"{title}. {text}" if title else text
 
 
-def build_beir(dataset: str, num_queries: int, kb_size: int, seed: int = 42) -> dict:
+def build_beir(dataset: str, num_queries: int, kb_size: int, seed: int = 42,
+               keep_all_gold: bool = False) -> dict:
     """Build a BEIR dataset: KB = gold passages (from qrels) + `kb_size` random filler."""
     from datasets import load_dataset
 
@@ -165,12 +166,14 @@ def build_beir(dataset: str, num_queries: int, kb_size: int, seed: int = 42) -> 
     logger.info(f"Loading qrels: {qrels_repo} (split=test)")
     qrels_ds = load_dataset(qrels_repo, split="test")
     best_gold: dict[str, tuple[int, str]] = {}
+    all_gold: dict[str, list[str]] = {}
     for r in qrels_ds:
         qid = str(r["query-id"] if "query-id" in r else r["query_id"])
         cid = str(r["corpus-id"] if "corpus-id" in r else r["corpus_id"])
         score = int(r.get("score", 1))
         if qid not in best_gold or score > best_gold[qid][0]:
             best_gold[qid] = (score, cid)
+        all_gold.setdefault(qid, []).append(cid)
 
     # 2. queries: id -> text (only keep queries that have a gold label)
     logger.info(f"Loading queries: {corpus_repo} (config=queries)")
@@ -188,7 +191,19 @@ def build_beir(dataset: str, num_queries: int, kb_size: int, seed: int = 42) -> 
             f"Only {len(selected_qids)} queries have qrels; requested {num_queries}."
         )
 
-    gold_ids = {best_gold[qid][1] for qid in selected_qids}
+    # `keep_all_gold` indexes every labelled gold passage, not just the best-scoring
+    # one. It exists because the single-gold reduction silently broke HotpotQA: those
+    # queries are 2-hop and need BOTH passages, so indexing one left every query
+    # unanswerable and made refusals correct rather than adversarial. See
+    # docs/findings_summary.md §0.1 and scripts/check_gold_multiplicity.py.
+    #
+    # For corpora whose extra golds are redundant (NQ, FiQA) this changes nothing
+    # about answerability -- it only enlarges the gold set -- so it is off by default
+    # and the existing NQ results stay reproducible.
+    if keep_all_gold:
+        gold_ids = {cid for qid in selected_qids for cid in all_gold[qid]}
+    else:
+        gold_ids = {best_gold[qid][1] for qid in selected_qids}
 
     # 3. corpus: resolve gold passages + sample filler passages
     logger.info(f"Loading corpus: {corpus_repo} (config=corpus)")
@@ -229,12 +244,21 @@ def build_beir(dataset: str, num_queries: int, kb_size: int, seed: int = 42) -> 
         gold_doc_id = best_gold[qid][1]
         if gold_doc_id not in kb_id_set:
             continue
-        queries.append({
+        record = {
             "query_id": qid,
             "query": q_text[qid],
             "gold_answer": "",  # BEIR queries carry no short answer; unused by C1
             "gold_doc_id": gold_doc_id,
-        })
+        }
+        if keep_all_gold:
+            # Additive: `gold_doc_id` keeps its old meaning so existing scoring code
+            # is unaffected. `gold_doc_ids` is the full required set -- retrieval on
+            # a complementary-evidence corpus must be scored against ALL of these
+            # reaching top-k, not just the one.
+            record["gold_doc_ids"] = [
+                c for c in all_gold[qid] if c in kb_id_set
+            ]
+        queries.append(record)
 
     return {"queries": queries, "kb_docs": kb_docs, "source": f"beir:{dataset}"}
 
@@ -252,13 +276,20 @@ def main():
     parser.add_argument("--kb-size", type=int, default=500000,
                         help="Number of filler docs (gold docs added on top)")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--keep-all-gold", action="store_true",
+                        help="Index every labelled gold passage per query, not just "
+                             "the highest-scoring one, and emit gold_doc_ids alongside "
+                             "gold_doc_id. Required for complementary-evidence corpora "
+                             "such as HotpotQA, where the query needs all of them; see "
+                             "scripts/check_gold_multiplicity.py")
     parser.add_argument("--output-dir", type=Path, default=DATA_DIR)
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     if args.corpus == "beir":
-        data = build_beir(args.dataset, args.num_queries, args.kb_size, seed=args.seed)
+        data = build_beir(args.dataset, args.num_queries, args.kb_size, seed=args.seed,
+                          keep_all_gold=args.keep_all_gold)
     else:
         data = build_synthetic(args.num_queries, args.kb_size, seed=args.seed)
 
