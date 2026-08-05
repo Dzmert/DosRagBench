@@ -29,6 +29,13 @@ import pathlib
 QRELS_REPO = {
     "nq": "BeIR/nq-qrels",
     "hotpotqa": "BeIR/hotpotqa-qrels",
+    # Candidates for a third corpus. Check these BEFORE building one: a uniform
+    # gold count above 1 means complementary evidence (like HotpotQA) and the
+    # single-gold reduction would drop something the query needs. A ragged
+    # distribution means redundant annotation (like NQ) and is harmless.
+    "fiqa": "BeIR/fiqa-qrels",
+    "trec-covid": "BeIR/trec-covid-qrels",
+    "scifact": "BeIR/scifact-qrels",
 }
 
 
@@ -67,6 +74,20 @@ def main() -> None:
     print(f"\nprepare_data.py keeps 1 per query -> {kept} of {total_gold} gold rows")
     print(f"DISCARDED: {total_gold - kept} gold passages "
           f"({(total_gold - kept) / max(total_gold, 1):.1%} of the labelled evidence)")
+
+    # A uniform count > 1 is the multi-hop signature: every query needs the same
+    # number of passages, so the discarded ones are required evidence. A ragged
+    # spread means annotators marked several passages that each answer the query
+    # on their own, so dropping all but the best-scoring one costs nothing.
+    if len(counts) == 1 and next(iter(counts)) > 1:
+        print("\nVERDICT: uniform gold count -> COMPLEMENTARY evidence (multi-hop).")
+        print("  Every query loses required evidence. Denial here is largely")
+        print("  CORRECT refusal, not over-abstention. Not usable as-is.")
+    elif max(counts) > 1:
+        print("\nVERDICT: ragged gold counts -> REDUNDANT annotation.")
+        print("  The kept passage still answers the query. Safe to use as-is.")
+    else:
+        print("\nVERDICT: single gold throughout. Safe to use as-is.")
 
     qpath = args.queries or pathlib.Path(f"data_{args.dataset}/queries.json")
     if args.dataset == "nq" and args.queries is None:
