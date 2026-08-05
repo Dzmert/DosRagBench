@@ -1,0 +1,67 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────────────────────
+# DoSRAGBench external baseline: Shafran et al. blocker / jamming documents
+# (arXiv:2406.05870, USENIX Sec 2025).
+#
+# This is NOT one of our attacks -- it is the comparison point Bao asked for
+# against a specific paper rather than a survey. Its threat model is STRONGER
+# than ours: it optimises against the target RAG via black-box feedback, where
+# our attacks are optimisation-free.
+#
+# Cost is the thing to watch. Worst case is iters x batch x queries x 2 sides;
+# at the defaults that is 25 x 8 x 50 x 2 = 20,000 generations. It early-aborts
+# on refusal or on a stall, so the real figure is far lower -- but this has never
+# been run, so SMOKE TEST FIRST and read the throughput off the log:
+#
+#   qsub -v NUM_QUERIES=5,WALLTIME_NOTE=smoke scripts/run_blocker_katana.pbs
+#
+# Then scale to the configured 50 once you know seconds-per-query.
+#
+# Submit:  qsub -v NUM_QUERIES=50 scripts/run_blocker_katana.pbs
+# Watch:   qstat -u $USER
+# ─────────────────────────────────────────────────────────────────────────────
+#PBS -N dosrag_blocker
+#PBS -l select=1:ncpus=8:ngpus=1:mem=90gb
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+set -euo pipefail
+
+PAIR=${PAIR:-llama-3.1-8b}
+NUM_QUERIES=${NUM_QUERIES:-50}
+ITERS=${ITERS:-25}
+BATCH=${BATCH:-8}
+TOKENS=${TOKENS:-50}
+
+PROJECT="$HOME/thesis_b/DosRagBench"
+cd "$PROJECT"
+
+if [ -f .env ]; then
+    set -a; source .env; set +a
+fi
+
+export HF_HOME="/srv/scratch/$USER/hf_cache"
+export HF_DATASETS_CACHE="/srv/scratch/$USER/hf_cache/datasets"
+export DOSRAGBENCH_CACHE="/srv/scratch/$USER/dosragbench_cache"
+mkdir -p "$HF_HOME" "$HF_DATASETS_CACHE" "$DOSRAGBENCH_CACHE"
+
+module load python/3.11
+source .venv/bin/activate
+
+echo "=========================================="
+echo "Blocker baseline (Shafran et al.)"
+echo "pair=$PAIR queries=$NUM_QUERIES iters=$ITERS batch=$BATCH tokens=$TOKENS"
+echo "worst case: $((ITERS * BATCH * NUM_QUERIES * 2)) generations across both sides"
+echo "Node:    $(hostname)"
+echo "Started: $(date)"
+echo "=========================================="
+
+python3 scripts/run_attack.py \
+    --category BLOCKER \
+    --model-pair "$PAIR" \
+    --num-queries "$NUM_QUERIES" \
+    --blocker-iters "$ITERS" \
+    --blocker-batch "$BATCH" \
+    --blocker-tokens "$TOKENS"
+
+echo "Finished: $(date)"
