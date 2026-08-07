@@ -118,14 +118,23 @@ result in §3.11; §6.1 is downgraded accordingly.
 | Aligned clean floor, chat prompt (A0) | 0.371 |
 | Aligned clean floor, base prompt (A2) | **0.138** |
 | Share of the floor attributable to prompt wording | **~63%** |
+| Base clean floor, chat prompt (A3) | 0.078 |
 | Pre-registered prediction for A2 | 0.20–0.30 — **wrong** |
-| Prompt-matched alignment effect (floor) | **+0.134** against +0.367 under `auto` |
-| Prompt-matched alignment effect (ASR) | **+0.204** against +0.318 under `auto` |
+| Prompt-matched alignment effect (floor), base prompt | **+0.134** |
+| Prompt-matched alignment effect (floor), chat prompt | **+0.293** |
+| *(unmatched `auto` figure, for comparison)* | *+0.367* |
+| **Prompt × training interaction** | **+0.159** |
 
 **Every figure in this document outside §3.11 uses `auto` prompts and is therefore
-an upper bound on the alignment effect.** The mechanism survives — a 34× floor
-ratio with wording held constant — but at roughly 40–60% of the reported magnitude.
-Lead with the prompt-matched numbers.
+an upper bound on the alignment effect.** The mechanism survives — with wording
+held constant the effect is +0.134 to +0.293 depending on which wording — but at
+roughly 40–80% of the reported magnitude. Lead with the conservative +0.134.
+
+**The completed 2×2 turned the confound into a result.** The refusal licence buys a
+base model +0.074 and an aligned model +0.233 — the same instruction, a factor of
+3.1 apart. Instruction tuning is what makes an availability-lowering instruction
+operative. The falsification test was not met on either clause (A2 = 0.138, not
+< 0.10; A3 = 0.078, not > 0.20).
 
 ---
 
@@ -617,7 +626,7 @@ queries per arm.
 | A0 | aligned | chat (`auto`) | 0.371 | 0.329 | 629 |
 | A1 | aligned | chat, no refusal licence | 0.243 | 0.395 | 757 |
 | A2 | aligned | base | **0.138** | 0.215 | 862 |
-| A3 | base | chat | *outstanding* | | |
+| A3 | base | chat | 0.078 | 0.038 | 922 |
 
 **The pre-registered prediction was wrong.** A2's floor was predicted to land at
 0.20–0.30 and came in at **0.138**, in the "partial" band. Recorded here rather
@@ -662,15 +671,59 @@ disproportionately attackable. ASR rose because the denominator got harder. This
 the clearest available demonstration of why the clean floor is the primary endpoint
 and attributable ASR is not.
 
-**A3 is still outstanding and is interpretively decisive**, not merely a
-falsification check. Falsification required A2 < 0.10 *and* A3 > 0.20; A2 is 0.138,
-so **this experiment cannot refute the mechanism claim**. But A3 determines how the
-mechanism is described:
+**A3 landed on the interaction branch.** Falsification required A2 < 0.10 *and*
+A3 > 0.20. A2 is 0.138 and A3 is 0.078 — **both clauses fail, so the pre-registered
+falsification test is not met on either arm**, not merely on one.
 
-- A3 floor near 0 → the refusal licence only works on a model *trained* to honour
-  it. That is an interaction effect and a stronger claim than the original.
-- A3 floor near 0.14 → the licence alone reproduces the aligned floor, and the
-  training account weakens sharply.
+#### The completed 2×2
+
+With A3 in, all four cells of prompt × training exist. The base/base cell is the
+base side of the reference run, which already used `RAG_PROMPT_BASE`. **All four
+cells are n = 1,000 with no conditioning**, so this table is directly comparable
+across cells in a way the ASR figures are not:
+
+**Clean denial floor (no attack at all):**
+
+| | base prompt | chat prompt | prompt effect |
+|---|---:|---:|---:|
+| **base model** | 0.004 | 0.078 | +0.074 |
+| **aligned model** | 0.138 | 0.371 | +0.233 |
+| **training effect** | **+0.134** | **+0.293** | |
+
+**Interaction: +0.159** (0.371 − 0.138 − 0.078 + 0.004). The interaction term is
+*larger than the base model's entire response to the prompt.*
+
+The refusal licence is worth **+0.074 to a base model and +0.233 to an aligned one —
+a factor of 3.1**. The instruction is the same string in both cases. What differs is
+whether the model was trained to obey instructions.
+
+**This is the thesis in one number.** Instruction tuning does not merely raise the
+refusal floor as a main effect; it makes the model *responsive to an instruction
+that lowers availability*. A base model given an explicit licence to refuse largely
+ignores it. An aligned model given the same licence acts on it. Alignment is what
+converts "you may decline" from decoration into an attack surface.
+
+The training effect is now bracketed by two prompt-matched estimates rather than
+one: **+0.134 with the base prompt, +0.293 with the chat prompt.** The `auto`
+figure (+0.367) exceeds both because it also carries the wording difference.
+**Quote +0.134 as the conservative estimate** and state the range — the effect is
+prompt-dependent, and that dependence is itself the finding.
+
+**Three caveats, all of which must be stated.**
+
+1. **The 2×2 measures availability, not utility.** `gold_answer` is empty for every
+   BEIR query (§ "Known data hazards"), so nothing here establishes that the base
+   model's 0.004 floor means it *answered correctly* — only that it did not decline.
+   A model that never notices it cannot answer will score well on this metric. That
+   is a coherent thing to measure under a denial-of-service threat model, which is
+   what the reframing (§0.2, §3.10) commits to, but it is not a claim about answer
+   quality and must not be written as one.
+2. **The ASR 2×2 is not clean.** Each cell conditions on its own answerable set
+   (996 / 922 / 862 / 629), so the ASR cells are not paired across cells and the
+   ASR interaction (+0.087) inherits the §6.2 denominator problem. The floor table
+   above has no such defect. Lead with the floor.
+3. **Measured once.** One model pair (`llama-3.1-8b`), one attack (D3), one dataset
+   (NQ). The interaction is a single observation, not a replicated result.
 
 ---
 
@@ -954,11 +1007,17 @@ includes *"If the context doesn't contain the answer, say so briefly"* — close
 instruction to refuse. The base version (`rag.py:26`) does not, and adds two
 few-shot exemplars that both answer directly.
 
-**This is no longer an open threat: it was run.** See §3.11 for the ablation. The
-short version is that the confound is **real and large — about 63% of the aligned
-clean-denial floor is prompt wording** — and that the alignment effect survives it
-at roughly 40–60% of its reported magnitude. The pre-registered prediction that
-A2's floor would land at 0.20–0.30 was **wrong**; it landed at 0.138.
+**This is no longer an open threat: it was run, and all four arms have landed.** See
+§3.11 for the ablation. The short version is that the confound is **real and large —
+about 63% of the aligned clean-denial floor is prompt wording** — and that the
+alignment effect survives it at +0.134 (base prompt) to +0.293 (chat prompt). The
+pre-registered prediction that A2's floor would land at 0.20–0.30 was **wrong**; it
+landed at 0.138.
+
+**The fourth arm converted the weakness into a finding.** The full 2×2 shows a
+**+0.159 prompt × training interaction**: the refusal licence raises a base model's
+floor by 0.074 and an aligned model's by 0.233. The confound is not merely bounded —
+measuring it produced the sharpest statement of the mechanism in the document.
 
 **Consequence for the rest of this document.** Every figure computed under `auto`
 prompts — which is every figure outside §3.11 — carries an upward prompt bias on
@@ -974,9 +1033,11 @@ chat prompt, and it still shows a large effect — in the opposite direction (§
 retrieval quality under a **fixed** prompt, which no wording difference can explain.
 Both were immune to this confound before the ablation and remain so.
 
-**Status: downgraded from "the most attackable point in the methodology" to a
-measured and bounded caveat** — but a caveat with a large coefficient, which must
-be disclosed rather than buried.
+**Status: closed as a threat, retained as a reporting obligation.** All four arms
+ran. The confound is real and large, and every `auto` figure must be labelled an
+upper bound — but the ablation that measured it also produced the +0.159 interaction
+(§3.11), which is a stronger statement of the mechanism than anything the confounded
+runs supported. The remaining obligation is disclosure, not further experiment.
 
 ### 6.2 Shrinking denominators
 Counting epistemic refusals as denials pushes aligned clean-denial rates high —

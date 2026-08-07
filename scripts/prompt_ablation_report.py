@@ -43,6 +43,9 @@ ROOT = "results_promptablation"
 REFERENCE = "results/llama-3.1-8b_D3"
 
 ARMS = [
+    # The base/base cell is free: the reference run's base side already used
+    # RAG_PROMPT_BASE (no chat template), so it completes the 2x2 with no extra run.
+    ("--", "base", "base (auto)", REFERENCE, "base"),
     ("A0", "aligned", "chat (auto)", REFERENCE, "aligned"),
     ("A1", "aligned", "chat-no-refusal",
      f"{ROOT}/llama-3.1-8b_D3_prompt-chat-no-refusal_aligned", "aligned"),
@@ -142,6 +145,37 @@ def main() -> None:
             print(f"\n  answerable denominator rose {a0['n_answerable']} -> "
                   f"{a2['n_answerable']}, as predicted (secondary 3):\n  the §6.2 "
                   "selection artifact shrinks mechanically.")
+
+    # ─── The 2x2, once all four cells exist ──────────────────────────────
+    bb = results.get("--")
+    if all(x is not None for x in (bb, a0, a2, a3)):
+        print("\n--- prompt x training, clean denial floor ---")
+        print("  All four cells are n=1000 with no conditioning, so unlike the ASR")
+        print("  column these are directly comparable across cells.\n")
+        print(f"  {'':16s} {'base prompt':>12s} {'chat prompt':>12s} {'prompt eff':>12s}")
+        print(f"  {'base model':16s} {bb['floor']:12.3f} {a3['floor']:12.3f} "
+              f"{a3['floor'] - bb['floor']:+12.3f}")
+        print(f"  {'aligned model':16s} {a2['floor']:12.3f} {a0['floor']:12.3f} "
+              f"{a0['floor'] - a2['floor']:+12.3f}")
+        print(f"  {'training eff':16s} {a2['floor'] - bb['floor']:+12.3f} "
+              f"{a0['floor'] - a3['floor']:+12.3f}")
+
+        interaction = a0["floor"] - a2["floor"] - a3["floor"] + bb["floor"]
+        lic_base = a3["floor"] - bb["floor"]
+        lic_aligned = a0["floor"] - a2["floor"]
+        print(f"\n  interaction: {interaction:+.3f}")
+        print(f"  The refusal licence is worth {lic_base:+.3f} to a base model and "
+              f"{lic_aligned:+.3f}\n  to an aligned one"
+              + (f" -- a factor of {lic_aligned / lic_base:.1f}."
+                 if lic_base > 0 else ".")
+              + " Same string; what differs is whether\n  the model was trained to "
+                "obey instructions.")
+        print(f"\n  Prompt-matched training effect: {a2['floor'] - bb['floor']:+.3f} "
+              f"(base prompt) to "
+              f"{a0['floor'] - a3['floor']:+.3f} (chat prompt).\n"
+              "  Quote the smaller as the conservative estimate; state the range.")
+        print("\n  CAVEAT: this is availability, not correctness. gold_answer is empty\n"
+              "  for every BEIR query, so a low floor does not mean correct answers.")
 
     print("\nDo NOT edit docs/prompt_confound_preregistration.md after reading this.")
     print("If a number landed outside the predicted band, say so in the thesis.")
