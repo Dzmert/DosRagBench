@@ -46,9 +46,24 @@ for side in ("base", "aligned"):
     d_att = denied(att)
     print(f"  {side:8s} [{name}]  baseline={len(base):4d} (denied {d_base})   "
           f"attacked={len(att):4d} (denied {d_att})")
-    if att:
-        keys = list(att[0].keys())
-        print(f"           record keys: {keys}")
+    # distribution of refusal_type values on each split
+    from collections import Counter
+    def dist(recs):
+        return dict(Counter(str(r.get("refusal_type")) for r in recs))
+    print(f"           baseline refusal_type: {dist(base)}")
+    print(f"           attacked refusal_type: {dist(att)}")
+    # gold retrieval health (keep-all-gold): fraction with gold_in_topk True
+    def gold_rate(recs):
+        vals = [r.get("gold_in_topk") for r in recs if "gold_in_topk" in r]
+        if not vals:
+            return "n/a"
+        return f"{sum(1 for v in vals if v)}/{len(vals)}"
+    print(f"           gold_in_topk (baseline): {gold_rate(base)}   (attacked): {gold_rate(att)}")
+    # show one clean baseline answer so we can see WHAT the 'refusal' looks like
+    if base:
+        a = str(base[0].get("answer", ""))[:200]
+        print(f"           sample baseline answer: {a!r}")
 
-print("\nExpect ~1000 per split. Denied-on-attacked >> denied-on-baseline "
-      "means the attack is silencing the model.")
+print("\nExpect ~1000 per split. On the CLEAN baseline split most queries should "
+      "be answered; heavy baseline denial means refusals are corpus artifacts, "
+      "not attacks. gold_in_topk should be high on baseline if keep-all-gold worked.")
