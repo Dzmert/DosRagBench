@@ -57,11 +57,12 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 
-def load_dataset():
-    queries_path = DATA_DIR / "queries.json"
-    kb_path = DATA_DIR / "knowledge_base.json"
+def load_dataset(data_dir=DATA_DIR):
+    queries_path = data_dir / "queries.json"
+    kb_path = data_dir / "knowledge_base.json"
     if not queries_path.exists() or not kb_path.exists():
-        raise FileNotFoundError("Missing data/. Run scripts/prepare_data.py first.")
+        raise FileNotFoundError(
+            f"Missing {data_dir}/. Run scripts/prepare_data.py first.")
     with open(queries_path) as f:
         queries = json.load(f)
     with open(kb_path) as f:
@@ -302,6 +303,12 @@ def main():
     parser.add_argument("--category", required=True)
     parser.add_argument("--model-pair", required=True)
     parser.add_argument("--num-queries", type=int, default=None)
+    parser.add_argument("--data-dir", type=Path, default=DATA_DIR,
+                        help="Directory holding queries.json + knowledge_base.json "
+                             "(default: data/). Point at data_hotpotqa/ to run the "
+                             "HotpotQA corpus WITHOUT overwriting the NQ data in data/. "
+                             "The index cache is keyed by doc-id hash, so a different "
+                             "corpus builds its own index and never reuses the NQ one.")
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--embedder", default="sentence-transformers/all-MiniLM-L6-v2")
     parser.add_argument("--device", default="auto",
@@ -354,7 +361,7 @@ def main():
     if args.num_queries is not None:
         attack_config.num_queries = args.num_queries
 
-    queries, kb_docs = load_dataset()
+    queries, kb_docs = load_dataset(args.data_dir)
     num_queries = min(attack_config.num_queries, len(queries))
     logger.info(f"Loaded {len(queries)} queries, {len(kb_docs)} KB docs; using {num_queries} queries")
 
