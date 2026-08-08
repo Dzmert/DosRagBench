@@ -4,9 +4,14 @@
 Usage:
     python3 scripts/check_pilot.py [results_dir]
 
-Defaults to results_hotpotqa/llama-3.1-8b_D2. Prints record count, the keys on
-the first record, and whether gold_doc_ids is present (confirms --keep-all-gold
-carried through the run).
+Defaults to results_hotpotqa/llama-3.1-8b_D2. Confirms both model sides ran to
+completion and reports the denial (refusal) rate on the attacked split so you
+can eyeball whether the attack did anything before fanning out the full matrix.
+
+raw_results.json shape:
+    { "base": {..., "baseline": [rec...], "attacked": [rec...]},
+      "aligned": {..., "baseline": [rec...], "attacked": [rec...]} }
+Each rec has: query, answer, refusal_type, severity, retrieved_adversarial_count, ...
 """
 import json
 import sys
@@ -19,24 +24,31 @@ if not path.exists():
     sys.exit(f"MISSING: {path} does not exist.")
 
 data = json.load(open(path))
+print(f"file: {path}")
 
-# Records may be a list, or a dict with a 'results'/side split -- handle both.
-if isinstance(data, dict):
-    print("top-level keys:", list(data.keys()))
-    # find the first list of records we can inspect
-    records = None
-    for v in data.values():
-        if isinstance(v, list) and v and isinstance(v[0], dict):
-            records = v
-            break
-    if records is None:
-        sys.exit("Could not find a list of records inside the dict.")
-else:
-    records = data
+for side in ("base", "aligned"):
+    if side not in data:
+        print(f"  {side}: MISSING")
+        continue
+    s = data[side]
+    name = s.get("model_name", "?")
+    base = s.get("baseline", [])
+    att = s.get("attacked", [])
+    # denial = anything with a non-null / non-"none" refusal_type on attacked split
+    def denied(recs):
+        n = 0
+        for r in recs:
+            rt = r.get("refusal_type")
+            if rt and str(rt).lower() != "none":
+                n += 1
+        return n
+    d_base = denied(base)
+    d_att = denied(att)
+    print(f"  {side:8s} [{name}]  baseline={len(base):4d} (denied {d_base})   "
+          f"attacked={len(att):4d} (denied {d_att})")
+    if att:
+        keys = list(att[0].keys())
+        print(f"           record keys: {keys}")
 
-print(f"{len(records)} records")
-first = records[0]
-print("record keys:", list(first.keys()))
-print("has gold_doc_ids:", "gold_doc_ids" in first)
-if "gold_doc_ids" in first:
-    print("example gold_doc_ids:", first["gold_doc_ids"])
+print("\nExpect ~1000 per split. Denied-on-attacked >> denied-on-baseline "
+      "means the attack is silencing the model.")
