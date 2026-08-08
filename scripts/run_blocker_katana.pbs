@@ -8,21 +8,24 @@
 # than ours: it optimises against the target RAG via black-box feedback, where
 # our attacks are optimisation-free.
 #
-# Cost is the thing to watch. Worst case is iters x batch x queries x 2 sides;
-# at the defaults that is 25 x 8 x 50 x 2 = 20,000 generations. It early-aborts
-# on refusal or on a stall, so the real figure is far lower -- but this has never
-# been run, so SMOKE TEST FIRST and read the throughput off the log:
+# Cost is the thing to watch. MEASURED throughput from the n=5 smoke test
+# (dosrag_blocker.o8923941, 25 iters x 8 batch):
+#   base    ~175 oracle gens/query x ~5.5s  = ~16 min/query (full 256-tok answers)
+#   aligned ~169 oracle gens/query x ~1.0s  = ~2.7 min/query (refuses early)
+# => 50 queries needs ~16h total, which is why walltime is 24h (NOT the old 12h;
+#    at 12h the base side alone would hit the wall and die mid-run).
+# For a fast 12h run instead, drop to NUM_QUERIES=30 and add -l walltime=12:00:00.
 #
-#   qsub -v NUM_QUERIES=5,WALLTIME_NOTE=smoke scripts/run_blocker_katana.pbs
+# Budget note: 25 iters x 8 batch = 200 candidate evals/query, far below the
+# paper's 1000 x 32. Report this run as budget-limited -- it is a LOWER BOUND on
+# the optimised attacker, which is the honest and still-useful framing.
 #
-# Then scale to the configured 50 once you know seconds-per-query.
-#
-# Submit:  qsub -v NUM_QUERIES=50 scripts/run_blocker_katana.pbs
+# Submit (50 queries, 24h):  qsub -v NUM_QUERIES=50 scripts/run_blocker_katana.pbs
 # Watch:   qstat -u $USER
 # ─────────────────────────────────────────────────────────────────────────────
 #PBS -N dosrag_blocker
 #PBS -l select=1:ncpus=8:ngpus=1:mem=90gb
-#PBS -l walltime=12:00:00
+#PBS -l walltime=24:00:00
 #PBS -j oe
 
 set -euo pipefail
