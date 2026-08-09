@@ -1,11 +1,19 @@
-"""Visual summary of the DoSRAGBench alignment-paradox results.
+"""Visual summary of the DoSRAGBench alignment results (NQ-only, no AVI).
 
 Reads results/avi_report_clean.json (produced by clean_avi_report.py) and renders
-a two-panel figure:
+a two-panel figure over the NQ runs:
   - Left:  aligned-model ASR (%) per attack x model pair  -> attack strength.
-  - Right: AVI regime per attack x model pair (paradox / independent / protective).
+  - Right: risk difference (pp), ASR_aligned - ASR_base   -> the alignment effect.
 
-Saved to results/avi_summary.png.
+The risk difference replaces the old AVI ratio: AVI explodes when base ASR is
+near zero (most runs), so the field-standard reporting is the difference of the
+two attack success rates, not their ratio. Diverging colour: red = aligned denies
+more (the paradox), blue = base denies more (protective).
+
+The 12 HotpotQA runs are excluded -- that arm was withdrawn (two-hop retrieval
+confound: 24.3% joint gold recall@5, so refusals there are correct not adversarial).
+
+Saved to results/asr_risk_summary.png.
 """
 
 from __future__ import annotations
@@ -17,7 +25,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.colors import BoundaryNorm, ListedColormap
+from matplotlib.colors import TwoSlopeNorm
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RESULTS_DIR = REPO_ROOT / "results"
@@ -37,19 +45,20 @@ ATTACK_ORDER = [
 
 def main() -> None:
     data = json.loads((RESULTS_DIR / "avi_report_clean.json").read_text())
-    kept = data["kept"]
+    # NQ-only: the 12 HotpotQA runs were withdrawn.
+    kept = [e for e in data["kept"] if e["dataset"] == "NQ"]
     by = {(e["family"], e["attack_category"]): e for e in kept}
     attacks = [a for a in ATTACK_ORDER if any((f, a) in by for f in FAMILIES)]
 
     asr = np.full((len(attacks), len(FAMILIES)), np.nan)
-    avi = np.full((len(attacks), len(FAMILIES)), np.nan)
+    risk = np.full((len(attacks), len(FAMILIES)), np.nan)
     for i, a in enumerate(attacks):
         for j, f in enumerate(FAMILIES):
             e = by.get((f, a))
             if e is None:
                 continue
             asr[i, j] = e["aligned_asr"] * 100
-            avi[i, j] = e["avi_asr"]
+            risk[i, j] = (e["aligned_asr"] - e["base_asr"]) * 100
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 8))
     xlabels = [FAMILY_LABELS[f] for f in FAMILIES]
@@ -68,30 +77,21 @@ def main() -> None:
     cbar1 = fig.colorbar(im1, ax=ax1, fraction=0.046, pad=0.04)
     cbar1.set_label("Aligned ASR (%)")
 
-    # ---- Panel 2: AVI regime heatmap (categorical) ----
-    # 0 protective (<0.8), 1 independent (0.8-1.5), 2 moderate (1.5-3), 3 strong (>=3)
-    regime = np.full_like(avi, np.nan)
+    # ---- Panel 2: risk-difference heatmap (diverging, centred at 0) ----
+    lim = np.nanmax(np.abs(risk))
+    norm = TwoSlopeNorm(vmin=-lim, vcenter=0.0, vmax=lim)
+    im2 = ax2.imshow(risk, cmap="RdBu_r", norm=norm, aspect="auto")
+    ax2.set_title("Risk difference (pp)\nASR_aligned − ASR_base", fontsize=12, pad=10)
     for i in range(len(attacks)):
         for j in range(len(FAMILIES)):
-            v = avi[i, j]
-            if np.isnan(v):
-                continue
-            regime[i, j] = 0 if v < 0.8 else 1 if v < 1.5 else 2 if v < 3.0 else 3
-    cmap = ListedColormap(["#2e7d32", "#8fbf6f", "#f0ad4e", "#c0392b"])
-    norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
-    im2 = ax2.imshow(regime, cmap=cmap, norm=norm, aspect="auto")
-    ax2.set_title("AVI regime  (=ASR_aligned / ASR_base)\nalignment paradox map", fontsize=12, pad=10)
-    for i in range(len(attacks)):
-        for j in range(len(FAMILIES)):
-            v = avi[i, j]
+            v = risk[i, j]
             if np.isnan(v):
                 ax2.text(j, i, "–", ha="center", va="center", color="gray")
                 continue
-            label = f"{v:.2f}" if v < 100 else "∞"
-            ax2.text(j, i, label, ha="center", va="center", color="white", fontsize=8)
-    cbar2 = fig.colorbar(im2, ax=ax2, fraction=0.046, pad=0.04, ticks=[0, 1, 2, 3])
-    cbar2.ax.set_yticklabels(["protective\n<0.8", "independent\n0.8–1.5",
-                              "moderate\n1.5–3", "strong\n≥3"])
+            ax2.text(j, i, f"{v:+.0f}", ha="center", va="center",
+                     color="white" if abs(v) > 0.55 * lim else "black", fontsize=9)
+    cbar2 = fig.colorbar(im2, ax=ax2, fraction=0.046, pad=0.04)
+    cbar2.set_label("Risk difference (pp)   red = aligned denies more")
 
     for ax in (ax1, ax2):
         ax.set_xticks(range(len(FAMILIES)))
@@ -104,13 +104,13 @@ def main() -> None:
         ax.tick_params(which="minor", length=0)
 
     fig.suptitle(
-        "DoSRAGBench — Alignment Paradox Summary (thin-sample runs excluded)",
+        "DoSRAGBench — Alignment effect on NQ (thin-sample runs excluded)",
         fontsize=14, fontweight="bold",
     )
     fig.tight_layout(rect=[0, 0, 1, 0.96])
-    out = RESULTS_DIR / "avi_summary.png"
+    out = RESULTS_DIR / "asr_risk_summary.png"
     fig.savefig(out, dpi=140, bbox_inches="tight")
-    print(f"Wrote {out}")
+    print(f"Wrote {out}  ({len(kept)} NQ runs)")
 
 
 if __name__ == "__main__":
