@@ -15,6 +15,7 @@ Saved to results/verdict_breakdown.png.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import matplotlib
@@ -24,6 +25,11 @@ from matplotlib.patches import Patch
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RESULTS_DIR = REPO_ROOT / "results"
+
+# Which dataset arm to plot. Defaults to NQ (the headline); set DATASET=FiQA to
+# render the generalisation arm to a suffixed file, leaving NQ figures untouched.
+DATASET = os.environ.get("DATASET", "NQ")
+SUFFIX = "" if DATASET == "NQ" else f"_{DATASET.lower()}"
 
 # Categorical slots 1-4 for the substantive verdicts; the null bucket takes a
 # neutral gray so "no effect" stays recessive rather than reading as a finding.
@@ -59,7 +65,7 @@ def main() -> None:
     data = json.loads((RESULTS_DIR / "avi_significance.json").read_text())
     # NQ-only: the 12 HotpotQA runs were withdrawn (two-hop retrieval confound,
     # 24.3% joint gold recall@5 -- refusals there are correct, not adversarial).
-    rows = [r for r in data["rows"] if r["dataset"] == "NQ"]
+    rows = [r for r in data["rows"] if r["dataset"] == DATASET]
     kept = len(rows)
 
     up = [r for r in rows if r["aligned_asr"] > r["base_asr"]]
@@ -130,7 +136,8 @@ def main() -> None:
         text.set_color(INK_SECONDARY)
 
     fig.suptitle(
-        "Not every apparent paradox is real",
+        "Not every apparent paradox is real"
+        f"{'' if DATASET == 'NQ' else f'  ·  {DATASET}'}",
         fontsize=15, fontweight="bold", color=INK, x=0.5, y=0.98,
     )
     fig.text(
@@ -148,7 +155,7 @@ def main() -> None:
     )
 
     fig.tight_layout(rect=[0.02, 0.10, 0.98, 0.87])
-    out = RESULTS_DIR / "verdict_breakdown.png"
+    out = RESULTS_DIR / f"verdict_breakdown{SUFFIX}.png"
     fig.savefig(out, dpi=200, facecolor=SURFACE, bbox_inches="tight")
     print(f"Wrote {out}")
     for label, segs in bars:

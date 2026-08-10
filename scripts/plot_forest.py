@@ -15,6 +15,7 @@ Saved to results/forest_genuine.png.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import matplotlib
@@ -24,6 +25,11 @@ from matplotlib.lines import Line2D
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RESULTS_DIR = REPO_ROOT / "results"
+
+# Which dataset arm to plot. Defaults to NQ (the headline); set DATASET=FiQA to
+# render the generalisation arm to a suffixed file, leaving NQ figures untouched.
+DATASET = os.environ.get("DATASET", "NQ")
+SUFFIX = "" if DATASET == "NQ" else f"_{DATASET.lower()}"
 
 # Categorical slots 1 and 2 (validated all-pairs, light surface).
 C_BASE = "#2a78d6"
@@ -63,7 +69,7 @@ def main() -> None:
     data = json.loads((RESULTS_DIR / "avi_significance.json").read_text())
     # NQ-only: the 12 HotpotQA runs were withdrawn (two-hop retrieval confound).
     genuine = [r for r in data["rows"]
-               if r["verdict"] == "GENUINE paradox" and r["dataset"] == "NQ"]
+               if r["verdict"] == "GENUINE paradox" and r["dataset"] == DATASET]
 
     # Group by family, strongest effect first within each group. Rows are laid
     # out top-down, so build the list reversed for matplotlib's bottom-up y-axis.
@@ -171,7 +177,8 @@ def main() -> None:
         text.set_color(INK)
 
     fig.suptitle(
-        f"Base vs. aligned denial rate — the {len(plot_rows)} genuine alignment paradoxes",
+        f"Base vs. aligned denial rate — the {len(plot_rows)} genuine alignment paradoxes"
+        f"{'' if DATASET == 'NQ' else f'  ·  {DATASET}'}",
         fontsize=14, fontweight="bold", color=INK, x=0.5, y=0.975,
     )
     fig.text(
@@ -183,7 +190,7 @@ def main() -> None:
     )
 
     fig.tight_layout(rect=[0, 0.0, 1, 0.925])
-    out = RESULTS_DIR / "forest_genuine.png"
+    out = RESULTS_DIR / f"forest_genuine{SUFFIX}.png"
     fig.savefig(out, dpi=200, facecolor=SURFACE, bbox_inches="tight")
     print(f"Wrote {out}  ({len(plot_rows)} genuine runs)")
 

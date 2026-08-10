@@ -130,12 +130,14 @@ def _synthetic_offline(num_queries: int, kb_size: int, seed: int) -> dict:
 BEIR_DATASETS = {
     "nq": ("BeIR/nq", "BeIR/nq-qrels"),
     "hotpotqa": ("BeIR/hotpotqa", "BeIR/hotpotqa-qrels"),
+    "fiqa": ("BeIR/fiqa", "BeIR/fiqa-qrels"),
 }
 
 # Rough download sizes (parquet), logged before we fetch anything large.
 BEIR_DOWNLOAD_HINT = {
     "nq": "~764 MB (corpus) + tiny qrels",
     "hotpotqa": "~1.5 GB (corpus) + tiny qrels",
+    "fiqa": "~30 MB (corpus, ~57k passages) + tiny qrels",
 }
 
 

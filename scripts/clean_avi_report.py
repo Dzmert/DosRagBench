@@ -100,8 +100,10 @@ def load_entries(
         entry = {
             "run_name": run_dir.name,
             # No dataset component in run dir names (HANDOFF weakness 4), so the
-            # same name occurs under both roots. Tag it or the rows collide.
-            "dataset": "HotpotQA" if run_dir.parent.name.endswith("hotpotqa") else "NQ",
+            # same name occurs under every root. Tag it or the rows collide.
+            "dataset": ("HotpotQA" if run_dir.parent.name.endswith("hotpotqa")
+                        else "FiQA" if run_dir.parent.name.endswith("fiqa")
+                        else "NQ"),
             "family": fam,
             "attack_category": attack,
             "attack_name": ATTACK_NAMES.get(attack, attack),

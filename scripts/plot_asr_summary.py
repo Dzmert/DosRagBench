@@ -19,6 +19,7 @@ Saved to results/asr_risk_summary.png.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import matplotlib
@@ -29,6 +30,11 @@ from matplotlib.colors import TwoSlopeNorm
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RESULTS_DIR = REPO_ROOT / "results"
+
+# Which dataset arm to plot. Defaults to NQ (the headline); set DATASET=FiQA to
+# render the generalisation arm to a suffixed file, leaving NQ figures untouched.
+DATASET = os.environ.get("DATASET", "NQ")
+SUFFIX = "" if DATASET == "NQ" else f"_{DATASET.lower()}"
 
 FAMILIES = ["llama-3.1-8b", "mistral-7b", "qwen-2.5-7b", "llama-r1-8b"]
 FAMILY_LABELS = {
@@ -45,8 +51,9 @@ ATTACK_ORDER = [
 
 def main() -> None:
     data = json.loads((RESULTS_DIR / "avi_report_clean.json").read_text())
-    # NQ-only: the 12 HotpotQA runs were withdrawn.
-    kept = [e for e in data["kept"] if e["dataset"] == "NQ"]
+    # Defaults to NQ (headline); DATASET=FiQA renders the generalisation arm.
+    # The 12 HotpotQA runs were withdrawn.
+    kept = [e for e in data["kept"] if e["dataset"] == DATASET]
     by = {(e["family"], e["attack_category"]): e for e in kept}
     attacks = [a for a in ATTACK_ORDER if any((f, a) in by for f in FAMILIES)]
 
@@ -104,11 +111,11 @@ def main() -> None:
         ax.tick_params(which="minor", length=0)
 
     fig.suptitle(
-        "DoSRAGBench — Alignment effect on NQ (thin-sample runs excluded)",
+        f"DoSRAGBench — Alignment effect on {DATASET} (thin-sample runs excluded)",
         fontsize=14, fontweight="bold",
     )
     fig.tight_layout(rect=[0, 0, 1, 0.96])
-    out = RESULTS_DIR / "asr_risk_summary.png"
+    out = RESULTS_DIR / f"asr_risk_summary{SUFFIX}.png"
     fig.savefig(out, dpi=140, bbox_inches="tight")
     print(f"Wrote {out}  ({len(kept)} NQ runs)")
 
