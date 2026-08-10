@@ -3,7 +3,7 @@
   "category": "BLOCKER",
   "side": "both",
   "prompt_style": "auto",
-  "num_queries": 5,
+  "num_queries": 50,
   "top_k": 5,
   "embedder": "sentence-transformers/all-MiniLM-L6-v2"
 }
