@@ -57,7 +57,9 @@ SURFACE = "#fcfcfb"
 
 def main() -> None:
     data = json.loads((RESULTS_DIR / "avi_significance.json").read_text())
-    rows = data["rows"]
+    # NQ-only: the 12 HotpotQA runs were withdrawn (two-hop retrieval confound,
+    # 24.3% joint gold recall@5 -- refusals there are correct, not adversarial).
+    rows = [r for r in data["rows"] if r["dataset"] == "NQ"]
     kept = len(rows)
 
     up = [r for r in rows if r["aligned_asr"] > r["base_asr"]]
@@ -97,8 +99,9 @@ def main() -> None:
         ax.text(-0.5, yv, label, ha="right", va="center", fontsize=10.5,
                 color=INK, linespacing=1.5)
 
-    # Callout for the headline claim.
-    n_genuine = data["counts"]["genuine"]
+    # Callout for the headline claim. Derived from the NQ-only rows above, not
+    # data["counts"] (which still totals the HotpotQA-inclusive 62-run set).
+    n_genuine = sum(1 for r in rows if r["verdict"] == "GENUINE paradox")
     ax.annotate(
         f"{n_genuine} survive both tests",
         xy=(n_genuine / 2, 1.0 + bar_h / 2), xycoords="data",

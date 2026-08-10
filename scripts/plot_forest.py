@@ -3,7 +3,8 @@
 Reads results/avi_significance.json (produced by compute_significance.py) and
 renders one row per genuine paradox: base and aligned attack-attributable ASR
 with 95% Wilson confidence intervals, grouped by model family, annotated with
-AVI and the aligned-model McNemar discordant counts.
+the risk difference (ASR_aligned - ASR_base, pp) and the aligned-model McNemar
+discordant counts. NQ-only; the 12 HotpotQA runs were withdrawn.
 
 The visual argument is the CI separation: where the base interval and the
 aligned interval do not touch, the paradox is not a point-estimate artifact.
@@ -60,7 +61,9 @@ ATTACK_NAMES = {
 
 def main() -> None:
     data = json.loads((RESULTS_DIR / "avi_significance.json").read_text())
-    genuine = [r for r in data["rows"] if r["verdict"] == "GENUINE paradox"]
+    # NQ-only: the 12 HotpotQA runs were withdrawn (two-hop retrieval confound).
+    genuine = [r for r in data["rows"]
+               if r["verdict"] == "GENUINE paradox" and r["dataset"] == "NQ"]
 
     # Group by family, strongest effect first within each group. Rows are laid
     # out top-down, so build the list reversed for matplotlib's bottom-up y-axis.
@@ -115,7 +118,9 @@ def main() -> None:
     ax.set_yticks(ypos)
     ax.set_yticklabels(ylabels, fontsize=9.5, color=INK)
     ax.set_ylim(-0.8, y - 0.4)
-    ax.set_xlim(-0.6, 25.5)
+    # Fit the full spread: the strongest aligned CIs reach ~62% (D2 family), so a
+    # 25% limit clipped 14 of 32 rows -- including the poster-child D2 markers.
+    ax.set_xlim(-1.5, 65)
     ax.set_xlabel("Attack-attributable denial rate, ASR (%)   —   95% Wilson CI",
                   fontsize=10, color=INK_SECONDARY, labelpad=8)
     ax.grid(axis="x", color=GRID, linewidth=0.8, zorder=0)
@@ -138,14 +143,14 @@ def main() -> None:
     axt.set_xlim(0, 1)
     axt.axis("off")
     top = y - 0.4
-    axt.text(0.14, top - 0.35, "AVI", fontsize=9.5, fontweight="bold",
+    axt.text(0.14, top - 0.35, "Risk Δ pp", fontsize=9.5, fontweight="bold",
              color=INK_SECONDARY, ha="center", va="top")
     axt.text(0.52, top - 0.35, "McNemar c/b", fontsize=9.5, fontweight="bold",
              color=INK_SECONDARY, ha="center", va="top")
     axt.text(0.90, top - 0.35, "FDR q", fontsize=9.5, fontweight="bold",
              color=INK_SECONDARY, ha="center", va="top")
     for yv, r in zip(ypos, plot_rows):
-        axt.text(0.14, yv, f"{r['avi']:.2f}", fontsize=9.5, color=INK,
+        axt.text(0.14, yv, f"{r['risk_diff'] * 100:+.0f}", fontsize=9.5, color=INK,
                  ha="center", va="center", fontfamily="monospace")
         axt.text(0.52, yv, f"{r['aligned_mcnemar_c']}/{r['aligned_mcnemar_b']}",
                  fontsize=9.5, color=INK, ha="center", va="center",
@@ -166,7 +171,7 @@ def main() -> None:
         text.set_color(INK)
 
     fig.suptitle(
-        "Base vs. aligned denial rate — the 12 genuine alignment paradoxes",
+        f"Base vs. aligned denial rate — the {len(plot_rows)} genuine alignment paradoxes",
         fontsize=14, fontweight="bold", color=INK, x=0.5, y=0.975,
     )
     fig.text(
