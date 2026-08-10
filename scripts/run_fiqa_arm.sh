@@ -16,6 +16,18 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."   # repo root
 
+# The inline phases (check, analyse) run Python on the LOGIN node, whose default
+# python3 is too old (no PEP 563). Load the module + venv the same way the PBS
+# jobs do. Guarded so this still works on a machine without `module`/.venv.
+activate_env() {
+  if type module >/dev/null 2>&1; then module load python/3.11 >/dev/null 2>&1 || true; fi
+  if [ -f .venv/bin/activate ]; then
+    # shellcheck disable=SC1091
+    source .venv/bin/activate
+  fi
+  echo "   (python: $(command -v python3), $(python3 --version 2>&1))"
+}
+
 PHASE="${1:-}"
 
 case "$PHASE" in
@@ -28,6 +40,7 @@ case "$PHASE" in
 
   check)
     echo ">> Single-hop sanity on FiQA qrels (inline, login-node safe)."
+    activate_env
     python3 scripts/check_gold_multiplicity.py --dataset fiqa
     if [ -f data_fiqa/queries.json ]; then
       python3 -c "import json; q=json.load(open('data_fiqa/queries.json')); print('data_fiqa OK:', len(q), 'queries; single-gold =', 'gold_doc_ids' not in q[0])"
@@ -59,6 +72,7 @@ case "$PHASE" in
 
   analyse)
     echo ">> Folding FiQA into significance (per-dataset FDR; NQ headline unchanged)."
+    activate_env
     python3 scripts/compute_significance.py \
         --results-dir results --results-dir results_fiqa
     echo ">> Rebuilding the clean report (NQ + FiQA)."
