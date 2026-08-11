@@ -1,0 +1,54 @@
+2026-08-08 15:46:02,453 [INFO] BEIR mode: dataset='hotpotqa'. This will download ~1.5 GB (corpus) + tiny qrels to your HuggingFace cache on first run.
+2026-08-08 15:46:02,453 [INFO] Loading qrels: BeIR/hotpotqa-qrels (split=test)
+2026-08-08 15:46:02,689 [INFO] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+2026-08-08 15:46:02,924 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa-qrels/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-08-08 15:46:03,157 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/BeIR/hotpotqa-qrels/b15429e9244c8ec966985d7778427c3b1543b314/README.md "HTTP/1.1 200 OK"
+2026-08-08 15:46:03,397 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa-qrels/resolve/b15429e9244c8ec966985d7778427c3b1543b314/hotpotqa-qrels.py "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:04,051 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/BeIR/hotpotqa-qrels/BeIR/hotpotqa-qrels.py "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:04,335 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/hotpotqa-qrels/revision/b15429e9244c8ec966985d7778427c3b1543b314 "HTTP/1.1 200 OK"
+2026-08-08 15:46:04,555 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa-qrels/resolve/b15429e9244c8ec966985d7778427c3b1543b314/.huggingface.yaml "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:04,803 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=BeIR/hotpotqa-qrels "HTTP/1.1 200 OK"
+2026-08-08 15:46:05,028 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/hotpotqa-qrels/tree/b15429e9244c8ec966985d7778427c3b1543b314/data?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:05,248 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/hotpotqa-qrels/tree/b15429e9244c8ec966985d7778427c3b1543b314?recursive=false&expand=false "HTTP/1.1 200 OK"
+2026-08-08 15:46:05,498 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa-qrels/resolve/b15429e9244c8ec966985d7778427c3b1543b314/dataset_infos.json "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:06,458 [INFO] Loading queries: BeIR/hotpotqa (config=queries)
+2026-08-08 15:46:06,684 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-08-08 15:46:06,905 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/BeIR/hotpotqa/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/README.md "HTTP/1.1 200 OK"
+2026-08-08 15:46:07,151 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa/resolve/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/hotpotqa.py "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:07,368 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/BeIR/hotpotqa/BeIR/hotpotqa.py "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:07,599 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/hotpotqa/revision/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b "HTTP/1.1 200 OK"
+2026-08-08 15:46:07,828 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa/resolve/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/.huggingface.yaml "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:08,082 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=BeIR/hotpotqa "HTTP/1.1 200 OK"
+2026-08-08 15:46:08,313 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/hotpotqa/tree/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/corpus?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-08-08 15:46:08,545 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/hotpotqa/tree/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b?recursive=false&expand=false "HTTP/1.1 200 OK"
+2026-08-08 15:46:08,768 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa/resolve/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/dataset_infos.json "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:08,991 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/hotpotqa/tree/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/queries?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-08-08 15:46:10,289 [INFO] Loading corpus: BeIR/hotpotqa (config=corpus)
+2026-08-08 15:46:10,514 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-08-08 15:46:10,522 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/BeIR/hotpotqa/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/README.md "HTTP/1.1 200 OK"
+2026-08-08 15:46:10,749 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa/resolve/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/hotpotqa.py "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:10,962 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/BeIR/hotpotqa/BeIR/hotpotqa.py "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:11,181 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa/resolve/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/.huggingface.yaml "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:11,430 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=BeIR/hotpotqa "HTTP/1.1 200 OK"
+2026-08-08 15:46:11,647 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/hotpotqa/resolve/a7e8bab212f5a89f9be1bc9b654aa6dfa317f32b/dataset_infos.json "HTTP/1.1 404 Not Found"
+2026-08-08 15:46:12,786 [INFO] Corpus has 5233329 passages; building id->position map...
+2026-08-08 15:46:53,800 [INFO] Materializing 501975 passages (1975 gold + 500000 filler)...
+2026-08-08 15:47:09,521 [INFO] Wrote 1000 queries -> data_hotpotqa/queries.json
+2026-08-08 15:47:09,521 [INFO] Wrote 501975 KB docs -> data_hotpotqa/knowledge_base.json
+2026-08-08 15:47:09,521 [INFO]   (source=beir:hotpotqa, 1000 gold docs tracked)
+PREP OK: 1000 queries; keep-all-gold = True
+
+================================================================================
+                     Resource Usage on 08/08/2026 15:47:12                      
+
+Job Id: 8939468 
+Queue: CSE
+Walltime: 00:01:14  (requested 02:00:00)
+Job execution was successful. Exit Status 0. 
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k225         |     8       0.82      10.0%   |  90.0gb    2.71gb     3.0%    |
+--------------------------------------------------------------------------------

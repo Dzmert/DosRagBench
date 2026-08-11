@@ -27,3 +27,4 @@ DosRagBench.e*
 # (see .gitattributes). Regenerate it with `prepare_data.py --dataset hotpotqa`
 # instead of committing it.
 data_hotpotqa/
+.cache/

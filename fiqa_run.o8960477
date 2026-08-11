@@ -1,0 +1,163 @@
+FiQA run: pair=mistral-7b category=D2 queries=1000
+2026-08-11 01:51:45,354 [INFO] Environment: katana
+2026-08-11 01:51:45,488 [INFO] Loaded 648 queries, 57638 KB docs; using 648 queries
+2026-08-11 01:51:45,534 [INFO] Loading embedder: sentence-transformers/all-MiniLM-L6-v2 (device=cuda)
+2026-08-11 01:51:45,783 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:45,787 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/modules.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:46,024 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:46,028 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:46,032 [INFO] Loading SentenceTransformer model from sentence-transformers/all-MiniLM-L6-v2.
+2026-08-11 01:51:46,243 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config_sentence_transformers.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:46,247 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config_sentence_transformers.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:46,474 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:46,478 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/README.md "HTTP/1.1 200 OK"
+2026-08-11 01:51:46,697 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/modules.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:46,702 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/modules.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:46,928 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/sentence_bert_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:46,932 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/sentence_bert_config.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:47,162 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/adapter_config.json "HTTP/1.1 404 Not Found"
+2026-08-11 01:51:47,395 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:47,398 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 4067.85it/s]
+2026-08-11 01:51:47,750 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-08-11 01:51:47,992 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-08-11 01:51:48,225 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-08-11 01:51:48,450 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-08-11 01:51:48,677 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:48,680 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:48,899 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:48,903 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:49,135 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:49,139 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:49,373 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:49,377 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:49,598 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-08-11 01:51:49,829 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-08-11 01:51:50,078 [INFO] HTTP Request: HEAD https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/main/1_Pooling/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:50,082 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sentence-transformers/all-MiniLM-L6-v2/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/1_Pooling%2Fconfig.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:50,308 [INFO] HTTP Request: GET https://huggingface.co/api/models/sentence-transformers/all-MiniLM-L6-v2 "HTTP/1.1 200 OK"
+/home/z5419867/thesis_b/DosRagBench/src/dosragbench/pipeline/retriever.py:146: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.embedder.get_sentence_embedding_dimension()
+2026-08-11 01:51:50,458 [INFO] Loading cached index: /srv/scratch/z5419867/dosragbench_cache/index_57638_all-MiniLM-L6-v2_33c9db5c0618.faiss
+2026-08-11 01:51:50,638 [INFO] Loaded index: 57638 vectors from /srv/scratch/z5419867/dosragbench_cache/index_57638_all-MiniLM-L6-v2_33c9db5c0618.faiss
+2026-08-11 01:51:50,641 [INFO] Writing to results_fiqa/mistral-7b_D2/ (prompt_style=auto)
+2026-08-11 01:51:50,641 [INFO] ══ BASE: Mistral 7B Base ══
+2026-08-11 01:51:50,641 [INFO] Loading model: Mistral 7B Base
+2026-08-11 01:51:50,641 [INFO] Loading Mistral 7B Base (mistralai/Mistral-7B-v0.3)
+2026-08-11 01:51:50,860 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-v0.3/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:50,864 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-v0.3/caa1feb0e54d415e2df31207e5f4e273e33509b1/config.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:51,142 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-v0.3/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:51,147 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-v0.3/caa1feb0e54d415e2df31207e5f4e273e33509b1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:51,383 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-v0.3/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:51,388 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-v0.3/caa1feb0e54d415e2df31207e5f4e273e33509b1/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-08-11 01:51:51,771 [INFO] HTTP Request: GET https://huggingface.co/api/models/mistralai/Mistral-7B-v0.3/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-08-11 01:51:51,991 [INFO] HTTP Request: GET https://huggingface.co/api/models/mistralai/Mistral-7B-v0.3/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-08-11 01:51:52,351 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-v0.3/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:51:52,355 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-v0.3/caa1feb0e54d415e2df31207e5f4e273e33509b1/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:55,  5.23it/s]Loading weights:   1%|          | 2/291 [00:00<00:55,  5.23it/s]/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/bitsandbytes/backends/cuda/ops.py:213: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+Loading weights:   1%|▏         | 4/291 [00:00<00:31,  9.26it/s]Loading weights:   2%|▏         | 6/291 [00:00<00:27, 10.31it/s]Loading weights:   4%|▍         | 13/291 [00:00<00:12, 23.00it/s]Loading weights:   5%|▌         | 16/291 [00:00<00:12, 21.16it/s]Loading weights:   8%|▊         | 22/291 [00:01<00:10, 26.23it/s]Loading weights:   9%|▊         | 25/291 [00:01<00:11, 23.46it/s]Loading weights:  10%|▉         | 28/291 [00:01<00:11, 23.12it/s]Loading weights:  11%|█         | 32/291 [00:01<00:11, 23.02it/s]Loading weights:  12%|█▏        | 36/291 [00:01<00:09, 25.81it/s]Loading weights:  14%|█▎        | 40/291 [00:01<00:08, 28.07it/s]Loading weights:  15%|█▍        | 43/291 [00:02<00:10, 24.50it/s]Loading weights:  17%|█▋        | 49/291 [00:02<00:08, 29.39it/s]Loading weights:  18%|█▊        | 53/291 [00:02<00:08, 27.20it/s]Loading weights:  20%|█▉        | 58/291 [00:02<00:07, 29.60it/s]Loading weights:  21%|██▏       | 62/291 [00:02<00:08, 27.32it/s]Loading weights:  23%|██▎       | 67/291 [00:02<00:07, 29.65it/s]Loading weights:  24%|██▍       | 71/291 [00:02<00:08, 27.39it/s]Loading weights:  26%|██▌       | 76/291 [00:03<00:07, 29.68it/s]Loading weights:  27%|██▋       | 80/291 [00:03<00:09, 21.87it/s]Loading weights:  29%|██▉       | 85/291 [00:03<00:08, 25.06it/s]Loading weights:  30%|███       | 88/291 [00:03<00:08, 22.90it/s]Loading weights:  32%|███▏      | 94/291 [00:03<00:07, 27.59it/s]Loading weights:  33%|███▎      | 97/291 [00:04<00:09, 20.09it/s]Loading weights:  34%|███▍      | 100/291 [00:04<00:08, 21.66it/s]Loading weights:  36%|███▌      | 104/291 [00:04<00:08, 21.97it/s]Loading weights:  37%|███▋      | 108/291 [00:04<00:07, 24.74it/s]Loading weights:  38%|███▊      | 112/291 [00:04<00:06, 27.10it/s]Loading weights:  40%|███▉      | 115/291 [00:04<00:07, 23.99it/s]Loading weights:  42%|████▏     | 121/291 [00:05<00:05, 28.93it/s]Loading weights:  43%|████▎     | 125/291 [00:05<00:06, 26.87it/s]Loading weights:  45%|████▍     | 130/291 [00:05<00:05, 29.26it/s]Loading weights:  46%|████▌     | 134/291 [00:05<00:05, 27.13it/s]Loading weights:  48%|████▊     | 139/291 [00:05<00:05, 29.46it/s]Loading weights:  49%|████▉     | 143/291 [00:05<00:05, 27.28it/s]Loading weights:  51%|█████     | 148/291 [00:05<00:04, 29.58it/s]Loading weights:  52%|█████▏    | 152/291 [00:06<00:05, 27.37it/s]Loading weights:  54%|█████▍    | 157/291 [00:06<00:04, 29.61it/s]Loading weights:  55%|█████▌    | 161/291 [00:06<00:04, 27.30it/s]Loading weights:  57%|█████▋    | 166/291 [00:06<00:04, 29.53it/s]Loading weights:  58%|█████▊    | 170/291 [00:06<00:04, 27.23it/s]Loading weights:  60%|██████    | 175/291 [00:06<00:03, 29.49it/s]Loading weights:  62%|██████▏   | 179/291 [00:07<00:04, 27.32it/s]Loading weights:  63%|██████▎   | 184/291 [00:07<00:03, 29.60it/s]Loading weights:  65%|██████▍   | 188/291 [00:07<00:03, 27.38it/s]Loading weights:  66%|██████▋   | 193/291 [00:07<00:03, 29.56it/s]Loading weights:  68%|██████▊   | 197/291 [00:07<00:03, 27.31it/s]Loading weights:  69%|██████▉   | 202/291 [00:07<00:03, 28.67it/s]Loading weights:  70%|███████   | 205/291 [00:08<00:03, 25.30it/s]Loading weights:  73%|███████▎  | 211/291 [00:08<00:02, 29.63it/s]Loading weights:  74%|███████▍  | 215/291 [00:08<00:02, 27.46it/s]Loading weights:  76%|███████▌  | 220/291 [00:08<00:02, 29.68it/s]Loading weights:  77%|███████▋  | 224/291 [00:08<00:02, 27.45it/s]Loading weights:  79%|███████▊  | 229/291 [00:08<00:02, 29.71it/s]Loading weights:  80%|████████  | 233/291 [00:08<00:02, 27.48it/s]Loading weights:  82%|████████▏ | 238/291 [00:09<00:01, 29.71it/s]Loading weights:  83%|████████▎ | 242/291 [00:09<00:01, 27.44it/s]Loading weights:  85%|████████▍ | 247/291 [00:09<00:01, 29.67it/s]Loading weights:  86%|████████▋ | 251/291 [00:09<00:01, 27.36it/s]Loading weights:  88%|████████▊ | 256/291 [00:09<00:01, 29.64it/s]Loading weights:  89%|████████▉ | 260/291 [00:09<00:01, 27.44it/s]Loading weights:  91%|█████████ | 265/291 [00:10<00:00, 29.70it/s]Loading weights:  92%|█████████▏| 269/291 [00:10<00:00, 27.46it/s]Loading weights:  94%|█████████▍| 274/291 [00:10<00:00, 29.71it/s]Loading weights:  96%|█████████▌| 278/291 [00:10<00:00, 27.44it/s]Loading weights:  97%|█████████▋| 283/291 [00:10<00:00, 29.70it/s]Loading weights:  99%|█████████▊| 287/291 [00:10<00:00, 27.47it/s]Loading weights: 100%|██████████| 291/291 [00:10<00:00, 26.59it/s]
+2026-08-11 01:52:05,101 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-v0.3/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 01:52:05,105 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-v0.3/caa1feb0e54d415e2df31207e5f4e273e33509b1/generation_config.json "HTTP/1.1 200 OK"
+2026-08-11 01:52:05,331 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-v0.3/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-08-11 01:52:05,332 [INFO] Loaded on cuda:0
+/home/z5419867/thesis_b/DosRagBench/.venv/lib/python3.11/site-packages/bitsandbytes/backends/cuda/ops.py:468: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+2026-08-11 01:56:43,845 [INFO]   [25/648] processed
+2026-08-11 02:01:22,144 [INFO]   [50/648] processed
+2026-08-11 02:06:00,747 [INFO]   [75/648] processed
+2026-08-11 02:10:38,885 [INFO]   [100/648] processed
+2026-08-11 02:15:16,887 [INFO]   [125/648] processed
+2026-08-11 02:19:55,411 [INFO]   [150/648] processed
+2026-08-11 02:24:33,760 [INFO]   [175/648] processed
+2026-08-11 02:29:11,793 [INFO]   [200/648] processed
+2026-08-11 02:33:50,250 [INFO]   [225/648] processed
+2026-08-11 02:38:28,174 [INFO]   [250/648] processed
+2026-08-11 02:43:06,313 [INFO]   [275/648] processed
+2026-08-11 02:47:44,114 [INFO]   [300/648] processed
+2026-08-11 02:52:22,377 [INFO]   [325/648] processed
+2026-08-11 02:57:00,731 [INFO]   [350/648] processed
+2026-08-11 03:01:38,497 [INFO]   [375/648] processed
+2026-08-11 03:06:16,785 [INFO]   [400/648] processed
+2026-08-11 03:10:55,254 [INFO]   [425/648] processed
+2026-08-11 03:15:33,322 [INFO]   [450/648] processed
+2026-08-11 03:20:11,631 [INFO]   [475/648] processed
+2026-08-11 03:24:49,289 [INFO]   [500/648] processed
+2026-08-11 03:29:28,132 [INFO]   [525/648] processed
+2026-08-11 03:34:05,974 [INFO]   [550/648] processed
+2026-08-11 03:38:44,056 [INFO]   [575/648] processed
+2026-08-11 03:43:21,927 [INFO]   [600/648] processed
+2026-08-11 03:47:59,932 [INFO]   [625/648] processed
+2026-08-11 03:52:15,598 [INFO] base done in 7225.0s
+2026-08-11 03:52:15,601 [INFO]   ASR=0.003 GDS=0.003 LIR=1.00 retrieval_LIR=0.95
+2026-08-11 03:52:15,601 [INFO] ══ ALIGNED: Mistral 7B Instruct ══
+2026-08-11 03:52:15,601 [INFO] Loading model: Mistral 7B Instruct
+2026-08-11 03:52:15,601 [INFO] Loading Mistral 7B Instruct (mistralai/Mistral-7B-Instruct-v0.3)
+2026-08-11 03:52:15,879 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 03:52:15,883 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-Instruct-v0.3/c170c708c41dac9275d15a8fff4eca08d52bab71/config.json "HTTP/1.1 200 OK"
+2026-08-11 03:52:16,116 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 03:52:16,120 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-Instruct-v0.3/c170c708c41dac9275d15a8fff4eca08d52bab71/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-08-11 03:52:16,343 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 03:52:16,348 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-Instruct-v0.3/c170c708c41dac9275d15a8fff4eca08d52bab71/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-08-11 03:52:16,574 [INFO] HTTP Request: GET https://huggingface.co/api/models/mistralai/Mistral-7B-Instruct-v0.3/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-08-11 03:52:16,796 [INFO] HTTP Request: GET https://huggingface.co/api/models/mistralai/Mistral-7B-Instruct-v0.3/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-08-11 03:52:17,150 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 03:52:17,154 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-Instruct-v0.3/c170c708c41dac9275d15a8fff4eca08d52bab71/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:   0%|          | 1/291 [00:00<00:56,  5.10it/s]Loading weights:   1%|          | 2/291 [00:00<00:56,  5.15it/s]Loading weights:   2%|▏         | 5/291 [00:00<00:27, 10.51it/s]Loading weights:   3%|▎         | 9/291 [00:00<00:16, 17.58it/s]Loading weights:   4%|▍         | 13/291 [00:00<00:12, 22.70it/s]Loading weights:   5%|▌         | 16/291 [00:00<00:13, 20.91it/s]Loading weights:   8%|▊         | 22/291 [00:01<00:10, 26.62it/s]Loading weights:   9%|▊         | 25/291 [00:01<00:11, 23.67it/s]Loading weights:  11%|█         | 31/291 [00:01<00:08, 28.89it/s]Loading weights:  12%|█▏        | 34/291 [00:01<00:10, 25.29it/s]Loading weights:  14%|█▎        | 40/291 [00:01<00:08, 29.90it/s]Loading weights:  15%|█▌        | 44/291 [00:01<00:08, 27.59it/s]Loading weights:  17%|█▋        | 49/291 [00:02<00:08, 29.89it/s]Loading weights:  18%|█▊        | 53/291 [00:02<00:08, 27.63it/s]Loading weights:  20%|█▉        | 58/291 [00:02<00:07, 29.93it/s]Loading weights:  21%|██▏       | 62/291 [00:02<00:08, 27.64it/s]Loading weights:  23%|██▎       | 67/291 [00:02<00:07, 29.90it/s]Loading weights:  24%|██▍       | 71/291 [00:02<00:07, 27.67it/s]Loading weights:  26%|██▌       | 76/291 [00:02<00:07, 29.96it/s]Loading weights:  27%|██▋       | 80/291 [00:03<00:07, 27.64it/s]Loading weights:  29%|██▉       | 85/291 [00:03<00:06, 29.93it/s]Loading weights:  31%|███       | 89/291 [00:03<00:07, 27.69it/s]Loading weights:  32%|███▏      | 94/291 [00:03<00:06, 29.77it/s]Loading weights:  34%|███▎      | 98/291 [00:03<00:08, 22.40it/s]Loading weights:  35%|███▌      | 103/291 [00:04<00:07, 23.98it/s]Loading weights:  36%|███▋      | 106/291 [00:04<00:08, 22.30it/s]Loading weights:  38%|███▊      | 112/291 [00:04<00:06, 27.02it/s]Loading weights:  40%|███▉      | 115/291 [00:04<00:07, 24.30it/s]Loading weights:  42%|████▏     | 121/291 [00:04<00:05, 28.80it/s]Loading weights:  43%|████▎     | 125/291 [00:04<00:06, 26.96it/s]Loading weights:  45%|████▍     | 130/291 [00:05<00:05, 28.43it/s]Loading weights:  46%|████▌     | 133/291 [00:05<00:06, 25.15it/s]Loading weights:  48%|████▊     | 139/291 [00:05<00:05, 29.52it/s]Loading weights:  49%|████▉     | 143/291 [00:05<00:05, 27.39it/s]Loading weights:  51%|█████     | 148/291 [00:05<00:04, 29.60it/s]Loading weights:  52%|█████▏    | 152/291 [00:05<00:05, 27.38it/s]Loading weights:  54%|█████▍    | 157/291 [00:05<00:04, 29.63it/s]Loading weights:  55%|█████▌    | 161/291 [00:06<00:04, 27.43it/s]Loading weights:  57%|█████▋    | 166/291 [00:06<00:04, 29.69it/s]Loading weights:  58%|█████▊    | 170/291 [00:06<00:04, 27.45it/s]Loading weights:  60%|██████    | 175/291 [00:06<00:03, 29.72it/s]Loading weights:  62%|██████▏   | 179/291 [00:06<00:04, 27.51it/s]Loading weights:  63%|██████▎   | 184/291 [00:06<00:03, 29.73it/s]Loading weights:  65%|██████▍   | 188/291 [00:07<00:03, 27.47it/s]Loading weights:  66%|██████▋   | 193/291 [00:07<00:03, 29.76it/s]Loading weights:  68%|██████▊   | 197/291 [00:07<00:03, 27.50it/s]Loading weights:  69%|██████▉   | 202/291 [00:07<00:03, 28.78it/s]Loading weights:  70%|███████   | 205/291 [00:07<00:03, 25.40it/s]Loading weights:  73%|███████▎  | 211/291 [00:07<00:02, 29.76it/s]Loading weights:  74%|███████▍  | 215/291 [00:08<00:02, 27.49it/s]Loading weights:  76%|███████▌  | 220/291 [00:08<00:02, 29.74it/s]Loading weights:  77%|███████▋  | 224/291 [00:08<00:02, 27.53it/s]Loading weights:  79%|███████▊  | 229/291 [00:08<00:02, 29.81it/s]Loading weights:  80%|████████  | 233/291 [00:08<00:02, 27.60it/s]Loading weights:  82%|████████▏ | 238/291 [00:08<00:01, 28.59it/s]Loading weights:  83%|████████▎ | 241/291 [00:09<00:01, 25.28it/s]Loading weights:  85%|████████▍ | 247/291 [00:09<00:01, 29.53it/s]Loading weights:  86%|████████▋ | 251/291 [00:09<00:01, 27.41it/s]Loading weights:  88%|████████▊ | 256/291 [00:09<00:01, 29.74it/s]Loading weights:  89%|████████▉ | 260/291 [00:09<00:01, 27.56it/s]Loading weights:  91%|█████████ | 265/291 [00:09<00:00, 29.83it/s]Loading weights:  92%|█████████▏| 269/291 [00:10<00:00, 26.40it/s]Loading weights:  94%|█████████▍| 274/291 [00:10<00:00, 28.90it/s]Loading weights:  95%|█████████▌| 277/291 [00:10<00:00, 25.46it/s]Loading weights:  97%|█████████▋| 283/291 [00:10<00:00, 29.85it/s]Loading weights:  99%|█████████▊| 287/291 [00:10<00:00, 27.61it/s]Loading weights: 100%|██████████| 291/291 [00:10<00:00, 27.22it/s]
+2026-08-11 03:52:28,327 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-08-11 03:52:28,331 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/mistralai/Mistral-7B-Instruct-v0.3/c170c708c41dac9275d15a8fff4eca08d52bab71/generation_config.json "HTTP/1.1 200 OK"
+2026-08-11 03:52:28,557 [INFO] HTTP Request: HEAD https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+2026-08-11 03:52:28,558 [INFO] Loaded on cuda:0
+2026-08-11 03:54:06,905 [INFO]   [25/648] processed
+2026-08-11 03:55:48,660 [INFO]   [50/648] processed
+2026-08-11 03:57:37,921 [INFO]   [75/648] processed
+2026-08-11 03:59:29,836 [INFO]   [100/648] processed
+2026-08-11 04:01:34,892 [INFO]   [125/648] processed
+2026-08-11 04:03:33,550 [INFO]   [150/648] processed
+2026-08-11 04:05:18,512 [INFO]   [175/648] processed
+2026-08-11 04:07:06,664 [INFO]   [200/648] processed
+2026-08-11 04:09:03,494 [INFO]   [225/648] processed
+2026-08-11 04:11:00,104 [INFO]   [250/648] processed
+2026-08-11 04:12:53,919 [INFO]   [275/648] processed
+2026-08-11 04:14:38,869 [INFO]   [300/648] processed
+2026-08-11 04:16:38,915 [INFO]   [325/648] processed
+2026-08-11 04:18:21,147 [INFO]   [350/648] processed
+2026-08-11 04:20:05,117 [INFO]   [375/648] processed
+2026-08-11 04:22:14,482 [INFO]   [400/648] processed
+2026-08-11 04:24:04,399 [INFO]   [425/648] processed
+2026-08-11 04:26:05,822 [INFO]   [450/648] processed
+2026-08-11 04:27:48,827 [INFO]   [475/648] processed
+2026-08-11 04:29:30,025 [INFO]   [500/648] processed
+2026-08-11 04:31:27,240 [INFO]   [525/648] processed
+2026-08-11 04:33:14,212 [INFO]   [550/648] processed
+2026-08-11 04:35:06,519 [INFO]   [575/648] processed
+2026-08-11 04:36:52,895 [INFO]   [600/648] processed
+2026-08-11 04:38:32,472 [INFO]   [625/648] processed
+2026-08-11 04:40:20,629 [INFO] aligned done in 2885.0s
+2026-08-11 04:40:20,632 [INFO]   ASR=0.407 GDS=0.269 LIR=1.11 retrieval_LIR=0.97
+2026-08-11 04:40:20,691 [INFO] Saved results to results_fiqa/mistral-7b_D2/
+Done. Results in results_fiqa/mistral-7b_D2/
+
+================================================================================
+                     Resource Usage on 11/08/2026 04:40:25                      
+
+Job Id: 8960477 
+Queue: CSE
+Walltime: 02:48:46  (requested 12:00:00)
+Job execution was successful. Exit Status 0. 
+
+--------------------------------------------------------------------------------
+|              |             GPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node  GPU ID | Requested   Used   Efficiency | Available   Used              |
+| k173    0    |     1       0.51       51%    | 46068 MiB   8.26G             |
+--------------------------------------------------------------------------------
+|Total         |     1       0.51      51.0%   |                               |
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k173         |     8        1.0      12.0%   |  90.0gb    30.48gb    33.9%   |
+--------------------------------------------------------------------------------
