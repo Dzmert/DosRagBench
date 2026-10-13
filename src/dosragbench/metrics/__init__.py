@@ -12,6 +12,7 @@ from dosragbench.metrics.refusal import (
     classify_refusal,
     classify_severity,
 )
+from dosragbench.metrics.answer import answer_contains_gold, normalize_answer
 
 __all__ = [
     "MetricsReport",
@@ -22,4 +23,6 @@ __all__ = [
     "SeverityLevel",
     "classify_refusal",
     "classify_severity",
+    "answer_contains_gold",
+    "normalize_answer",
 ]

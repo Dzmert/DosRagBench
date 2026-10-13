@@ -47,7 +47,7 @@ from dosragbench.attacks import (
     BlockerOracleAttack,
     build_attack,
 )
-from dosragbench.metrics import QueryResult, classify_severity, compute_metrics
+from dosragbench.metrics import QueryResult, compute_metrics
 from dosragbench.models import detect_environment, load_model
 from dosragbench.pipeline import Document, HNSWRetriever, RAGPipeline
 from dosragbench.utils.config import (
@@ -152,30 +152,30 @@ def gold_spec(q: dict):
     return q.get("gold_doc_id")
 
 
-def make_blocker_feedback(rag, retriever):
-    """Severity oracle for the BLOCKER baseline's black-box optimisation.
+def make_blocker_response_fn(rag, retriever):
+    """Response oracle for the BLOCKER baseline's black-box optimisation.
 
     Each call is one full RAG round-trip (retrieval + generation) against the
     live target, which is what makes this baseline's threat model stronger than
-    ours: it needs query access to the deployed system. Returns the same
-    SeverityLevel our own attacks are scored with, so the comparison is on one
-    instrument. Latency is not part of the signal (lir=1.0) — the blocker
-    targets refusal, and a single probe has no baseline latency to divide by.
+    ours: it needs query access to the deployed system. It returns the RAG's
+    answer TEXT; the blocker scores that with its own embedding objective, so the
+    optimisation never touches the severity classifier the run is judged with
+    (avoids optimising against the evaluation instrument).
 
     The returned callable carries a .calls counter so the cost is reportable.
     """
 
-    def feedback(query: str, adv_docs: list[Document]) -> int:
-        feedback.calls += 1
+    def respond(query: str, adv_docs: list[Document]) -> str:
+        respond.calls += 1
         retriever.set_adversarial(adv_docs)
         try:
             resp = rag.query(query)
         finally:
             retriever.clear_adversarial()
-        return int(classify_severity(resp.answer))
+        return resp.answer
 
-    feedback.calls = 0
-    return feedback
+    respond.calls = 0
+    return respond
 
 
 def make_blocker_oracle(rag):
@@ -207,7 +207,7 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries,
     # document optimised against the base model is not the same attack when
     # replayed against the aligned one.
     if isinstance(attack, BlockerAttack):
-        attack.feedback_fn = make_blocker_feedback(rag, retriever)
+        attack.response_fn = make_blocker_response_fn(rag, retriever)
     # BLOCKER_ORACLE crafts its passage with the live generator, bound per side
     # for the same reason (the base and aligned passages are distinct artifacts).
     if isinstance(attack, BlockerOracleAttack):
@@ -219,28 +219,36 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries,
         query_text = q["query"]
         gold_doc_id = gold_spec(q)
 
+        gold_answer = q.get("gold_answer", "")
+
         retriever.clear_adversarial()
         baseline_resp = rag.query(query_text, gold_doc_id=gold_doc_id)
-        baseline_results.append(QueryResult.from_rag_response(baseline_resp))
+        baseline_results.append(
+            QueryResult.from_rag_response(baseline_resp, gold_answer=gold_answer)
+        )
 
         adv_docs = attack.generate_adversarial_docs(query_text, baseline_resp.retrieved_docs)
         retriever.set_adversarial(adv_docs)
         attacked_resp = rag.query(query_text, gold_doc_id=gold_doc_id)
         attacked_results.append(
-            QueryResult.from_rag_response(attacked_resp, baseline_latency=baseline_resp.total_latency_s)
+            QueryResult.from_rag_response(
+                attacked_resp,
+                baseline_latency=baseline_resp.total_latency_s,
+                gold_answer=gold_answer,
+            )
         )
         retriever.clear_adversarial()
 
         if (i + 1) % 25 == 0:
             msg = f"  [{i+1}/{num_queries}] processed"
             if isinstance(attack, BlockerAttack):
-                msg += f" ({attack.feedback_fn.calls} oracle queries so far)"
+                msg += f" ({attack.response_fn.calls} oracle queries so far)"
             logger.info(msg)
 
     if isinstance(attack, BlockerAttack):
         logger.info(
-            f"BLOCKER used {attack.feedback_fn.calls} oracle queries against "
-            f"{model_config.name} ({attack.feedback_fn.calls / max(num_queries, 1):.1f} per query)"
+            f"BLOCKER used {attack.response_fn.calls} oracle queries against "
+            f"{model_config.name} ({attack.response_fn.calls / max(num_queries, 1):.1f} per query)"
         )
     if isinstance(attack, BlockerOracleAttack) and attack.fallbacks:
         logger.warning(
@@ -408,8 +416,11 @@ def main():
             batch_size=args.blocker_batch,
             max_iters=args.blocker_iters,
             seed=attack_config.seed,
+            target=attack_config.params.get("target", "insufficient"),
+            embedder_id=args.embedder,
+            device=args.device,
         )
-        # feedback_fn is bound per model side in run_model_side(), once that
+        # response_fn is bound per model side in run_model_side(), once that
         # side's generator is loaded.
         attack = build_attack(attack_config, blocker_config=blocker_config)
         worst_case = args.blocker_iters * args.blocker_batch * num_queries

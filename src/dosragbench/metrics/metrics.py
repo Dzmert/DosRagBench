@@ -9,6 +9,7 @@ import math
 from dataclasses import dataclass, field
 from statistics import mean, stdev
 
+from dosragbench.metrics.answer import answer_contains_gold
 from dosragbench.metrics.refusal import (
     RefusalType,
     SeverityLevel,
@@ -34,13 +35,22 @@ class QueryResult:
     gold_rank: int = -1  # position of gold doc in results, -1 if absent
     refusal_type: RefusalType = RefusalType.NO_REFUSAL
     severity: SeverityLevel = SeverityLevel.FULL_AVAILABILITY
+    # Answer-string correctness (only meaningful when a short gold answer exists)
+    gold_answer: str = ""
+    answer_correct: bool = False
 
     @classmethod
-    def from_rag_response(cls, resp, baseline_latency: float | None = None) -> "QueryResult":
-        """Build a QueryResult from a RAGResponse, classifying refusal/severity."""
+    def from_rag_response(cls, resp, baseline_latency: float | None = None,
+                          gold_answer: str = "") -> "QueryResult":
+        """Build a QueryResult from a RAGResponse, classifying refusal/severity.
+
+        ``gold_answer`` drives the answer-string correctness signal; optional, so
+        stub shims and gold-less corpora still work.
+        """
         refusal = classify_refusal(resp.answer)
         lir = resp.total_latency_s / baseline_latency if baseline_latency else 1.0
         severity = classify_severity(resp.answer, latency_inflation_ratio=lir)
+        gold = gold_answer or getattr(resp, "gold_answer", "")
         return cls(
             query=resp.query,
             answer=resp.answer,
@@ -55,6 +65,8 @@ class QueryResult:
             gold_rank=getattr(resp, "gold_rank", -1),
             refusal_type=refusal,
             severity=severity,
+            gold_answer=gold,
+            answer_correct=answer_contains_gold(resp.answer, gold),
         )
 
     def to_dict(self) -> dict:
@@ -71,6 +83,8 @@ class QueryResult:
             "gold_rank": self.gold_rank,
             "refusal_type": self.refusal_type.value,
             "severity": int(self.severity),
+            "gold_answer": self.gold_answer,
+            "answer_correct": self.answer_correct,
         }
 
 
@@ -89,6 +103,12 @@ class MetricsReport:
     gds_absolute: float = 0.0  # Legacy GDS: mean attacked severity, no baseline subtraction
     baseline_denial_rate: float = 0.0  # Clean-run FULL_DENIAL fraction (the confound floor)
     num_answerable: int = 0  # Queries answered clean; denominator of the conditional ASR
+
+    # Answer-string correctness (needs short gold answers; unknown/0 for gold-less corpora)
+    has_gold: bool = False
+    accuracy_baseline: float = 0.0   # fraction correct on the clean run
+    accuracy_attacked: float = 0.0   # fraction correct under attack
+    correctness_drop_rate: float = 0.0  # of clean-correct queries, fraction no longer correct
     lir_mean: float = 1.0  # Latency Inflation Ratio (mean)
     lir_median: float = 1.0
     tor_mean: float = 1.0  # Token Overhead Ratio (mean)
@@ -123,6 +143,10 @@ class MetricsReport:
             "gds_absolute": round(self.gds_absolute, 4),
             "baseline_denial_rate": round(self.baseline_denial_rate, 4),
             "num_answerable": self.num_answerable,
+            "has_gold": self.has_gold,
+            "accuracy_baseline": round(self.accuracy_baseline, 4),
+            "accuracy_attacked": round(self.accuracy_attacked, 4),
+            "correctness_drop_rate": round(self.correctness_drop_rate, 4),
             "lir_mean": round(self.lir_mean, 3),
             "lir_median": round(self.lir_median, 3),
             "tor_mean": round(self.tor_mean, 3),
@@ -214,6 +238,14 @@ def compute_metrics(
     # Absolute GDS (legacy definition): mean attacked severity, no baseline subtraction.
     gds_absolute = sum(severity_weights[r.severity] for r in attacked) / n
 
+    # ── Answer-string correctness (only meaningful with short gold answers) ──
+    has_gold = any(bool(b.gold_answer and b.gold_answer.strip()) for b in baseline)
+    accuracy_baseline = mean(1.0 if b.answer_correct else 0.0 for b in baseline) if has_gold else 0.0
+    accuracy_attacked = mean(1.0 if a.answer_correct else 0.0 for a in attacked) if has_gold else 0.0
+    correct_clean = [(a, b) for a, b in zip(attacked, baseline) if b.answer_correct]
+    correctness_drop = sum(1 for a, _ in correct_clean if not a.answer_correct)
+    correctness_drop_rate = (correctness_drop / len(correct_clean)) if correct_clean else 0.0
+
     # ── LIR: latency inflation ratio per query, then aggregate ──
     lir_values = []
     retrieval_lir_values = []
@@ -278,6 +310,10 @@ def compute_metrics(
         gds_absolute=gds_absolute,
         baseline_denial_rate=baseline_denial_rate,
         num_answerable=num_answerable,
+        has_gold=has_gold,
+        accuracy_baseline=accuracy_baseline,
+        accuracy_attacked=accuracy_attacked,
+        correctness_drop_rate=correctness_drop_rate,
         lir_mean=lir_mean,
         lir_median=lir_median,
         tor_mean=tor_mean,
