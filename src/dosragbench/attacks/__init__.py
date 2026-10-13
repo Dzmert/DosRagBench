@@ -5,6 +5,7 @@ from dosragbench.attacks.a2_contradiction import ContradictionFloodingAttack
 from dosragbench.attacks.a3_authority import AuthoritySpoofingAttack
 from dosragbench.attacks.base import DoSAttack
 from dosragbench.attacks.blocker import BlockerAttack, BlockerConfig
+from dosragbench.attacks.blocker_construct import BlockerInjectAttack, BlockerOracleAttack
 from dosragbench.attacks.c0_random_baseline import RandomInjectionAttack
 from dosragbench.attacks.c1_clustering import EmbeddingClusteringAttack
 from dosragbench.attacks.c2_index_pollution import IndexPollutionAttack
@@ -35,6 +36,8 @@ ATTACK_REGISTRY: dict[str, type[DoSAttack]] = {
     "D3": EpistemicUncertaintyAttack,
     "D4": InfiniteQualificationAttack,
     "BLOCKER": BlockerAttack,
+    "BLOCKER_INJECT": BlockerInjectAttack,
+    "BLOCKER_ORACLE": BlockerOracleAttack,
 }
 
 
@@ -72,6 +75,8 @@ __all__ = [
     "InfiniteQualificationAttack",
     "BlockerAttack",
     "BlockerConfig",
+    "BlockerInjectAttack",
+    "BlockerOracleAttack",
     "ATTACK_REGISTRY",
     "build_attack",
 ]

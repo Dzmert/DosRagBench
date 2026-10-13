@@ -41,7 +41,12 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from dosragbench.attacks import BlockerAttack, BlockerConfig, build_attack
+from dosragbench.attacks import (
+    BlockerAttack,
+    BlockerConfig,
+    BlockerOracleAttack,
+    build_attack,
+)
 from dosragbench.metrics import QueryResult, classify_severity, compute_metrics
 from dosragbench.models import detect_environment, load_model
 from dosragbench.pipeline import Document, HNSWRetriever, RAGPipeline
@@ -173,6 +178,22 @@ def make_blocker_feedback(rag, retriever):
     return feedback
 
 
+def make_blocker_oracle(rag):
+    """Auxiliary generator for the BLOCKER_ORACLE baseline.
+
+    Bound per model side, so each side's blocker passage is crafted by that
+    side's own generator (the same per-side convention BLOCKER uses). This is a
+    weaker-attacker substitution for the paper's dedicated GPT-4 oracle.
+    """
+
+    def oracle(prompt: str) -> str:
+        oracle.calls += 1
+        return rag.model.generate(prompt)["text"]
+
+    oracle.calls = 0
+    return oracle
+
+
 def run_model_side(model_config, retriever, queries, attack, top_k, num_queries,
                    prompt_style="auto"):
     """MERGE MODE: baseline + attacked for one model, no per-query rebuild."""
@@ -187,6 +208,10 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries,
     # replayed against the aligned one.
     if isinstance(attack, BlockerAttack):
         attack.feedback_fn = make_blocker_feedback(rag, retriever)
+    # BLOCKER_ORACLE crafts its passage with the live generator, bound per side
+    # for the same reason (the base and aligned passages are distinct artifacts).
+    if isinstance(attack, BlockerOracleAttack):
+        attack.oracle_fn = make_blocker_oracle(rag)
 
     baseline_results, attacked_results = [], []
 
@@ -216,6 +241,11 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries,
         logger.info(
             f"BLOCKER used {attack.feedback_fn.calls} oracle queries against "
             f"{model_config.name} ({attack.feedback_fn.calls / max(num_queries, 1):.1f} per query)"
+        )
+    if isinstance(attack, BlockerOracleAttack) and attack.fallbacks:
+        logger.warning(
+            f"BLOCKER_ORACLE fell back to injection text on {attack.fallbacks}/{num_queries} "
+            f"queries against {model_config.name}"
         )
 
     loaded.unload()
