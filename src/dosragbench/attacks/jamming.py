@@ -29,6 +29,11 @@ Methods (set via the ``method`` param, or the J1/J2/J3 category codes):
   - "opt"     (J3): black-box hill-climbing on d̃_j tokens to maximize similarity
                     between the RAG's response and the target non-answer. Needs a
                     ``response_fn`` that runs the full RAG for a candidate blocker.
+                    Optimized per victim (each model side re-runs it); not cached.
+
+J2's crafted passage is cached per query and reused across the base and aligned
+sides so the AVI compares victims under an identical blocker. J3 is per-victim
+by design, so it is not cached.
 
 All three are alignment-relevant: the "safety" target in particular asks the
 model to decline, so a more safety-aligned model may be *easier* to jam — exactly
@@ -106,13 +111,12 @@ class JammingAttack(DoSAttack):
         self._device = device
         self._embedder = None  # lazy, only for J3
 
-        # Per-query cache of the crafted jamming text, keyed by query. The runner
-        # reuses one attack object across the base and aligned sides, so caching
-        # guarantees BOTH models face the byte-identical blocker — only the victim
-        # varies, which is what the AVI comparison requires. It also means J3 is
-        # optimized once (against whichever side runs first) rather than re-run per
-        # victim; that is the correct apples-to-apples choice for AVI and roughly
-        # halves J3 cost. State this in the paper.
+        # Per-query cache of the crafted jamming text, keyed by query, used by J2
+        # ONLY. The runner reuses one attack object across the base and aligned
+        # sides, so caching the oracle passage guarantees both models face the
+        # byte-identical blocker — only the victim varies, which is what the AVI
+        # comparison requires. J3 is deliberately NOT cached: it optimizes against
+        # each victim model's own responses (paper-faithful per-victim attack).
         self._jamming_cache: dict[str, str] = {}
         self._oracle_fallbacks = 0  # # queries where J2 fell back to J1 text
 
@@ -257,25 +261,28 @@ class JammingAttack(DoSAttack):
         if self.method == "inject":
             # Query-independent of model; no need to cache.
             jamming_text = self._jamming_inject()
-        elif query in self._jamming_cache:
-            # Reuse the text crafted on the first side so both models face the
-            # identical blocker (fair AVI; avoids re-running J3 per victim).
-            jamming_text = self._jamming_cache[query]
         elif self.method == "oracle":
             if oracle_generate is None:
                 raise ValueError(
                     "Jamming method 'oracle' (J2) needs an oracle_generate callable; "
                     "the runner must pass one (e.g. the model's generate function)."
                 )
-            jamming_text = self._jamming_oracle(query, oracle_generate)
-            self._jamming_cache[query] = jamming_text
+            # Cache the oracle-crafted passage per query: it is victim-independent
+            # (an auxiliary LLM writes text that induces the target), so both model
+            # sides should face the identical blocker for a fair AVI.
+            if query in self._jamming_cache:
+                jamming_text = self._jamming_cache[query]
+            else:
+                jamming_text = self._jamming_oracle(query, oracle_generate)
+                self._jamming_cache[query] = jamming_text
         else:  # opt
             if response_fn is None:
                 raise ValueError(
                     "Jamming method 'opt' (J3) needs a response_fn callable that runs "
                     "the full RAG for a candidate blocker; the runner must pass one."
                 )
+            # NOT cached: J3 optimizes against the specific victim model's
+            # responses (paper-faithful), so each side re-runs the optimization.
             jamming_text = self._jamming_opt(query, response_fn)
-            self._jamming_cache[query] = jamming_text
 
         return [self._blocker(query, jamming_text, i) for i in range(max(n, 1))]

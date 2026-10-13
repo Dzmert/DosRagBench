@@ -323,7 +323,7 @@ class TestOracleHygiene:
 
 
 class TestCrossSideCache:
-    def test_same_blocker_reused_across_sides(self):
+    def test_j2_blocker_reused_across_sides(self):
         attack = JammingAttack(_cfg("oracle"))
         calls = {"n": 0}
 
@@ -332,7 +332,22 @@ class TestCrossSideCache:
             return f"crafted passage number {calls['n']}"
 
         first = attack.generate_adversarial_docs("q", [], oracle_generate=oracle)
-        # Second side runs the same query: must reuse, not re-craft.
+        # Second side, same query: J2 must reuse, not re-craft.
         second = attack.generate_adversarial_docs("q", [], oracle_generate=oracle)
         assert calls["n"] == 1
         assert first[0].text == second[0].text
+
+    def test_j3_reoptimizes_per_victim(self):
+        attack = JammingAttack(_cfg("opt", opt_tokens=3, opt_iters=1, opt_batch=1))
+        calls = {"n": 0}
+
+        def response_fn(_jamming_text):
+            calls["n"] += 1
+            return "some non-target response"
+
+        attack.generate_adversarial_docs("q", [], response_fn=response_fn)
+        first_calls = calls["n"]
+        # Second side, same query: J3 must re-run the optimization (not cached).
+        attack.generate_adversarial_docs("q", [], response_fn=response_fn)
+        assert calls["n"] == 2 * first_calls
+        assert "q" not in attack._jamming_cache

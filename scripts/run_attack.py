@@ -342,11 +342,11 @@ def main():
     if args.side in ("both", "aligned"):
         sides.append(("aligned", pair.aligned))
 
-    # For J2/J3 the first side to run crafts the blocker, which is then cached and
+    # For J2 the first side to run crafts the oracle blocker, which is cached and
     # reused on the other side. Run the aligned (instruct) side first so the
-    # stronger model is the oracle / optimizer, rather than a base model fed an
-    # instruction prompt it won't follow.
-    if args.category in ("J2", "J3"):
+    # stronger model is the oracle, rather than a base model fed an instruction
+    # prompt it won't follow. (J3 optimizes per victim, so order is irrelevant.)
+    if args.category == "J2":
         sides.sort(key=lambda s: 0 if s[0] == "aligned" else 1)
 
     def _flush():
