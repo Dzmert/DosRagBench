@@ -106,6 +106,16 @@ class JammingAttack(DoSAttack):
         self._device = device
         self._embedder = None  # lazy, only for J3
 
+        # Per-query cache of the crafted jamming text, keyed by query. The runner
+        # reuses one attack object across the base and aligned sides, so caching
+        # guarantees BOTH models face the byte-identical blocker — only the victim
+        # varies, which is what the AVI comparison requires. It also means J3 is
+        # optimized once (against whichever side runs first) rather than re-run per
+        # victim; that is the correct apples-to-apples choice for AVI and roughly
+        # halves J3 cost. State this in the paper.
+        self._jamming_cache: dict[str, str] = {}
+        self._oracle_fallbacks = 0  # # queries where J2 fell back to J1 text
+
     # ─── blocker assembly ────────────────────────────────────────────
 
     def _blocker(self, query: str, jamming_text: str, idx: int) -> Document:
@@ -124,14 +134,39 @@ class JammingAttack(DoSAttack):
 
     # ─── J2: oracle-generated ────────────────────────────────────────
 
+    @staticmethod
+    def _strip_reasoning(text: str) -> str:
+        """Drop a leading <think>…</think> reasoning trace (R1-style models)."""
+        if "</think>" in text:
+            text = text.rsplit("</think>", 1)[1]
+        return text.strip()
+
     def _jamming_oracle(self, query: str, oracle_generate: Callable[[str], str]) -> str:
         prompt = ORACLE_PROMPT.format(query=query, target=self.target, n_words=self.oracle_words)
         try:
-            text = oracle_generate(prompt).strip()
+            text = self._strip_reasoning(oracle_generate(prompt).strip())
         except Exception as exc:  # oracle failure -> fall back to injection
-            logger.warning(f"Oracle generation failed ({exc}); falling back to inject text")
+            self._oracle_fallbacks += 1
+            logger.warning(
+                f"Oracle generation failed ({exc}); falling back to inject text. "
+                f"J2 fallback count now {self._oracle_fallbacks} — these queries are "
+                f"effectively J1, not J2."
+            )
             return self._jamming_inject()
-        return text or self._jamming_inject()
+        if not text:
+            self._oracle_fallbacks += 1
+            logger.warning(
+                f"Oracle returned empty text; falling back to inject. "
+                f"J2 fallback count now {self._oracle_fallbacks}."
+            )
+            return self._jamming_inject()
+        # Enforce the length budget the prompt only requested, so an over-long
+        # blocker cannot overflow the RAG context window and wipe it out (the
+        # pipeline drops any document that would exceed max_context_length).
+        words = text.split()
+        if len(words) > self.oracle_words:
+            text = " ".join(words[: self.oracle_words])
+        return text
 
     # ─── J3: black-box optimization (hill-climbing) ──────────────────
 
@@ -164,9 +199,11 @@ class JammingAttack(DoSAttack):
             [self.target], convert_to_numpy=True, normalize_embeddings=True
         )[0]
 
+        target_prefix = self.target.split(".")[0].lower()
         tokens = self._rng.choices(_OPT_VOCAB, k=self.opt_tokens)
         best_text = " ".join(tokens)
-        best_score = self._similarity(response_fn(best_text), target_emb)
+        best_response = response_fn(best_text)
+        best_score = self._similarity(best_response, target_emb)
         stale = 0
 
         for it in range(self.opt_iters):
@@ -180,13 +217,15 @@ class JammingAttack(DoSAttack):
             improved = False
             for cand in candidates:
                 text = " ".join(cand)
-                score = self._similarity(response_fn(text), target_emb)
+                response = response_fn(text)  # one generation per candidate
+                score = self._similarity(response, target_emb)
                 if score > best_score:
-                    best_score, best_text, tokens = score, text, cand
+                    best_score, best_text, best_response, tokens = score, text, response, cand
                     improved = True
 
-            # Early stop: target already achieved, or no progress for a while.
-            if self.target.split(".")[0].lower() in response_fn(best_text).lower():
+            # Early stop on the already-known best response (no extra generation),
+            # or when no candidate has improved for opt_patience iterations.
+            if target_prefix in best_response.lower():
                 logger.debug(f"J3 early stop at iter {it}: target substring reached")
                 break
             stale = 0 if improved else stale + 1
@@ -216,7 +255,12 @@ class JammingAttack(DoSAttack):
         n = count if count is not None else self.config.num_adversarial_docs
 
         if self.method == "inject":
+            # Query-independent of model; no need to cache.
             jamming_text = self._jamming_inject()
+        elif query in self._jamming_cache:
+            # Reuse the text crafted on the first side so both models face the
+            # identical blocker (fair AVI; avoids re-running J3 per victim).
+            jamming_text = self._jamming_cache[query]
         elif self.method == "oracle":
             if oracle_generate is None:
                 raise ValueError(
@@ -224,6 +268,7 @@ class JammingAttack(DoSAttack):
                     "the runner must pass one (e.g. the model's generate function)."
                 )
             jamming_text = self._jamming_oracle(query, oracle_generate)
+            self._jamming_cache[query] = jamming_text
         else:  # opt
             if response_fn is None:
                 raise ValueError(
@@ -231,5 +276,6 @@ class JammingAttack(DoSAttack):
                     "the full RAG for a candidate blocker; the runner must pass one."
                 )
             jamming_text = self._jamming_opt(query, response_fn)
+            self._jamming_cache[query] = jamming_text
 
         return [self._blocker(query, jamming_text, i) for i in range(max(n, 1))]

@@ -268,7 +268,9 @@ def main():
     ]
     for code, name, avi in all_avis:
         print(f"\n{code} ({name}):")
-        avi_val = avi["avi_asr"]
+        # Print the AVI the interpretation is actually based on (paired jam first,
+        # else legacy ASR), so the number and its verdict always agree.
+        avi_val = avi["avi_jam"] if avi.get("avi_jam") is not None else avi["avi_asr"]
         avi_str = f"{avi_val:.2f}" if avi_val is not None else "n/a (no effect)"
         print(f"  Base ASR    = {avi['base_asr']*100:.1f}%")
         print(f"  Aligned ASR = {avi['aligned_asr']*100:.1f}%")

@@ -175,7 +175,8 @@ class TestPairedMetrics:
         attacked = [_qr("Actually the answer is 42.")]
         m = compute_metrics(attacked, baseline, "stub", "J1")
         assert m.answerable_baseline == 0
-        assert m.jam_success_rate == 0.0
+        # Nothing was answerable clean, so jam success is undefined, not a measured 0.
+        assert m.jam_success_rate is None
         assert m.reverse_flip_rate == 1.0
 
     def test_correctness_drop(self):
@@ -267,3 +268,71 @@ class TestRunnerWiring:
         assert retr.adv and retr.adv[0].text.startswith("who filler tokens")
         assert rag.last_query == "who"
         assert out == TARGET_RESPONSES["insufficient"]
+
+
+# ─── review follow-ups: boundary match, undefined AVI, truncation, caching ───
+
+class TestGoldTokenBoundary:
+    def test_short_numeric_gold_not_substring(self):
+        assert not answer_contains_gold("It happened in 1945.", "4")
+        assert answer_contains_gold("The answer is 4 apples.", "4")
+
+    def test_short_word_gold_not_inside_token(self):
+        assert not answer_contains_gold("They started early.", "art")
+        assert answer_contains_gold("It is modern art today.", "art")
+
+    def test_multiword_gold_subsequence(self):
+        assert answer_contains_gold("It was Leonardo da Vinci, painter.", "Leonardo da Vinci")
+        assert not answer_contains_gold("Leonardo painted; da Vinci coded.", "Leonardo da Vinci")
+
+
+class TestUndefinedJamAVI:
+    def test_none_jam_side_makes_avi_undefined(self):
+        base = MetricsReport(model_name="b", attack_category="J1", num_queries=5)
+        base.jam_success_rate = None  # base answered nothing clean
+        aligned = MetricsReport(model_name="a", attack_category="J1", num_queries=5)
+        aligned.jam_success_rate = 0.4
+        avi = compute_avi(aligned, base)
+        assert avi["avi_jam"] is None
+        assert "undefined" in avi["interpretation"].lower()
+
+
+class TestOracleHygiene:
+    def test_oracle_output_truncated_to_word_budget(self):
+        attack = JammingAttack(_cfg("oracle", oracle_words=5))
+        long_text = "word " * 100
+        docs = attack.generate_adversarial_docs("myquery", [], oracle_generate=lambda p: long_text)
+        jamming = docs[0].text[len("myquery "):]
+        assert len(jamming.split()) <= 5
+
+    def test_reasoning_trace_stripped(self):
+        attack = JammingAttack(_cfg("oracle", oracle_words=50))
+        out = "<think>let me reason about this</think> The real crafted passage here."
+        docs = attack.generate_adversarial_docs("q", [], oracle_generate=lambda p: out)
+        assert "reason about this" not in docs[0].text
+        assert "real crafted passage" in docs[0].text
+
+    def test_fallback_counted(self):
+        attack = JammingAttack(_cfg("oracle"))
+
+        def boom(_p):
+            raise RuntimeError("oom")
+
+        attack.generate_adversarial_docs("q", [], oracle_generate=boom)
+        assert attack._oracle_fallbacks == 1
+
+
+class TestCrossSideCache:
+    def test_same_blocker_reused_across_sides(self):
+        attack = JammingAttack(_cfg("oracle"))
+        calls = {"n": 0}
+
+        def oracle(_p):
+            calls["n"] += 1
+            return f"crafted passage number {calls['n']}"
+
+        first = attack.generate_adversarial_docs("q", [], oracle_generate=oracle)
+        # Second side runs the same query: must reuse, not re-craft.
+        second = attack.generate_adversarial_docs("q", [], oracle_generate=oracle)
+        assert calls["n"] == 1
+        assert first[0].text == second[0].text

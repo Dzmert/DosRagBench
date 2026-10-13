@@ -56,6 +56,11 @@ SEED_QUESTIONS = [
 class UniversalPoisoningAttack(DoSAttack):
     """Category C4: Query-agnostic hub docs placed at the query-space centroid."""
 
+    # The pooled-budget path (run_attack._pooled_adversarial_docs) uses this to
+    # build ONE global hub set of the right size, instead of calling once per
+    # query (which would inject many duplicate hubs with colliding doc_ids).
+    query_agnostic = True
+
     def __init__(self, config: AttackConfig, embedder_id: str | None = None,
                  device: str = "auto"):
         super().__init__(config)

@@ -104,6 +104,19 @@ def _pooled_adversarial_docs(attack, queries, num_queries, total_budget):
     q_slice = queries[:num_queries]
     all_adv = []
 
+    supports_count = "count" in inspect.signature(attack.generate_adversarial_docs).parameters
+
+    # Query-agnostic attacks (e.g. C4) have one global hub set, not a per-query
+    # one. Build it once at the full budget so the pooled path does not inject
+    # duplicate hubs with colliding doc_ids.
+    if getattr(attack, "query_agnostic", False):
+        want = total_budget if total_budget is not None else attack.config.num_adversarial_docs
+        if want <= 0:
+            return all_adv
+        if supports_count:
+            return attack.generate_adversarial_docs("", [], count=want)
+        return attack.generate_adversarial_docs("", [])[:want]
+
     if total_budget is None:
         for q in q_slice:
             all_adv.extend(attack.generate_adversarial_docs(q["query"], []))
@@ -114,10 +127,6 @@ def _pooled_adversarial_docs(attack, queries, num_queries, total_budget):
         return all_adv
     base = total_budget // n
     remainder = total_budget % n
-
-    # Pass the per-query allocation to attacks that accept a `count` (e.g. C1),
-    # so a budget larger than the config's num_adversarial_docs is actually met.
-    supports_count = "count" in inspect.signature(attack.generate_adversarial_docs).parameters
 
     for i, q in enumerate(q_slice):
         want = base + (1 if i < remainder else 0)
@@ -333,6 +342,20 @@ def main():
     if args.side in ("both", "aligned"):
         sides.append(("aligned", pair.aligned))
 
+    # For J2/J3 the first side to run crafts the blocker, which is then cached and
+    # reused on the other side. Run the aligned (instruct) side first so the
+    # stronger model is the oracle / optimizer, rather than a base model fed an
+    # instruction prompt it won't follow.
+    if args.category in ("J2", "J3"):
+        sides.sort(key=lambda s: 0 if s[0] == "aligned" else 1)
+
+    def _flush():
+        """Persist whatever has completed so far (so a killed long run isn't lost)."""
+        with open(out_dir / "raw_results.json", "w") as f:
+            json.dump(all_results, f, indent=2)
+        with open(out_dir / "metrics.json", "w") as f:
+            json.dump(metrics_reports, f, indent=2)
+
     for side_name, model_cfg in sides:
         logger.info(f"══ {side_name.upper()}: {model_cfg.name} ══")
         t0 = time.perf_counter()
@@ -350,11 +373,14 @@ def main():
         metrics_reports[side_name] = report.to_dict()
         logger.info(f"  ASR={report.asr:.3f} GDS={report.gds:.3f} "
                     f"LIR={report.lir_mean:.2f} retrieval_LIR={report.retrieval_lir_mean:.2f}")
+        _flush()  # checkpoint after each side
 
-    with open(out_dir / "raw_results.json", "w") as f:
-        json.dump(all_results, f, indent=2)
-    with open(out_dir / "metrics.json", "w") as f:
-        json.dump(metrics_reports, f, indent=2)
+    # Record J2 oracle fallbacks (queries that silently degraded to J1 text).
+    fallbacks = getattr(attack, "_oracle_fallbacks", 0)
+    if fallbacks:
+        all_results["_meta"] = {"oracle_fallbacks": fallbacks, "num_queries": num_queries}
+        logger.warning(f"J2 oracle fell back to J1 text on {fallbacks}/{num_queries} queries")
+        _flush()
     logger.info(f"Saved results to {out_dir}/")
 
 

@@ -38,17 +38,30 @@ def normalize_answer(s: str) -> str:
 
 
 def answer_contains_gold(answer: str, gold_answer: str) -> bool:
-    """True if the normalized gold short answer appears in the normalized response.
+    """True if the normalized gold short answer appears in the normalized response
+    as a whole token subsequence.
 
-    Returns False when no gold answer is available (e.g. BEIR queries carry no
-    short answer), so correctness is simply 'unknown' rather than falsely True.
+    Matching is at the token level, not a raw character substring, so a short gold
+    like "4" or "art" does not spuriously match inside "1945" or "started". This
+    keeps the correctness signal from being inflated on NQ/TriviaQA-style short
+    answers. Returns False when no gold answer is available (e.g. BEIR queries
+    carry no short answer), so correctness is simply 'unknown' rather than
+    falsely True.
     """
     if not gold_answer or not gold_answer.strip():
         return False
-    norm_gold = normalize_answer(gold_answer)
-    if not norm_gold:
+    gold_tokens = normalize_answer(gold_answer).split()
+    if not gold_tokens:
         return False
-    return norm_gold in normalize_answer(answer)
+    ans_tokens = normalize_answer(answer).split()
+    if len(gold_tokens) > len(ans_tokens):
+        return False
+    # Sliding-window subsequence match on token boundaries.
+    first = gold_tokens[0]
+    for i in range(len(ans_tokens) - len(gold_tokens) + 1):
+        if ans_tokens[i] == first and ans_tokens[i:i + len(gold_tokens)] == gold_tokens:
+            return True
+    return False
 
 
 def response_answers_query(answer: str) -> bool:
