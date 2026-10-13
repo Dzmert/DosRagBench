@@ -132,6 +132,34 @@ def _pooled_adversarial_docs(attack, queries, num_queries, total_budget):
     return all_adv
 
 
+def _jamming_kwargs(attack, rag, retriever, query_text, gold_doc_id):
+    """Build the per-query callables a JammingAttack needs (J2 oracle / J3 opt).
+
+    J1 (inject) needs nothing. J2 uses the loaded model as its oracle. J3 needs a
+    response_fn that runs the full RAG for a candidate blocker and returns the
+    answer, so the optimizer can score response↔target similarity.
+    """
+    from dosragbench.attacks.jamming import JammingAttack
+    from dosragbench.pipeline import Document
+
+    if not isinstance(attack, JammingAttack):
+        return {}
+    if attack.method == "oracle":
+        return {"oracle_generate": lambda p: rag.model.generate(p)["text"]}
+    if attack.method == "opt":
+        def response_fn(jamming_text: str) -> str:
+            probe = Document(
+                doc_id="adv_JAM_opt_probe",
+                text=f"{query_text} {jamming_text}".strip(),
+                is_adversarial=True,
+                attack_category=attack.category,
+            )
+            retriever.set_adversarial([probe])
+            return rag.query(query_text, gold_doc_id=gold_doc_id).answer
+        return {"response_fn": response_fn}
+    return {}
+
+
 def run_model_side(model_config, retriever, queries, attack, top_k, num_queries):
     """MERGE MODE: baseline + attacked for one model, no per-query rebuild."""
     logger.info(f"Loading model: {model_config.name}")
@@ -143,16 +171,26 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries)
     for i, q in enumerate(queries[:num_queries]):
         query_text = q["query"]
         gold_doc_id = q.get("gold_doc_id")
+        gold_answer = q.get("gold_answer", "")
 
         retriever.clear_adversarial()
         baseline_resp = rag.query(query_text, gold_doc_id=gold_doc_id)
-        baseline_results.append(QueryResult.from_rag_response(baseline_resp))
+        baseline_results.append(
+            QueryResult.from_rag_response(baseline_resp, gold_answer=gold_answer)
+        )
 
-        adv_docs = attack.generate_adversarial_docs(query_text, baseline_resp.retrieved_docs)
+        gen_kwargs = _jamming_kwargs(attack, rag, retriever, query_text, gold_doc_id)
+        adv_docs = attack.generate_adversarial_docs(
+            query_text, baseline_resp.retrieved_docs, **gen_kwargs
+        )
         retriever.set_adversarial(adv_docs)
         attacked_resp = rag.query(query_text, gold_doc_id=gold_doc_id)
         attacked_results.append(
-            QueryResult.from_rag_response(attacked_resp, baseline_latency=baseline_resp.total_latency_s)
+            QueryResult.from_rag_response(
+                attacked_resp,
+                baseline_latency=baseline_resp.total_latency_s,
+                gold_answer=gold_answer,
+            )
         )
         retriever.clear_adversarial()
 
@@ -262,7 +300,9 @@ def main():
     retriever = HNSWRetriever(embedder_id=args.embedder, device=args.device)
     get_or_build_index(retriever, kb_docs, args.embedder, kb_signature)
 
-    if args.category == "C1":
+    # C1/C4 need the embedder for clustering; J* accept it (J3 needs it for the
+    # optimization objective, J1/J2 ignore it).
+    if args.category in ("C1", "C4", "J1", "J2", "J3"):
         attack = build_attack(attack_config, embedder_id=args.embedder, device=args.device)
     else:
         attack = build_attack(attack_config)

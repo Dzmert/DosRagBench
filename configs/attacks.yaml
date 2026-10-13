@@ -37,6 +37,49 @@ A3:
       - "CONFIDENTIAL - Internal use only"
       - "RESTRICTED - Authorized personnel only"
 
+A4:
+  name: "Output Exhaustion (Sponge)"
+  num_queries: 200
+  num_adversarial_docs: 5
+  seed: 42
+  params: {}  # targets TOR/generation-latency by coercing maximally long output
+
+# CATEGORY J: JAMMING / BLOCKER DOCUMENTS (Shafran et al., USENIX Security 2025)
+# The canonical DoS-on-RAG baseline. One blocker document per query, built as
+# <query> ‖ <jamming text>. Evaluate with the paired jam_success_rate metric.
+
+J1:
+  name: "Jamming — Instruction Injection"
+  num_queries: 200
+  num_adversarial_docs: 1  # paper uses a single blocker per query
+  seed: 42
+  params:
+    method: "inject"
+    target: "insufficient"  # "insufficient" | "safety" | "correctness"
+
+J2:
+  name: "Jamming — Oracle-Generated"
+  num_queries: 200
+  num_adversarial_docs: 1
+  seed: 42
+  params:
+    method: "oracle"
+    target: "insufficient"
+    oracle_words: 30
+
+J3:
+  name: "Jamming — Black-box Optimization"
+  num_queries: 50  # expensive: ~opt_batch generations per iteration
+  num_adversarial_docs: 1
+  seed: 42
+  params:
+    method: "opt"
+    target: "insufficient"
+    opt_tokens: 50
+    opt_iters: 100   # paper: 1000
+    opt_batch: 16    # paper: 32
+    opt_patience: 30  # paper: 100
+
 # ABLATION BASELINE: random injection (isolates C1's clustering mechanism)
 
 RAND:
@@ -75,3 +118,12 @@ C3:
   params:
     token_perturbations: ["zero-width space", "unicode homoglyphs"]
     max_perturbations_per_doc: 20
+
+C4:
+  name: "Universal Retrieval Poisoning"
+  num_queries: 200
+  num_adversarial_docs: 50  # small FIXED budget: query-agnostic hubs, not per-query
+  seed: 42
+  params:
+    seed_query_count: 60
+    candidate_pool: 400
