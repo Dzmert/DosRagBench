@@ -114,6 +114,26 @@ BLOCKER:
   seed: 42
   params: {}
 
+# The two construction-based blocker variants (Shafran et al.), cheaper than the
+# optimization BLOCKER above. target: "insufficient" | "safety" | "correctness".
+
+BLOCKER_INJECT:
+  name: "Blocker — Instruction Injection (Shafran et al.)"
+  num_queries: 1000  # Optimization-free: one templated blocker per query, cheap.
+  num_adversarial_docs: 1
+  seed: 42
+  params:
+    target: "insufficient"
+
+BLOCKER_ORACLE:
+  name: "Blocker — Oracle-Generated (Shafran et al.)"
+  num_queries: 200  # One auxiliary generation per query.
+  num_adversarial_docs: 1
+  seed: 42
+  params:
+    target: "insufficient"
+    oracle_words: 30
+
 # CATEGORY D: CHAIN-OF-THOUGHT DEADLOCKS
 
 D1:
