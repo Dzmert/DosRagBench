@@ -20,7 +20,14 @@
 # paper's 1000 x 32. Report this run as budget-limited -- it is a LOWER BOUND on
 # the optimised attacker, which is the honest and still-useful framing.
 #
+# CATEGORY selects the variant (default BLOCKER):
+#   BLOCKER         black-box optimisation (above); ITERS/BATCH/TOKENS apply
+#                   only to this one.
+#   BLOCKER_INJECT  instruction injection, optimisation-free, minutes.
+#   BLOCKER_ORACLE  one auxiliary generation per query per side, ~1-2h at 200.
+#
 # Submit (50 queries, 24h):  qsub -v NUM_QUERIES=50 scripts/run_blocker_katana.pbs
+# Oracle (200 queries):      qsub -v CATEGORY=BLOCKER_ORACLE,NUM_QUERIES=200 -l walltime=6:00:00 scripts/run_blocker_katana.pbs
 # Watch:   qstat -u $USER
 # ─────────────────────────────────────────────────────────────────────────────
 #PBS -N dosrag_blocker
@@ -30,6 +37,7 @@
 
 set -euo pipefail
 
+CATEGORY=${CATEGORY:-BLOCKER}
 PAIR=${PAIR:-llama-3.1-8b}
 NUM_QUERIES=${NUM_QUERIES:-50}
 ITERS=${ITERS:-25}
@@ -52,7 +60,7 @@ module load python/3.11
 source .venv/bin/activate
 
 echo "=========================================="
-echo "Blocker baseline (Shafran et al.)"
+echo "Blocker baseline (Shafran et al.): $CATEGORY"
 echo "pair=$PAIR queries=$NUM_QUERIES iters=$ITERS batch=$BATCH tokens=$TOKENS"
 echo "worst case: $((ITERS * BATCH * NUM_QUERIES * 2)) generations across both sides"
 echo "Node:    $(hostname)"
@@ -60,7 +68,7 @@ echo "Started: $(date)"
 echo "=========================================="
 
 python3 scripts/run_attack.py \
-    --category BLOCKER \
+    --category "$CATEGORY" \
     --model-pair "$PAIR" \
     --num-queries "$NUM_QUERIES" \
     --blocker-iters "$ITERS" \
