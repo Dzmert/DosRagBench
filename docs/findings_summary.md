@@ -825,7 +825,8 @@ wrong. `scripts/score_correctness.py` then labels every response **C** correct,
 on their first turn only (`normalise_answer` — R1 trace stripped, base-model
 follow-on turns cut), so a base model never gets credit for an answer buried in
 256 tokens of continuation. Runs with < 100 scored queries are dropped (`mistral`
-A1 and C1, the `A1_instructional` arms, BLOCKER), leaving the 52 grid runs.
+A1 and C1, the `A1_instructional` arms, BLOCKER), leaving 50 grid runs plus the
+two 200-query blocker runs (133 scored queries each); all 52 share one FDR pool.
 
 **Two matchers, because neither is right alone.** *Strict*: a gold alias appears
 verbatim as a token sequence. A hand check of 24 "wrong" answers found it misses
@@ -861,7 +862,7 @@ worse": they are more selective, and their refusals are mostly well-placed.
 
 **Finding 2 — attacks destroy more of the aligned model's correct answers.**
 Correctness drop = of queries answered correctly clean, the fraction no longer
-correct under attack. Fisher's exact aligned vs base, BH-FDR across 52 runs.
+correct under attack. Fisher's exact aligned vs base, BH-FDR across those 52 runs.
 
 | family | runs | base drop | aligned drop | diff | runs diff > 0 | sig. (q < 0.05) |
 |---|---:|---:|---:|---:|---|---|
