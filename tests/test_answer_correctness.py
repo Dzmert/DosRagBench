@@ -6,6 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from dosragbench.metrics import QueryResult, answer_contains_gold, compute_metrics
+from dosragbench.metrics.answer import answer_matches_any, gold_token_recall
 
 
 @dataclass
@@ -61,3 +62,26 @@ class TestAccuracyMetrics:
         assert m.has_gold is False
         assert m.accuracy_baseline == 0.0
         assert m.correctness_drop_rate == 0.0
+
+
+class TestMultiAlias:
+    def test_any_alias_matches(self):
+        golds = ["Roger Nichols", "Roger Nichols and Paul Williams"]
+        assert answer_matches_any("It was written by Roger Nichols.", golds)
+        assert not answer_matches_any("It was written by Carole King.", golds)
+
+    def test_strict_misses_reworded_name_lenient_recovers(self):
+        golds = ["Kirsten Simone Vangsness"]
+        assert not answer_matches_any("Kirsten Vangsness", golds)
+        assert answer_matches_any("Kirsten Vangsness", golds, lenient=True)
+
+    def test_lenient_ignores_function_words(self):
+        assert gold_token_recall("August 14, 1945", "14 and 15 August 1945") == 0.75
+
+    def test_lenient_still_rejects_wrong_answer(self):
+        assert not answer_matches_any("Abe Carver", ["Adam Caine"], lenient=True)
+        assert not answer_matches_any("1977", ["October 20, 1977"], lenient=True)
+
+    def test_no_aliases_is_never_correct(self):
+        assert not answer_matches_any("anything", [])
+        assert not answer_matches_any("anything", [], lenient=True)
