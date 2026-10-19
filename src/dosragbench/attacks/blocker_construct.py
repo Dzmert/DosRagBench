@@ -21,12 +21,21 @@ BLOCKER as external baselines. They are NOT presented as this project's own
 attacks.
 
 Faithfulness note: this is a re-implementation, not the authors' code. The three
-target non-answers are the paper's; the oracle here is whatever generator the
-runner binds (the victim's own model by default, a documented weaker-attacker
-substitution for the paper's GPT-4 oracle). Per the convention this repo already
-uses for BLOCKER, the oracle is bound per model side, so the passage crafted
-against the base model and the one crafted against the aligned model are distinct
-artifacts rather than a shared blocker.
+target non-answers are the paper's; the oracle here is an open 8B instruct model,
+a documented weaker-attacker substitution for the paper's GPT-4 oracle.
+
+The oracle is FIXED across model sides by default: passages are crafted once per
+query (`precompute`) and both sides face the same blocker, as in the paper. The
+first run (2026-10-16) bound the oracle per side instead, and it failed in a way
+that made the base-vs-aligned contrast meaningless: the base model cannot follow
+the oracle instruction and continued the prompt text, while the instruct model
+wrote passages that *answered* the question. Each side was therefore attacked by
+a different, and differently broken, artifact. Per-side binding is still
+available (`oracle_fn`) to reproduce that run, but is not the default.
+
+Every crafted passage is audited (`audit`): whether it contains the target
+non-answer and whether the refusal classifier reads it as a refusal. A run whose
+passages mostly fail that check measures the oracle, not the victim.
 """
 
 from __future__ import annotations
@@ -35,6 +44,7 @@ import logging
 from typing import Callable, Optional
 
 from dosragbench.attacks.base import DoSAttack
+from dosragbench.metrics.refusal import classify_refusal, is_denial
 from dosragbench.pipeline.retriever import Document
 from dosragbench.utils.config import AttackConfig
 
@@ -94,9 +104,10 @@ class BlockerInjectAttack(DoSAttack):
 class BlockerOracleAttack(DoSAttack):
     """BLOCKER_ORACLE: oracle-generated blocker.
 
-    Needs an ``oracle_fn(prompt) -> text`` callable, bound per model side by the
-    runner (mirroring how BLOCKER's feedback oracle is bound), so each side gets
-    a passage crafted by its own generator. ``oracle_words`` bounds the passage
+    Default (fixed oracle): the runner calls ``precompute(queries, oracle_fn)``
+    once with a single generator, and every model side is served the same cached
+    passage per query. Legacy (per-side): the runner binds ``oracle_fn`` per side
+    and passages are crafted on demand. ``oracle_words`` bounds the passage
     length so an over-long blocker can't overflow the RAG context window.
     """
 
@@ -106,6 +117,37 @@ class BlockerOracleAttack(DoSAttack):
         self.oracle_words = config.params.get("oracle_words", 30)
         self.oracle_fn: Optional[Callable[[str], str]] = None
         self.fallbacks = 0  # queries that fell back to injection text
+        self.passages: dict[str, str] = {}  # query -> fixed-oracle passage
+        self.records: list[dict] = []  # one audit record per crafted passage
+
+    def precompute(self, queries: list[str], oracle_fn: Callable[[str], str]) -> None:
+        """Craft every query's passage once with a single oracle (fixed-oracle mode)."""
+        self.oracle_fn = oracle_fn
+        for query in queries:
+            if query not in self.passages:
+                self.passages[query] = self._craft(query)
+        self.oracle_fn = None  # the generator is unloaded after this; don't keep it
+
+    def _record(self, query: str, passage: str, fallback: bool) -> None:
+        self.records.append({
+            "query": query,
+            "passage": passage,
+            "fallback": fallback,
+            "contains_target": self.target.lower() in passage.lower(),
+            "refusal_like": is_denial(classify_refusal(passage)),
+        })
+
+    def audit(self) -> dict:
+        """Summary of how many crafted passages actually carry the target non-answer."""
+        n = len(self.records)
+        count = lambda key: sum(1 for r in self.records if r[key])
+        return {
+            "n_passages": n,
+            "fallbacks": count("fallback"),
+            "contains_target": count("contains_target"),
+            "refusal_like": count("refusal_like"),
+            "refusal_like_rate": round(count("refusal_like") / n, 3) if n else 0.0,
+        }
 
     @staticmethod
     def _strip_reasoning(text: str) -> str:
@@ -131,11 +173,13 @@ class BlockerOracleAttack(DoSAttack):
                 f"Fallback count now {self.fallbacks} (these queries are effectively "
                 f"BLOCKER_INJECT, not BLOCKER_ORACLE)."
             )
+            self._record(query, inject_text, fallback=True)
             return inject_text
         if not text:
             self.fallbacks += 1
             logger.warning(f"Oracle returned empty text; using injection text. "
                            f"Fallback count now {self.fallbacks}.")
+            self._record(query, inject_text, fallback=True)
             return inject_text
         # Enforce the length budget the prompt only requested, so the blocker
         # cannot overflow and wipe the RAG context (the pipeline drops any single
@@ -143,7 +187,11 @@ class BlockerOracleAttack(DoSAttack):
         words = text.split()
         if len(words) > self.oracle_words:
             text = " ".join(words[: self.oracle_words])
+        self._record(query, text, fallback=False)
         return text
 
     def generate_adversarial_docs(self, query: str, retrieved_docs: list) -> list[Document]:
-        return [_blocker_doc(query, self._craft(query), self.category)]
+        passage = self.passages.get(query)
+        if passage is None:
+            passage = self._craft(query)
+        return [_blocker_doc(query, passage, self.category)]

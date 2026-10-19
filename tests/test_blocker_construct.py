@@ -83,3 +83,41 @@ class TestOracle:
         attack.oracle_fn = lambda p: "   "
         docs = attack.generate_adversarial_docs("q", [])
         assert attack.fallbacks == 1
+
+
+class TestFixedOracle:
+    def test_precompute_serves_same_passage_to_every_side(self):
+        attack = BlockerOracleAttack(_cfg("BLOCKER_ORACLE"))
+        calls = []
+
+        def oracle(prompt):
+            calls.append(prompt)
+            return f"passage {len(calls)}"
+
+        attack.precompute(["q1", "q2"], oracle)
+        assert len(calls) == 2
+        assert attack.oracle_fn is None  # generator released after precompute
+        first = attack.generate_adversarial_docs("q1", [])[0].text
+        second = attack.generate_adversarial_docs("q1", [])[0].text
+        assert first == second == "q1 passage 1"
+        assert len(calls) == 2  # served from cache, oracle not called again
+
+    def test_audit_flags_passages_that_are_not_blockers(self):
+        attack = BlockerOracleAttack(_cfg("BLOCKER_ORACLE", target="insufficient"))
+        answers = {
+            "q1": TARGET_RESPONSES["insufficient"],
+            "q2": "The settlement marked the start of the Spanish conquest.",
+        }
+        attack.precompute(["q1", "q2"], lambda p: answers["q1" if "q1" in p else "q2"])
+        audit = attack.audit()
+        assert audit["n_passages"] == 2
+        assert audit["contains_target"] == 1
+        assert audit["refusal_like"] == 1
+        assert audit["refusal_like_rate"] == 0.5
+        assert [r["query"] for r in attack.records] == ["q1", "q2"]
+
+    def test_fallback_is_recorded(self):
+        attack = BlockerOracleAttack(_cfg("BLOCKER_ORACLE"))
+        attack.precompute(["q"], lambda p: "")
+        assert attack.audit()["fallbacks"] == 1
+        assert attack.records[0]["contains_target"]

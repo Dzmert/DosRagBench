@@ -208,9 +208,10 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries,
     # replayed against the aligned one.
     if isinstance(attack, BlockerAttack):
         attack.response_fn = make_blocker_response_fn(rag, retriever)
-    # BLOCKER_ORACLE crafts its passage with the live generator, bound per side
-    # for the same reason (the base and aligned passages are distinct artifacts).
-    if isinstance(attack, BlockerOracleAttack):
+    # BLOCKER_ORACLE: passages are normally precomputed once by a fixed oracle
+    # (see main). Only the legacy --oracle-side per-side mode binds this side's
+    # generator here, which makes the base and aligned passages distinct artifacts.
+    if isinstance(attack, BlockerOracleAttack) and not attack.passages:
         attack.oracle_fn = make_blocker_oracle(rag)
 
     baseline_results, attacked_results = [], []
@@ -367,6 +368,14 @@ def main():
                         help="BLOCKER baseline: candidates scored per iteration (paper: 32).")
     parser.add_argument("--blocker-tokens", type=int, default=50,
                         help="BLOCKER baseline: length of the generation half d_j (paper: 50).")
+    parser.add_argument("--oracle-side", choices=["aligned", "base", "per-side"],
+                        default="aligned",
+                        help="BLOCKER_ORACLE: which model of the pair crafts the blocker "
+                             "passages. 'aligned' (default) crafts each query's passage "
+                             "once and serves it to BOTH sides, as in the paper. "
+                             "'per-side' reproduces the 2026-10-16 run, where each side "
+                             "crafted its own passage (base models can't follow the "
+                             "oracle instruction, so that contrast is confounded).")
     parser.add_argument("--prompt-style", default="auto",
                         choices=["auto", "chat", "chat-no-refusal", "base"],
                         help="Force a RAG prompt regardless of the model's chat_template "
@@ -466,6 +475,28 @@ def main():
     if args.side in ("both", "aligned"):
         sides.append(("aligned", pair.aligned))
 
+    oracle_name = None
+    if isinstance(attack, BlockerOracleAttack) and args.oracle_side != "per-side":
+        oracle_cfg = pair.aligned if args.oracle_side == "aligned" else pair.base
+        oracle_name = oracle_cfg.name
+        logger.info(f"BLOCKER_ORACLE: crafting {num_queries} passages once with "
+                    f"{oracle_name}; both sides get the same blocker per query")
+        t0 = time.perf_counter()
+        oracle_model = load_model(oracle_cfg)
+        attack.precompute(
+            [q["query"] for q in queries[:num_queries]],
+            lambda prompt: oracle_model.generate(prompt)["text"],
+        )
+        oracle_model.unload()
+        audit = attack.audit()
+        logger.info(f"Oracle passages crafted in {time.perf_counter()-t0:.1f}s: {audit}")
+        if audit["refusal_like_rate"] < 0.5:
+            logger.warning(
+                f"Only {audit['refusal_like']}/{audit['n_passages']} oracle passages read "
+                "as a refusal. The oracle is not producing blockers; this run measures "
+                "the oracle, not the victim. Inspect blocker_passages.json."
+            )
+
     for side_name, model_cfg in sides:
         logger.info(f"══ {side_name.upper()}: {model_cfg.name} ══")
         t0 = time.perf_counter()
@@ -487,16 +518,29 @@ def main():
 
     # Kept out of raw_results.json: the collectors iterate that file's top-level
     # keys as model sides, so an extra key there would be read as a third side.
+    run_config = {
+        "model_pair": args.model_pair,
+        "category": args.category,
+        "side": args.side,
+        "prompt_style": args.prompt_style,
+        "num_queries": num_queries,
+        "top_k": args.top_k,
+        "embedder": args.embedder,
+    }
+    if isinstance(attack, BlockerOracleAttack):
+        run_config["oracle_side"] = args.oracle_side
+        run_config["oracle_model"] = oracle_name or "per-side"
+        # Same reason: the passages go in their own file, not raw_results.json.
+        with open(out_dir / "blocker_passages.json", "w") as f:
+            json.dump({
+                "oracle_side": args.oracle_side,
+                "oracle_model": oracle_name or "per-side",
+                "target": attack.target,
+                "audit": attack.audit(),
+                "passages": attack.records,
+            }, f, indent=2)
     with open(out_dir / "run_config.json", "w") as f:
-        json.dump({
-            "model_pair": args.model_pair,
-            "category": args.category,
-            "side": args.side,
-            "prompt_style": args.prompt_style,
-            "num_queries": num_queries,
-            "top_k": args.top_k,
-            "embedder": args.embedder,
-        }, f, indent=2)
+        json.dump(run_config, f, indent=2)
 
     with open(out_dir / "raw_results.json", "w") as f:
         json.dump(all_results, f, indent=2)

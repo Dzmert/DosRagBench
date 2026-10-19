@@ -24,7 +24,9 @@
 #   BLOCKER         black-box optimisation (above); ITERS/BATCH/TOKENS apply
 #                   only to this one.
 #   BLOCKER_INJECT  instruction injection, optimisation-free, minutes.
-#   BLOCKER_ORACLE  one auxiliary generation per query per side, ~1-2h at 200.
+#   BLOCKER_ORACLE  passages crafted once by a fixed oracle (the pair's aligned
+#                   model), then both sides; ~1.5h at 200. Passages and their
+#                   audit are written to blocker_passages.json.
 #
 # Submit (50 queries, 24h):  qsub -v NUM_QUERIES=50 scripts/run_blocker_katana.pbs
 # Oracle (200 queries):      qsub -v CATEGORY=BLOCKER_ORACLE,NUM_QUERIES=200 -l walltime=6:00:00 scripts/run_blocker_katana.pbs
