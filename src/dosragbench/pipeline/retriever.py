@@ -153,6 +153,11 @@ class HNSWRetriever:
         self._adv_docs: list[Document] = []
         self._adv_embeddings: Optional[np.ndarray] = None
 
+        # Retrieval defences (see pipeline/defence.py). Empty = undefended, and the
+        # retrieval path is then exactly the one every recorded run used.
+        self.defences: list = []
+        self.defence_pool_k: int = 50
+
     # ─── Index construction (expensive, done once) ───────────────────
 
     def build_index(self, documents: list[Document]) -> None:
@@ -233,23 +238,29 @@ class HNSWRetriever:
 
         start = time.perf_counter()
 
+        # A defence sees a deeper pool than top_k, so search deeper when one is set.
+        search_k = max(top_k, self.defence_pool_k) if self.defences else top_k
+
         # Search the clean index
-        clean_scores, clean_idx = self.index.search(query_emb, top_k)
+        clean_scores, clean_idx = self.index.search(query_emb, search_k)
         candidates = []
         for score, idx in zip(clean_scores[0], clean_idx[0]):
             if idx < 0:
                 continue
-            candidates.append((float(score), self.documents[idx]))
+            candidates.append((float(score), self.documents[idx], int(idx)))
 
         # Search adversarial docs (brute force; there are few)
         if self._adv_embeddings is not None and len(self._adv_docs) > 0:
             adv_scores = (self._adv_embeddings @ query_emb[0]).astype(float)
-            for score, doc in zip(adv_scores, self._adv_docs):
-                candidates.append((float(score), doc))
+            for i, (score, doc) in enumerate(zip(adv_scores, self._adv_docs)):
+                candidates.append((float(score), doc, -1 - i))  # negative = adversarial row
 
         # Merge: highest inner-product score wins, take top_k
         candidates.sort(key=lambda x: x[0], reverse=True)
-        top = candidates[:top_k]
+        if self.defences:
+            top = self._apply_defences(query, candidates[:search_k])[:top_k]
+        else:
+            top = [(s, d) for s, d, _ in candidates[:top_k]]
 
         latency_s = time.perf_counter() - start
 
@@ -270,6 +281,23 @@ class HNSWRetriever:
             gold_rank=gold_rank,
             gold_ranks=gold_ranks,
         )
+
+    def _apply_defences(self, query: str, pool: list[tuple]) -> list[tuple[float, Document]]:
+        from dosragbench.pipeline.defence import Candidate
+
+        need_emb = any(d.needs_embeddings for d in self.defences)
+        cands = []
+        for score, doc, row in pool:
+            emb = None
+            if need_emb:
+                # HNSWFlat keeps the raw vectors, so clean embeddings are recoverable
+                # without re-encoding; adversarial ones are already in memory.
+                emb = (self.index.reconstruct(row) if row >= 0
+                       else self._adv_embeddings[-1 - row])
+            cands.append(Candidate(score=score, doc=doc, embedding=emb))
+        for defence in self.defences:
+            cands = defence.apply(query, cands)
+        return [(c.score, c.doc) for c in cands]
 
     # ─── Helpers ─────────────────────────────────────────────────────
 

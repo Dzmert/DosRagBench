@@ -1,0 +1,87 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────────────────────
+# DoSRAGBench defence experiment — one job runs a sweep of attacks x defences.
+#
+# Each defence runs on the clean AND attacked query, so every run measures both
+# the defence's benefit (attacked) and its utility cost (clean). The comparison
+# point is the undefended grid run in results/, so defended runs go to
+# results_defence/ and never overwrite it.
+#
+# Defences (DEFENCES, space-separated):
+#   rerank           cross-encoder rerank of a top-50 pool
+#   cluster          drop passages with >= 2 near-duplicates (cosine > 0.9)
+#   cluster,rerank   both, cluster filter first
+#   prompt           no retrieval defence; chat prompt without the refusal
+#                    licence (--prompt-style chat-no-refusal)
+#
+# SIDE defaults to aligned: the defence protects the deployed (aligned) model,
+# and the aligned side is ~15 min per 1,000-query run where the base side is
+# ~2h. Measured: aligned 855s per run (dosrag_promptabl.o8923901).
+# Default sweep = 4 attacks x 4 defences = 16 runs, ~5h; walltime 10h keeps it
+# in the 12h GPU queue (24h requests land in csegpu48, which can queue for days).
+#
+# Submit:  qsub scripts/run_defence_katana.pbs
+#          qsub -v PAIR=qwen-2.5-7b scripts/run_defence_katana.pbs
+#          qsub -v ATTACKS="D2",DEFENCES="cluster" scripts/run_defence_katana.pbs
+# Watch:   qstat -u $USER
+# ─────────────────────────────────────────────────────────────────────────────
+#PBS -N dosrag_defence
+#PBS -l select=1:ncpus=8:ngpus=1:mem=90gb
+#PBS -l walltime=10:00:00
+#PBS -j oe
+
+set -euo pipefail
+
+PAIR=${PAIR:-llama-3.1-8b}
+SIDE=${SIDE:-aligned}
+ATTACKS=${ATTACKS:-"D2 B3 A2 C1"}
+DEFENCES=${DEFENCES:-"rerank cluster cluster,rerank prompt"}
+NUM_QUERIES=${NUM_QUERIES:-1000}
+
+PROJECT="$HOME/thesis_b/DosRagBench"
+cd "$PROJECT"
+
+if [ -f .env ]; then
+    set -a; source .env; set +a
+fi
+
+export HF_HOME="/srv/scratch/$USER/hf_cache"
+export HF_DATASETS_CACHE="/srv/scratch/$USER/hf_cache/datasets"
+export DOSRAGBENCH_CACHE="/srv/scratch/$USER/dosragbench_cache"
+mkdir -p "$HF_HOME" "$HF_DATASETS_CACHE" "$DOSRAGBENCH_CACHE"
+
+module load python/3.11
+source .venv/bin/activate
+
+echo "=========================================="
+echo "Defence sweep: pair=$PAIR side=$SIDE queries=$NUM_QUERIES"
+echo "attacks:  $ATTACKS"
+echo "defences: $DEFENCES"
+echo "Node:    $(hostname)"
+echo "Started: $(date)"
+echo "=========================================="
+
+# Fetch the reranker up front, so a missing download fails in seconds rather
+# than after the first model load.
+python3 -c "from sentence_transformers import CrossEncoder; CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')"
+
+for ATTACK in $ATTACKS; do
+    for DEF in $DEFENCES; do
+        echo "------ $ATTACK / $DEF  ($(date +%H:%M)) ------"
+        if [ "$DEF" = "prompt" ]; then
+            DEF_ARGS=(--prompt-style chat-no-refusal --results-root results_defence)
+        else
+            DEF_ARGS=(--defence "$DEF")
+        fi
+        # One failed run must not kill the rest of the sweep.
+        python3 scripts/run_attack.py \
+            --category "$ATTACK" \
+            --model-pair "$PAIR" \
+            --side "$SIDE" \
+            --num-queries "$NUM_QUERIES" \
+            "${DEF_ARGS[@]}" \
+            || echo "!!! $ATTACK / $DEF failed (exit $?), continuing"
+    done
+done
+
+echo "Finished: $(date)"

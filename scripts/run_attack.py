@@ -50,6 +50,7 @@ from dosragbench.attacks import (
 from dosragbench.metrics import QueryResult, compute_metrics
 from dosragbench.models import detect_environment, load_model
 from dosragbench.pipeline import Document, HNSWRetriever, RAGPipeline
+from dosragbench.pipeline.defence import build_defences
 from dosragbench.utils.config import (
     DATA_DIR,
     RESULTS_DIR,
@@ -387,7 +388,27 @@ def main():
                              "Use results_promptablation/ for --prompt-style runs so the "
                              "62-run headline grid stays untouched — the collectors "
                              "scan results/ and results_hotpotqa/ only.")
+    parser.add_argument("--defence", default="",
+                        help="Retrieval defence(s), comma-separated and applied in order: "
+                             "'rerank' (cross-encoder), 'cluster' (drop near-duplicate "
+                             "clusters), e.g. 'cluster,rerank'. Applied to the clean AND "
+                             "attacked query. Writes to results_defence/ by default.")
+    parser.add_argument("--defence-pool", type=int, default=50,
+                        help="Candidates a defence sees before truncation to --top-k.")
+    parser.add_argument("--cluster-tau", type=float, default=0.9,
+                        help="cluster defence: cosine above which two passages are "
+                             "near-duplicates.")
+    parser.add_argument("--cluster-min-neighbours", type=int, default=2,
+                        help="cluster defence: drop a passage with at least this many "
+                             "near-duplicates in the pool.")
     args = parser.parse_args()
+
+    if args.defence and args.results_root is None:
+        # Never let a defended run land in results/, where it would overwrite the
+        # undefended grid run it is meant to be compared against.
+        args.results_root = REPO_ROOT / "results_defence"
+    if args.defence and args.c1_latency:
+        parser.error("--defence applies to generation runs; --c1-latency runs retrieval only.")
 
     if args.prompt_style != "auto" and args.results_root is None:
         parser.error(
@@ -416,6 +437,14 @@ def main():
 
     retriever = HNSWRetriever(embedder_id=args.embedder, device=args.device)
     get_or_build_index(retriever, kb_docs, args.embedder, kb_signature)
+    if args.defence:
+        retriever.defences = build_defences(
+            args.defence, device=retriever.device, tau=args.cluster_tau,
+            min_neighbours=args.cluster_min_neighbours,
+        )
+        retriever.defence_pool_k = args.defence_pool
+        logger.info(f"Retrieval defences: {[d.describe() for d in retriever.defences]} "
+                    f"(pool={args.defence_pool})")
 
     if args.category == "C1":
         attack = build_attack(attack_config, embedder_id=args.embedder, device=args.device)
@@ -446,8 +475,10 @@ def main():
     run_name = f"{args.model_pair}_{args.category}"
     if args.prompt_style != "auto":
         run_name += f"_prompt-{args.prompt_style}"
-        if args.side != "both":
-            run_name += f"_{args.side}"
+    if args.defence:
+        run_name += "_def-" + args.defence.replace(",", "+")
+    if (args.prompt_style != "auto" or args.defence) and args.side != "both":
+        run_name += f"_{args.side}"
     out_dir = (args.results_root or RESULTS_DIR) / run_name
     out_dir.mkdir(parents=True, exist_ok=True)
     logger.info(f"Writing to {out_dir}/ (prompt_style={args.prompt_style})")
@@ -539,6 +570,12 @@ def main():
                 "audit": attack.audit(),
                 "passages": attack.records,
             }, f, indent=2)
+    if retriever.defences:
+        run_config["defence"] = [d.describe() for d in retriever.defences]
+        run_config["defence_pool"] = args.defence_pool
+        for d in retriever.defences:
+            if hasattr(d, "removed_total"):
+                logger.info(f"{d.name} defence removed {d.removed_total} candidates in total")
     with open(out_dir / "run_config.json", "w") as f:
         json.dump(run_config, f, indent=2)
 
