@@ -23,6 +23,8 @@ classifier that has since been shown to be wrong. **Do not quote the old numbers
 > - **External blocker baselines** (Shafran et al.) have run (§3.14). Instruction
 >   injection *reverses* the paradox; an 8B oracle cannot build blockers, and the
 >   distractors it writes instead mislead the base model, not the aligned one.
+>   The optimised blocker, re-run on 19–20 Oct at 30 queries, is a null result at
+>   0.6% of the paper's search budget: it is significant on neither side.
 
 > ### ⛔ HotpotQA is withdrawn as of 5 August 2026
 >
@@ -272,7 +274,7 @@ Adversarial documents injected per query, from `configs/attacks.yaml`: 3 (A3),
 overridden at the command line — so the committed config contradicted the
 methodology. All 13 attack categories now declare 1,000. Two deliberate
 exceptions, both annotated in the file: `RAND` stays at 200 to match the C1
-latency sweep it controls, and `BLOCKER` stays at 50 because each query costs a
+latency sweep it controls, and `BLOCKER` stays at 50 (the reported re-run used 30, §3.14) because each query costs a
 full black-box search.
 
 ---
@@ -920,7 +922,7 @@ the 133 of each run's 200 queries that have a gold answer (§3.13).
 | `BLOCKER_INJECT` | 200 | **54.5%** | 24.6% | **−29.9pp** | 31/6 | **protective** | ✅ valid |
 | `BLOCKER_ORACLE` (fixed oracle) | 200 | 3.0% | 12.7% | +9.7pp | 16/21 | floor artifact | ✅ valid run — ⚠️ not a true blocker |
 | `BLOCKER_ORACLE_perside` | 200 | 1.5% | 8.9% | +7.4pp | 11/23 | floor artifact | ⛔ void |
-| `BLOCKER` (optimised) | 50 | — | — | — | — | — | ⛔ superseded, re-run pending |
+| `BLOCKER` (optimised, re-run) | 30 | 10.0% | 16.7% | +6.7pp | 3/4 | n.s. (Fisher p = 0.66) | ✅ valid — ⚠️ underpowered, 0.6% of paper's budget |
 
 | variant | base acc. clean → attacked | aligned acc. clean → attacked | base correct answers lost (→ refused / → wrong) | aligned lost (→ refused / → wrong) |
 |---|---|---|---|---|
@@ -977,14 +979,38 @@ prompt text; the instruct model wrote passages that *answered* the question, so
 each side faced a different, broken artifact and the contrast measures oracle
 quality. Kept for the record only; fixed in d90b008.
 
-**`BLOCKER` (optimised) is superseded.** The committed 50-query run optimised
-against the same severity classifier it was scored with — a circular objective.
-f6a52be decoupled it (the search now maximises embedding similarity to the target
-refusal string, as in the paper). **Do not quote the committed BLOCKER figures.**
-The re-run did not start at 50 queries / 24h (the 48h GPU queue had no free
-nodes for three days) and is being resubmitted at 30 queries / 12h. Budget is
-25 iters × 8 batch against the paper's 1000 × 32, so even the re-run is a lower
-bound on the optimised attacker.
+**`BLOCKER` (optimised, re-run 19–20 Oct): no denial of service at a feasible
+budget.** The re-run uses the decoupled objective from f6a52be: the search
+maximises embedding similarity between the RAG response and the target refusal
+string, as in the paper, instead of the severity classifier it is scored with.
+It ran on 30 queries, searched separately against each target model, with 25 iters × 8
+batch (`dosrag_blocker.o9554794`, about 11h). The first 50-query run, which used the
+circular objective, is overwritten; **do not quote any figure from it.**
+
+- **The search never succeeded.** Every query spent its full budget on both
+  sides (201 generations each, 6,030 per side). The early abort fires when the
+  response contains "I don't know", so it never fired, and neither model was ever
+  driven to the target non-answer.
+- **Base: 3 of 30 broken (10.0%, Wilson [3.5, 25.6]).** All three are degenerate
+  token salad ("in who in ! ! ! ! …"), classified as generation failures, not
+  refusals. The base model copied the optimised junk tokens.
+- **Aligned: 3 of 18 answerable broken (16.7%, [5.8, 39.2]).** McNemar c/b is
+  3/4 (p = 1.0): the passage fixes as many clean refusals as it causes. Fisher
+  base-vs-aligned p = 0.66.
+- **Retrieval works and generation doesn't.** The blocker reached the top-5 for every
+  query, but gold recall moved only from 80% to 77% (eviction 4.2%).
+- **Correctness:** only 16 queries have gold. Base went 9 → 10 correct, aligned
+  7 → 8. That is below the correctness report's 100-query floor, so the run is
+  excluded there.
+
+Read this as a null result **at this budget**, not as evidence that the attack
+fails in general. 25 × 8 = 200 generations per query is **0.6%** of the paper's
+1000 × 32, and at n = 30 only large gaps reach significance. What it does
+support is a practical claim: a black-box blocker optimised against an 8B model,
+at a compute cost already ~11 GPU-hours per 30 queries, produces no denial of
+service on either side. The paper's attack strength depends on roughly 160×
+more search. A larger re-run is not recommended unless a faithful replication is
+specifically required.
 
 ---
 
@@ -1407,12 +1433,13 @@ mitigates it".
 | Share of lost correct answers that become refusals | aligned 76–85% / base 3–5% | `correctness_report.json` |
 | `BLOCKER_INJECT` ASR (base / aligned) | 54.5% / 24.6% — protective, paradox reversed | `results/llama-3.1-8b_BLOCKER_INJECT/` |
 | `BLOCKER_ORACLE` passages that are real blockers | 0/200 contain the target; 21/200 read as refusals | `results/llama-3.1-8b_BLOCKER_ORACLE/blocker_passages.json` |
+| `BLOCKER` (optimised) ASR (base / aligned), n = 30 | 10.0% / 16.7%, Fisher p = 0.66 — n.s.; 0/60 searches reached the target | `results/llama-3.1-8b_BLOCKER/`, `dosrag_blocker.o9554794` |
 
 **Numbers that are superseded and must not be quoted:** 12 genuine paradoxes; the
 26 July per-attack McNemar table (D2 193/94, A3 156/16); the 16.9% Qwen-only
 refusal floor; "D4 and B1 produced nothing"; the "84 → 141 explicit_safety"
 mechanism switch; any figure from `metrics.json` or from `results/avi_report_raw.*`
-without the min-answerable filter; the committed `BLOCKER` run (circular objective,
-§3.14); `BLOCKER_ORACLE_perside` as an alignment comparison (§3.14); the in-run
+without the min-answerable filter; the 50-query `BLOCKER` run (circular objective,
+§3.14, overwritten by the 30-query re-run); `BLOCKER_ORACLE_perside` as an alignment comparison (§3.14); the in-run
 `accuracy_*` fields in any `metrics.json` (always 0 — gold answers live in a side
 file, §1).
