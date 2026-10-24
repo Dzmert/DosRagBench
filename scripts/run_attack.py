@@ -477,6 +477,10 @@ def main():
         run_name += f"_prompt-{args.prompt_style}"
     if args.defence:
         run_name += "_def-" + args.defence.replace(",", "+")
+        # Non-default cluster settings get their own directory, so a tuned
+        # filter never overwrites the §3.15 runs.
+        if "cluster" in args.defence and (args.cluster_tau != 0.9 or args.cluster_min_neighbours != 2):
+            run_name += f"-t{args.cluster_tau:g}-n{args.cluster_min_neighbours}"
     if (args.prompt_style != "auto" or args.defence) and args.side != "both":
         run_name += f"_{args.side}"
     out_dir = (args.results_root or RESULTS_DIR) / run_name

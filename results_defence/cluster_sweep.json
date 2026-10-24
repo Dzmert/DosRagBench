@@ -1,0 +1,851 @@
+{
+  "params": {
+    "num_queries": 1000,
+    "top_k": 5,
+    "attacks": [
+      "D2",
+      "B3",
+      "A2",
+      "C1"
+    ],
+    "embedder": "sentence-transformers/all-MiniLM-L6-v2"
+  },
+  "rows": [
+    {
+      "setting": null,
+      "clean": {
+        "gold_in_topk": 0.766,
+        "gold_rank0": 0.477,
+        "topk_changed": 0
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 3.937,
+          "gold_in_topk": 0.334
+        },
+        "B3": {
+          "adv_in_topk": 3.089,
+          "gold_in_topk": 0.501
+        },
+        "A2": {
+          "adv_in_topk": 2.055,
+          "gold_in_topk": 0.651
+        },
+        "C1": {
+          "adv_in_topk": 1.939,
+          "gold_in_topk": 0.589
+        }
+      }
+    },
+    {
+      "setting": [
+        0.8,
+        1,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.585,
+        "gold_rank0": 0.395,
+        "topk_changed": 0.621
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0,
+          "gold_in_topk": 0.397
+        },
+        "B3": {
+          "adv_in_topk": 0,
+          "gold_in_topk": 0.529
+        },
+        "A2": {
+          "adv_in_topk": 0.049,
+          "gold_in_topk": 0.581
+        },
+        "C1": {
+          "adv_in_topk": 0.004,
+          "gold_in_topk": 0.471
+        }
+      }
+    },
+    {
+      "setting": [
+        0.83,
+        1,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.659,
+        "gold_rank0": 0.433,
+        "topk_changed": 0.417
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.001,
+          "gold_in_topk": 0.506
+        },
+        "B3": {
+          "adv_in_topk": 0,
+          "gold_in_topk": 0.632
+        },
+        "A2": {
+          "adv_in_topk": 0.148,
+          "gold_in_topk": 0.655
+        },
+        "C1": {
+          "adv_in_topk": 0.007,
+          "gold_in_topk": 0.536
+        }
+      }
+    },
+    {
+      "setting": [
+        0.85,
+        1,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.697,
+        "gold_rank0": 0.452,
+        "topk_changed": 0.301
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.002,
+          "gold_in_topk": 0.575
+        },
+        "B3": {
+          "adv_in_topk": 0.001,
+          "gold_in_topk": 0.685
+        },
+        "A2": {
+          "adv_in_topk": 0.302,
+          "gold_in_topk": 0.69
+        },
+        "C1": {
+          "adv_in_topk": 0.01,
+          "gold_in_topk": 0.573
+        }
+      }
+    },
+    {
+      "setting": [
+        0.87,
+        1,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.733,
+        "gold_rank0": 0.464,
+        "topk_changed": 0.201
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.005,
+          "gold_in_topk": 0.644
+        },
+        "B3": {
+          "adv_in_topk": 0.002,
+          "gold_in_topk": 0.729
+        },
+        "A2": {
+          "adv_in_topk": 0.576,
+          "gold_in_topk": 0.719
+        },
+        "C1": {
+          "adv_in_topk": 0.013,
+          "gold_in_topk": 0.604
+        }
+      }
+    },
+    {
+      "setting": [
+        0.9,
+        1,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.752,
+        "gold_rank0": 0.47,
+        "topk_changed": 0.093
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.026,
+          "gold_in_topk": 0.713
+        },
+        "B3": {
+          "adv_in_topk": 0.012,
+          "gold_in_topk": 0.752
+        },
+        "A2": {
+          "adv_in_topk": 1.235,
+          "gold_in_topk": 0.711
+        },
+        "C1": {
+          "adv_in_topk": 0.017,
+          "gold_in_topk": 0.623
+        }
+      }
+    },
+    {
+      "setting": [
+        0.92,
+        1,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.762,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.054
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.079,
+          "gold_in_topk": 0.747
+        },
+        "B3": {
+          "adv_in_topk": 0.038,
+          "gold_in_topk": 0.761
+        },
+        "A2": {
+          "adv_in_topk": 1.635,
+          "gold_in_topk": 0.696
+        },
+        "C1": {
+          "adv_in_topk": 0.029,
+          "gold_in_topk": 0.632
+        }
+      }
+    },
+    {
+      "setting": [
+        0.94,
+        1,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.766,
+        "gold_rank0": 0.476,
+        "topk_changed": 0.034
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.213,
+          "gold_in_topk": 0.752
+        },
+        "B3": {
+          "adv_in_topk": 0.123,
+          "gold_in_topk": 0.762
+        },
+        "A2": {
+          "adv_in_topk": 1.934,
+          "gold_in_topk": 0.669
+        },
+        "C1": {
+          "adv_in_topk": 0.05,
+          "gold_in_topk": 0.636
+        }
+      }
+    },
+    {
+      "setting": [
+        0.96,
+        1,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.766,
+        "gold_rank0": 0.476,
+        "topk_changed": 0.017
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.587,
+          "gold_in_topk": 0.745
+        },
+        "B3": {
+          "adv_in_topk": 0.535,
+          "gold_in_topk": 0.748
+        },
+        "A2": {
+          "adv_in_topk": 2.041,
+          "gold_in_topk": 0.657
+        },
+        "C1": {
+          "adv_in_topk": 0.085,
+          "gold_in_topk": 0.636
+        }
+      }
+    },
+    {
+      "setting": [
+        0.98,
+        1,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.766,
+        "gold_rank0": 0.476,
+        "topk_changed": 0.01
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 1.534,
+          "gold_in_topk": 0.678
+        },
+        "B3": {
+          "adv_in_topk": 2.084,
+          "gold_in_topk": 0.646
+        },
+        "A2": {
+          "adv_in_topk": 2.059,
+          "gold_in_topk": 0.651
+        },
+        "C1": {
+          "adv_in_topk": 0.367,
+          "gold_in_topk": 0.634
+        }
+      }
+    },
+    {
+      "setting": [
+        0.8,
+        2,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.703,
+        "gold_rank0": 0.451,
+        "topk_changed": 0.282
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0,
+          "gold_in_topk": 0.479
+        },
+        "B3": {
+          "adv_in_topk": 0.001,
+          "gold_in_topk": 0.654
+        },
+        "A2": {
+          "adv_in_topk": 0.143,
+          "gold_in_topk": 0.7
+        },
+        "C1": {
+          "adv_in_topk": 0.018,
+          "gold_in_topk": 0.555
+        }
+      }
+    },
+    {
+      "setting": [
+        0.83,
+        2,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.748,
+        "gold_rank0": 0.469,
+        "topk_changed": 0.146
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.003,
+          "gold_in_topk": 0.578
+        },
+        "B3": {
+          "adv_in_topk": 0.004,
+          "gold_in_topk": 0.729
+        },
+        "A2": {
+          "adv_in_topk": 0.384,
+          "gold_in_topk": 0.74
+        },
+        "C1": {
+          "adv_in_topk": 0.029,
+          "gold_in_topk": 0.601
+        }
+      }
+    },
+    {
+      "setting": [
+        0.85,
+        2,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.764,
+        "gold_rank0": 0.479,
+        "topk_changed": 0.085
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.012,
+          "gold_in_topk": 0.644
+        },
+        "B3": {
+          "adv_in_topk": 0.007,
+          "gold_in_topk": 0.753
+        },
+        "A2": {
+          "adv_in_topk": 0.678,
+          "gold_in_topk": 0.747
+        },
+        "C1": {
+          "adv_in_topk": 0.035,
+          "gold_in_topk": 0.626
+        }
+      }
+    },
+    {
+      "setting": [
+        0.87,
+        2,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.766,
+        "gold_rank0": 0.476,
+        "topk_changed": 0.044
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.023,
+          "gold_in_topk": 0.686
+        },
+        "B3": {
+          "adv_in_topk": 0.011,
+          "gold_in_topk": 0.764
+        },
+        "A2": {
+          "adv_in_topk": 1.084,
+          "gold_in_topk": 0.732
+        },
+        "C1": {
+          "adv_in_topk": 0.043,
+          "gold_in_topk": 0.633
+        }
+      }
+    },
+    {
+      "setting": [
+        0.9,
+        2,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.767,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.022
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.115,
+          "gold_in_topk": 0.733
+        },
+        "B3": {
+          "adv_in_topk": 0.044,
+          "gold_in_topk": 0.767
+        },
+        "A2": {
+          "adv_in_topk": 1.684,
+          "gold_in_topk": 0.69
+        },
+        "C1": {
+          "adv_in_topk": 0.056,
+          "gold_in_topk": 0.636
+        }
+      }
+    },
+    {
+      "setting": [
+        0.92,
+        2,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.767,
+        "gold_rank0": 0.478,
+        "topk_changed": 0.014
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.289,
+          "gold_in_topk": 0.742
+        },
+        "B3": {
+          "adv_in_topk": 0.137,
+          "gold_in_topk": 0.765
+        },
+        "A2": {
+          "adv_in_topk": 1.951,
+          "gold_in_topk": 0.668
+        },
+        "C1": {
+          "adv_in_topk": 0.079,
+          "gold_in_topk": 0.637
+        }
+      }
+    },
+    {
+      "setting": [
+        0.94,
+        2,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.767,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.009
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.648,
+          "gold_in_topk": 0.73
+        },
+        "B3": {
+          "adv_in_topk": 0.419,
+          "gold_in_topk": 0.759
+        },
+        "A2": {
+          "adv_in_topk": 2.041,
+          "gold_in_topk": 0.656
+        },
+        "C1": {
+          "adv_in_topk": 0.116,
+          "gold_in_topk": 0.637
+        }
+      }
+    },
+    {
+      "setting": [
+        0.96,
+        2,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.767,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.006
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 1.412,
+          "gold_in_topk": 0.69
+        },
+        "B3": {
+          "adv_in_topk": 1.283,
+          "gold_in_topk": 0.715
+        },
+        "A2": {
+          "adv_in_topk": 2.059,
+          "gold_in_topk": 0.652
+        },
+        "C1": {
+          "adv_in_topk": 0.206,
+          "gold_in_topk": 0.637
+        }
+      }
+    },
+    {
+      "setting": [
+        0.98,
+        2,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.767,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.005
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 2.623,
+          "gold_in_topk": 0.578
+        },
+        "B3": {
+          "adv_in_topk": 2.806,
+          "gold_in_topk": 0.556
+        },
+        "A2": {
+          "adv_in_topk": 2.058,
+          "gold_in_topk": 0.652
+        },
+        "C1": {
+          "adv_in_topk": 0.698,
+          "gold_in_topk": 0.634
+        }
+      }
+    },
+    {
+      "setting": [
+        0.8,
+        3,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.757,
+        "gold_rank0": 0.475,
+        "topk_changed": 0.145
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.004,
+          "gold_in_topk": 0.533
+        },
+        "B3": {
+          "adv_in_topk": 0.003,
+          "gold_in_topk": 0.712
+        },
+        "A2": {
+          "adv_in_topk": 0.304,
+          "gold_in_topk": 0.751
+        },
+        "C1": {
+          "adv_in_topk": 0.025,
+          "gold_in_topk": 0.595
+        }
+      }
+    },
+    {
+      "setting": [
+        0.83,
+        3,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.769,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.065
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.014,
+          "gold_in_topk": 0.614
+        },
+        "B3": {
+          "adv_in_topk": 0.007,
+          "gold_in_topk": 0.755
+        },
+        "A2": {
+          "adv_in_topk": 0.665,
+          "gold_in_topk": 0.753
+        },
+        "C1": {
+          "adv_in_topk": 0.046,
+          "gold_in_topk": 0.621
+        }
+      }
+    },
+    {
+      "setting": [
+        0.85,
+        3,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.766,
+        "gold_rank0": 0.478,
+        "topk_changed": 0.036
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.032,
+          "gold_in_topk": 0.663
+        },
+        "B3": {
+          "adv_in_topk": 0.014,
+          "gold_in_topk": 0.756
+        },
+        "A2": {
+          "adv_in_topk": 1.031,
+          "gold_in_topk": 0.733
+        },
+        "C1": {
+          "adv_in_topk": 0.054,
+          "gold_in_topk": 0.63
+        }
+      }
+    },
+    {
+      "setting": [
+        0.87,
+        3,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.767,
+        "gold_rank0": 0.478,
+        "topk_changed": 0.018
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.087,
+          "gold_in_topk": 0.7
+        },
+        "B3": {
+          "adv_in_topk": 0.026,
+          "gold_in_topk": 0.766
+        },
+        "A2": {
+          "adv_in_topk": 1.434,
+          "gold_in_topk": 0.713
+        },
+        "C1": {
+          "adv_in_topk": 0.069,
+          "gold_in_topk": 0.634
+        }
+      }
+    },
+    {
+      "setting": [
+        0.9,
+        3,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.767,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.009
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.283,
+          "gold_in_topk": 0.736
+        },
+        "B3": {
+          "adv_in_topk": 0.135,
+          "gold_in_topk": 0.762
+        },
+        "A2": {
+          "adv_in_topk": 1.88,
+          "gold_in_topk": 0.672
+        },
+        "C1": {
+          "adv_in_topk": 0.103,
+          "gold_in_topk": 0.636
+        }
+      }
+    },
+    {
+      "setting": [
+        0.92,
+        3,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.767,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.009
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 0.59,
+          "gold_in_topk": 0.72
+        },
+        "B3": {
+          "adv_in_topk": 0.356,
+          "gold_in_topk": 0.756
+        },
+        "A2": {
+          "adv_in_topk": 2.02,
+          "gold_in_topk": 0.659
+        },
+        "C1": {
+          "adv_in_topk": 0.142,
+          "gold_in_topk": 0.637
+        }
+      }
+    },
+    {
+      "setting": [
+        0.94,
+        3,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.766,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.005
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 1.139,
+          "gold_in_topk": 0.689
+        },
+        "B3": {
+          "adv_in_topk": 0.843,
+          "gold_in_topk": 0.739
+        },
+        "A2": {
+          "adv_in_topk": 2.054,
+          "gold_in_topk": 0.651
+        },
+        "C1": {
+          "adv_in_topk": 0.203,
+          "gold_in_topk": 0.636
+        }
+      }
+    },
+    {
+      "setting": [
+        0.96,
+        3,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.766,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.003
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 2.131,
+          "gold_in_topk": 0.593
+        },
+        "B3": {
+          "adv_in_topk": 1.918,
+          "gold_in_topk": 0.654
+        },
+        "A2": {
+          "adv_in_topk": 2.057,
+          "gold_in_topk": 0.651
+        },
+        "C1": {
+          "adv_in_topk": 0.327,
+          "gold_in_topk": 0.636
+        }
+      }
+    },
+    {
+      "setting": [
+        0.98,
+        3,
+        50
+      ],
+      "clean": {
+        "gold_in_topk": 0.766,
+        "gold_rank0": 0.477,
+        "topk_changed": 0.003
+      },
+      "attacked": {
+        "D2": {
+          "adv_in_topk": 3.338,
+          "gold_in_topk": 0.465
+        },
+        "B3": {
+          "adv_in_topk": 2.992,
+          "gold_in_topk": 0.522
+        },
+        "A2": {
+          "adv_in_topk": 2.057,
+          "gold_in_topk": 0.651
+        },
+        "C1": {
+          "adv_in_topk": 0.891,
+          "gold_in_topk": 0.63
+        }
+      }
+    }
+  ]
+}

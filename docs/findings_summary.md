@@ -1094,11 +1094,54 @@ but it does nothing about the attack.
 - **The attacker is non-adaptive.** A2 already shows how an adaptive attacker
   would evade the filter.
 - **One filter setting (τ = 0.9, 2 neighbours), chosen before the run and not
-  tuned on these results.** So there is no test-set overfitting, but also no
-  sensitivity curve.
+  tuned on these results.** So there is no test-set overfitting. The sensitivity
+  curve is now §3.15.1.
 - **ASR denominators differ per arm.** Each arm has its own clean answerable set,
   so the prompt arm's ASR is over more queries. Attacked denial and accuracy are
   on the same 1,000 / 656 queries throughout.
+
+#### 3.15.1 Filter sensitivity — the setting is not cherry-picked, and A2 is partly reachable
+
+Every measure of the filter's effect on what gets retrieved needs no LLM.
+`scripts/sweep_cluster_filter.py` records each query's top-50 pool once (clean
+and attacked) and replays 27 settings on it offline: τ from 0.80 to 0.98 × at
+least 1, 2 or 3 neighbours. It takes 4 minutes on a laptop GPU. Its τ = 0.9 /
+2-neighbour cell reproduces the Katana runs: adversarial passages in the top-5
+are 0.12 / 0.04 / 1.68 / 0.06 here, against 0.11 / 0.04 / 1.69 / 0.06. Sources:
+`results_defence/cluster_sweep.md`, `.json` and `.png`.
+
+| setting | clean gold@5 | clean top-5 changed | D2 adv@5 | B3 | C1 | A2 | A2 gold@5 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| undefended | 76.6% | — | 3.94 | 3.09 | 1.94 | 2.06 | 65.1% |
+| τ 0.90, ≥2 (§3.15) | 76.7% | 2.2% | 0.12 | 0.04 | 0.06 | 1.68 | 69.0% |
+| τ 0.83, ≥3 | **76.9%** | 6.5% | **0.01** | **0.01** | **0.05** | **0.67** | **75.3%** |
+| τ 0.80, ≥1 (aggressive) | 58.5% | 62.1% | 0.00 | 0.00 | 0.00 | 0.05 | 58.1% |
+
+- **The §3.15 setting sits on a plateau, not a spike.** With 2 neighbours,
+  anything from τ = 0.85 to 0.92 keeps D2, B3 and C1 at or below 0.3 adversarial
+  passages in the top-5, and clean recall within 0.2pp of undefended. The result
+  does not depend on a lucky threshold.
+- **Requiring more neighbours lets τ go lower for free.** At ≥ 3 neighbours, τ
+  can drop to 0.83 with no clean recall cost. "Changed" counts queries whose top-5
+  differs at all; 6.5% of them change, but gold recall is unchanged. That catches
+  two-thirds of A2's passages (2.06 → 0.67), and A2's gold recall under attack
+  rises from 65% to 75%, above the clean undefended rate. Natural near-duplicates
+  rarely come in fours. A2's paraphrased contradiction pairs, at a looser
+  threshold, do.
+- **Held-out check.** τ = 0.83 / ≥ 3 was picked on queries 0–499 by a fixed rule:
+  the most A2 removed, with clean recall within 0.5pp and D2/B3/C1 at or below 0.1.
+  On queries 500–999 it gives A2 1.98 → 0.66, clean recall 78.0% → 78.6%, and
+  D2/B3/C1 at or below 0.03. The selection carries over.
+- **Pushing further breaks clean retrieval.** τ = 0.80 with any single neighbour
+  removes nearly everything adversarial, but clean recall falls 18pp and 62% of
+  clean top-5s change. That is the cliff, and it is clearly visible in the
+  figure.
+
+**Status: these are retrieval results only.** Whether removing two-thirds of A2's
+passages lowers A2's *denial* rate needs a generation run at τ = 0.83 / ≥ 3,
+submitted as
+`qsub -v CLUSTER_TAU=0.83,CLUSTER_MN=3,DEFENCES=cluster scripts/run_defence_katana.pbs`.
+Until it lands, quote the A2 improvement as a retrieval effect.
 
 ---
 
@@ -1527,6 +1570,7 @@ what mitigates it":
 | `BLOCKER_INJECT` ASR (base / aligned) | 54.5% / 24.6% — protective, paradox reversed | `results/llama-3.1-8b_BLOCKER_INJECT/` |
 | `BLOCKER_ORACLE` passages that are real blockers | 0/200 contain the target; 21/200 read as refusals | `results/llama-3.1-8b_BLOCKER_ORACLE/blocker_passages.json` |
 | Cluster filter, aligned ASR D2 / B3 / C1 / A2 | 58.2→4.8% / 36.1→1.1% / 20.2→9.1% / 26.4→23.7% (n.s.); clean denial 37.1→37.2% | `results_defence/defence_report.md` |
+| Cluster filter τ 0.83 / ≥3 nbr, retrieval only: A2 adv@5, clean gold@5 | 2.06 → 0.67, 76.6% → 76.9%; held-out half 1.98 → 0.66 | `results_defence/cluster_sweep.md` |
 | Rerank alone, aligned ASR A2 / B3 | 26.4→52.4% / 36.1→48.9% (attacks amplified); clean gold@rank0 47.2→59.8% | `results_defence/defence_report.md` |
 | `BLOCKER` (optimised) ASR (base / aligned), n = 30 | 10.0% / 16.7%, Fisher p = 0.66 — n.s.; 0/60 searches reached the target | `results/llama-3.1-8b_BLOCKER/`, `dosrag_blocker.o9554794` |
 

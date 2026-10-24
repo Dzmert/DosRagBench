@@ -23,6 +23,17 @@
 # Submit:  qsub scripts/run_defence_katana.pbs
 #          qsub -v PAIR=qwen-2.5-7b scripts/run_defence_katana.pbs
 #          qsub -v ATTACKS="D2",DEFENCES="cluster" scripts/run_defence_katana.pbs
+#
+# Follow-ups to §3.15:
+#   Base side under the cluster filter: does the alignment gap close? Base runs
+#   take ~2h each, so two per job:
+#          qsub -v SIDE=base,ATTACKS="D2 B3",DEFENCES="cluster" scripts/run_defence_katana.pbs
+#          qsub -v SIDE=base,ATTACKS="C1 A2",DEFENCES="cluster" scripts/run_defence_katana.pbs
+#   Second model pair, full sweep (every undefended Qwen run is at 1,000 queries):
+#          qsub -v PAIR=qwen-2.5-7b scripts/run_defence_katana.pbs
+#   Tuned cluster filter from the retrieval sweep (§3.15.1); non-default
+#   settings write to their own run directories (..._def-cluster-t0.83-n3_...):
+#          qsub -v CLUSTER_TAU=0.83,CLUSTER_MN=3,DEFENCES=cluster scripts/run_defence_katana.pbs
 # Watch:   qstat -u $USER
 # ─────────────────────────────────────────────────────────────────────────────
 #PBS -N dosrag_defence
@@ -37,6 +48,8 @@ SIDE=${SIDE:-aligned}
 ATTACKS=${ATTACKS:-"D2 B3 A2 C1"}
 DEFENCES=${DEFENCES:-"rerank cluster cluster,rerank prompt"}
 NUM_QUERIES=${NUM_QUERIES:-1000}
+CLUSTER_TAU=${CLUSTER_TAU:-0.9}
+CLUSTER_MN=${CLUSTER_MN:-2}
 
 PROJECT="$HOME/thesis_b/DosRagBench"
 cd "$PROJECT"
@@ -56,7 +69,7 @@ source .venv/bin/activate
 echo "=========================================="
 echo "Defence sweep: pair=$PAIR side=$SIDE queries=$NUM_QUERIES"
 echo "attacks:  $ATTACKS"
-echo "defences: $DEFENCES"
+echo "defences: $DEFENCES (cluster tau=$CLUSTER_TAU, min neighbours=$CLUSTER_MN)"
 echo "Node:    $(hostname)"
 echo "Started: $(date)"
 echo "=========================================="
@@ -71,7 +84,8 @@ for ATTACK in $ATTACKS; do
         if [ "$DEF" = "prompt" ]; then
             DEF_ARGS=(--prompt-style chat-no-refusal --results-root results_defence)
         else
-            DEF_ARGS=(--defence "$DEF")
+            DEF_ARGS=(--defence "$DEF" --cluster-tau "$CLUSTER_TAU"
+                      --cluster-min-neighbours "$CLUSTER_MN")
         fi
         # One failed run must not kill the rest of the sweep.
         python3 scripts/run_attack.py \
