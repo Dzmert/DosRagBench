@@ -1,0 +1,16 @@
+{
+  "model_pair": "llama-3.1-8b",
+  "category": "B3",
+  "side": "aligned",
+  "prompt_style": "auto",
+  "num_queries": 1000,
+  "top_k": 5,
+  "embedder": "sentence-transformers/all-MiniLM-L6-v2",
+  "defence": [
+    {
+      "name": "rerank",
+      "model": "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    }
+  ],
+  "defence_pool": 50
+}
