@@ -28,7 +28,7 @@ classifier that has since been shown to be wrong. **Do not quote the old numbers
 > - **Defences tested** (§3.15, added 24 Oct). A near-duplicate cluster filter
 >   cuts D2 / B3 / C1 ASR to 1–9% with no clean cost. Diversified A2 evades it.
 >   Cross-encoder reranking *amplifies* the attacks while improving clean
->   retrieval.
+>   retrieval. Replicated on Qwen (25 Oct).
 
 > ### ⛔ HotpotQA is withdrawn as of 5 August 2026
 >
@@ -1088,8 +1088,27 @@ residual ASR stays high (D2 50.5%). It trades refusals for answers on every
 query. Whether those answers are right is in the accuracy column (+6.5pp clean),
 but it does nothing about the attack.
 
+**Replication on `qwen-2.5-7b` (aligned, 25 Oct, `dosrag_defence.o9599091`).**
+The full sweep was repeated on a second pair. 15 of 16 runs completed; C1 /
+prompt was cut by the 10h walltime and is missing. Retrieval columns are
+identical to Llama's, as they must be: retrieval does not depend on the LLM. So
+this tests only whether the *generation* outcome carries over. It does, in every
+cell:
+
+| attack | cluster | rerank | cluster+rerank | prompt |
+|---|---|---|---|---|
+| D2 | 52.4% → **4.6%** (p 3e-62) | 52.4% → 48.3% | 52.4% → **4.7%** | 52.4% → 42.6% |
+| B3 | 33.8% → **0.3%** (p 7e-40) | 33.8% → 46.0% ⚠️ | 33.8% → **2.1%** | 33.8% → 26.0% |
+| C1 | 18.9% → **8.7%** (p 1e-9) | 18.9% → 15.8% | 18.9% → 12.5% | — (walltime) |
+| A2 | 22.0% → 21.4% (p 0.84, n.s.) | 22.0% → **50.4%** ⚠️ | 22.0% → **47.5%** ⚠️ | 22.0% → 18.9% |
+
+Clean cost is again nil for the cluster filter: denial 34.6% → 34.7% (p = 1.0),
+accuracy 51.5% → 51.2%. Reranking again improves clean results (denial −7.2pp,
+accuracy +3.4pp) while amplifying A2 and B3. All five points above hold on both
+pairs.
+
 **Caveats:**
-- **One model pair, aligned side only, NQ only.** The base side was skipped for
+- **Two model pairs, aligned side only, NQ only.** The base side was skipped for
   compute, and it is not the deployed model.
 - **The attacker is non-adaptive.** A2 already shows how an adaptive attacker
   would evade the filter.
@@ -1569,7 +1588,7 @@ what mitigates it":
 | Share of lost correct answers that become refusals | aligned 76–85% / base 3–5% | `correctness_report.json` |
 | `BLOCKER_INJECT` ASR (base / aligned) | 54.5% / 24.6% — protective, paradox reversed | `results/llama-3.1-8b_BLOCKER_INJECT/` |
 | `BLOCKER_ORACLE` passages that are real blockers | 0/200 contain the target; 21/200 read as refusals | `results/llama-3.1-8b_BLOCKER_ORACLE/blocker_passages.json` |
-| Cluster filter, aligned ASR D2 / B3 / C1 / A2 | 58.2→4.8% / 36.1→1.1% / 20.2→9.1% / 26.4→23.7% (n.s.); clean denial 37.1→37.2% | `results_defence/defence_report.md` |
+| Cluster filter, aligned ASR D2 / B3 / C1 / A2 (Llama) | 58.2→4.8% / 36.1→1.1% / 20.2→9.1% / 26.4→23.7% (n.s.); clean denial 37.1→37.2%; Qwen 52.4→4.6% / 33.8→0.3% / 18.9→8.7% / 22.0→21.4% | `results_defence/defence_report.md` |
 | Cluster filter τ 0.83 / ≥3 nbr, retrieval only: A2 adv@5, clean gold@5 | 2.06 → 0.67, 76.6% → 76.9%; held-out half 1.98 → 0.66 | `results_defence/cluster_sweep.md` |
 | Rerank alone, aligned ASR A2 / B3 | 26.4→52.4% / 36.1→48.9% (attacks amplified); clean gold@rank0 47.2→59.8% | `results_defence/defence_report.md` |
 | `BLOCKER` (optimised) ASR (base / aligned), n = 30 | 10.0% / 16.7%, Fisher p = 0.66 — n.s.; 0/60 searches reached the target | `results/llama-3.1-8b_BLOCKER/`, `dosrag_blocker.o9554794` |
