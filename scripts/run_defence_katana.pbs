@@ -22,13 +22,14 @@
 #
 # Submit:  qsub scripts/run_defence_katana.pbs
 #          qsub -v PAIR=qwen-2.5-7b scripts/run_defence_katana.pbs
-#          qsub -v ATTACKS="D2",DEFENCES="cluster" scripts/run_defence_katana.pbs
+#          qsub -v ATTACKS=D2,DEFENCES=cluster scripts/run_defence_katana.pbs
 #
 # Follow-ups to §3.15:
 #   Base side under the cluster filter: does the alignment gap close? Base runs
-#   take ~2h each, so two per job:
-#          qsub -v SIDE=base,ATTACKS="D2 B3",DEFENCES="cluster" scripts/run_defence_katana.pbs
-#          qsub -v SIDE=base,ATTACKS="C1 A2",DEFENCES="cluster" scripts/run_defence_katana.pbs
+#   take ~2h each. qsub -v rejects values containing spaces, so one attack per job:
+#          for A in D2 B3 C1 A2; do
+#            qsub -v SIDE=base,ATTACKS=$A,DEFENCES=cluster scripts/run_defence_katana.pbs
+#          done
 #   Second model pair, full sweep (every undefended Qwen run is at 1,000 queries):
 #          qsub -v PAIR=qwen-2.5-7b scripts/run_defence_katana.pbs
 #   Tuned cluster filter from the retrieval sweep (§3.15.1); non-default
