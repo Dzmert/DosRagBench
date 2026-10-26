@@ -1033,6 +1033,8 @@ with the undefended grid run. Sources: `results_defence/defence_report.md` and
   (§3.11).
 
 Attributable ASR, undefended → defended. p is exact McNemar on attacked denials.
+Figure: `results_defence/defence_asr.png` (`scripts/plot_defences.py`), which
+draws both pairs, all four attacks and all four arms as one dumbbell chart.
 
 | attack | cluster | rerank | cluster+rerank | prompt |
 |---|---|---|---|---|
@@ -1161,6 +1163,52 @@ passages lowers A2's *denial* rate needs a generation run at τ = 0.83 / ≥ 3,
 submitted as
 `qsub -v CLUSTER_TAU=0.83,CLUSTER_MN=3,DEFENCES=cluster scripts/run_defence_katana.pbs`.
 Until it lands, quote the A2 improvement as a retrieval effect.
+
+#### 3.15.2 A refusal-rate monitor — the signal exists, but the refusal floor drowns it
+
+§7 point 4 claimed the aligned model's refusals are a signal a monitor can act
+on. Tested on the existing runs, with no new generation
+(`scripts/refusal_monitor.py` → `results_defence/refusal_monitor.md` / `.json`).
+
+**A single refusal is not evidence.** Attack-induced refusals read exactly like
+the model's ordinary ones ("The context does not explicitly state…"). The
+classifier puts both in EPISTEMIC, and conflict or circularity wording appears
+in at most 3% (Llama) to 15% (Qwen) of A2's attacked refusals and in almost none
+of the others. So the monitor watches the refusal *rate*:
+- **Calibration:** the clean rate p0 is measured on queries 0–499.
+- **Alarm:** a window of n queries alarms when its refusal count passes a
+  one-sided binomial test at α = 0.01.
+- **Power:** simulated on the held-out queries 500–999, with a fraction f of
+  each window attacked. Empirical false alarms are ≤ 0.1% throughout.
+
+Smallest window detecting the attack with ≥ 90% power (— = not within 500 queries):
+
+| aligned side | D2 | B3 | A2 | C1 |
+|---|---|---|---|---|
+| llama-3.1-8b, f = 1 | 50 | 150 | 300 | — |
+| qwen-2.5-7b, f = 1 | 50 | 150 | 300 | 500 |
+| mistral-7b, f = 1 | 100 | 100 | 200 | (n/a) |
+| any pair, f = 0.5 | 200–500 (D2 only) | — | — | — |
+| any pair, f ≤ 0.25 | — | — | — | — |
+
+- **The asymmetry is real.** No base model emits a usable signal: clean refusal
+  is 0.2–1.4%, and attacks move it by at most 2pp. Only A2 and B3, at 500
+  queries, are ever detected. The aligned side is detectable on every pair. In
+  the R1 pair the pattern follows the more refusal-prone model, which there is
+  Llama-Instruct on the "base" side.
+- **But it is a weak detector.** The aligned model's clean refusal floor of
+  31–41% is noise the attack has to rise above. That needs tens to hundreds of
+  queries, *all* of them attacked. An attacker who poisons a quarter of the
+  traffic, or who uses C1, stays under the alarm within 500 queries. The same
+  floor that makes the aligned model look vulnerable (§3.3) also hides the
+  attack from a monitor.
+- **It does not rescue A2 behind the cluster filter.** That would need 300
+  (Qwen) to 500 (Llama) fully attacked queries.
+
+**So §7 point 4 is half right.** The aligned model's failures are visible in
+aggregate and the base model's are not, but "visible" means a sustained
+campaign, not a per-query alarm. Detecting a targeted attack would need a
+per-query signal that refusal text does not carry.
 
 ---
 
@@ -1542,7 +1590,9 @@ point 1 on clean queries, but amplifies the attacks.
 A fourth now comes from §3.13: the aligned model's attack losses are **visible**
 (76–85% become refusals), so its refusals are a detectable signal that retrieval
 was compromised — a monitor can act on them, where the base model's silent wrong
-answers give it nothing to act on.
+answers give it nothing to act on. *Tested in §3.15.2: true in aggregate only.*
+It takes 50–300 fully attacked queries to rise above the 31–41% clean refusal
+floor, and with a quarter of the traffic attacked it stays undetected.
 
 The defence experiment is §3.15. It converts "here is a vulnerability" into "here is
 what mitigates it":
@@ -1551,7 +1601,9 @@ what mitigates it":
 - **What doesn't:** reranking alone, which helps clean queries and hurts under
   attack.
 - **What remains open:** diversified attacks such as A2, which evade the filter.
-  Plausible next steps are paraphrase-robust clustering or an ensemble with a
+  The refusal monitor does not catch A2 in useful time (§3.15.2). A looser filter
+  setting removes two-thirds of A2's documents at retrieval (§3.15.1), pending
+  generation. Plausible next steps are paraphrase-robust clustering or an ensemble with a
   monitor on refusals (point 4).
 
 ---
@@ -1590,6 +1642,7 @@ what mitigates it":
 | `BLOCKER_ORACLE` passages that are real blockers | 0/200 contain the target; 21/200 read as refusals | `results/llama-3.1-8b_BLOCKER_ORACLE/blocker_passages.json` |
 | Cluster filter, aligned ASR D2 / B3 / C1 / A2 (Llama) | 58.2→4.8% / 36.1→1.1% / 20.2→9.1% / 26.4→23.7% (n.s.); clean denial 37.1→37.2%; Qwen 52.4→4.6% / 33.8→0.3% / 18.9→8.7% / 22.0→21.4% | `results_defence/defence_report.md` |
 | Cluster filter τ 0.83 / ≥3 nbr, retrieval only: A2 adv@5, clean gold@5 | 2.06 → 0.67, 76.6% → 76.9%; held-out half 1.98 → 0.66 | `results_defence/cluster_sweep.md` |
+| Refusal-rate monitor, aligned, window for 90% detection (α 0.01) | D2 50 / B3 150 / A2 300 queries, all attacked; none at ≤ 25% attacked; base: no signal | `results_defence/refusal_monitor.md` |
 | Rerank alone, aligned ASR A2 / B3 | 26.4→52.4% / 36.1→48.9% (attacks amplified); clean gold@rank0 47.2→59.8% | `results_defence/defence_report.md` |
 | `BLOCKER` (optimised) ASR (base / aligned), n = 30 | 10.0% / 16.7%, Fisher p = 0.66 — n.s.; 0/60 searches reached the target | `results/llama-3.1-8b_BLOCKER/`, `dosrag_blocker.o9554794` |
 
