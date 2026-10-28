@@ -1,0 +1,39 @@
+\chapter{Refusal Classifier Validation}
+\label{app:classifier}
+
+\section{Population-reweighted error}
+
+The validation sample oversamples hard boundary cases by design, so its raw
+agreement (93.0\%) understates accuracy on typical responses.
+\Cref{tab:reweight} reweights each class's error rate to its frequency among
+all 248{,}880 stored answers.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Classifier error by sampled class, reweighted to population frequency.}
+\label{tab:reweight}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Class & Population & $n$ & Errors & Error rate & Contribution \\
+\midrule
+answer (plain)       & 73.05\% & 60 & 1  & 1.7\%  & 1.22\pp \\
+epistemic refusal    & 25.81\% & 90 & 2  & 2.2\%  & 0.57\pp \\
+answer (suspicious)  & 0.87\%  & 60 & 18 & 30.0\% & 0.26\pp \\
+unspecified refusal  & 0.16\%  & 39 & 0  & 0.0\%  & 0.00\pp \\
+generation failure   & 0.08\%  & 27 & 0  & 0.0\%  & 0.00\pp \\
+explicit safety      & 0.02\%  & 24 & 0  & 0.0\%  & 0.00\pp \\
+\midrule
+\multicolumn{5}{@{}l}{Corpus-level error} & \textbf{2.05\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Disagreements with the independent annotator}
+
+\todo[inline]{The seven rows from findings\_summary §5.1, grouped: three where
+the annotator is arguably right (to be re-adjudicated by someone else), three
+of annotator drift, one annotator error (``I Can't Take My Eyes Off of You'').}
+
+\section{Codebook}
+\todo[inline]{Paste the codebook from scripts/make\_adjudication\_sheet.py.}

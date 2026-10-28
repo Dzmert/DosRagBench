@@ -1,0 +1,34 @@
+\chapter{Reproducibility}
+\label{app:repro}
+
+All code, configuration and per-query results are in the \bench{} repository.
+\todo{Repository URL / archive DOI.} Every number in this report is generated
+by a script from stored results. \Cref{tab:sources} maps each result to its
+source.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Where each result comes from.}
+\label{tab:sources}
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Result & Script $\to$ output \\
+\midrule
+Verdicts, risk differences & \texttt{compute\_significance.py} $\to$ \texttt{results/avi\_significance.json} \\
+Retrieval gradient & \texttt{retrieval\_binning.py} $\to$ \texttt{results/retrieval\_binning.csv} \\
+Gold-present conditioning & \texttt{gold\_present\_conditioning.py} \\
+Prompt ablation & \texttt{prompt\_ablation\_report.py} \\
+FiQA & \texttt{compute\_significance.py --results-dir results\_fiqa} \\
+Correctness & \texttt{score\_correctness.py} $\to$ \texttt{results/correctness\_report.json} \\
+Classifier validation & \texttt{score\_validation.py} \\
+Defences & \texttt{compare\_defences.py} $\to$ \texttt{results\_defence/defence\_report.json} \\
+Filter sensitivity & \texttt{sweep\_cluster\_filter.py} $\to$ \texttt{results\_defence/cluster\_sweep.json} \\
+Refusal monitor & \texttt{refusal\_monitor.py} $\to$ \texttt{results\_defence/refusal\_monitor.json} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Experiments ran on the UNSW Katana cluster, one GPU per job. An aligned-side
+1{,}000-query run takes about 15 minutes; a base-side run about 2 hours.
+\todo{GPU model; total GPU-hours.}

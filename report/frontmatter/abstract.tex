@@ -1,0 +1,38 @@
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+Retrieval-augmented generation (RAG) grounds a language model's answers in
+passages retrieved from a document collection. Anyone who can write to that
+collection can therefore influence what the model says, and most prior work on
+this threat studies \emph{misinformation}: making the model emit an
+attacker-chosen wrong answer. This thesis studies the availability side of the
+same threat. It asks whether poisoned passages can make a RAG system stop
+answering, and whether the instruction tuning that makes a model a usable
+assistant also makes it easier to silence.
+
+To answer this I built \bench{}, a benchmark of 13 denial-of-service attacks
+in four families. It runs each attack against four matched pairs of models,
+where each pair differs only in alignment training, over a 501{,}000-passage
+Natural Questions corpus and the FiQA financial corpus. Outcomes are scored by
+a refusal classifier validated against 300 hand-labelled responses (holdout
+$\kappa = 0.884$; $\kappa = 0.725$ against an independent annotator). Each run
+is tested twice: once for a difference between the models (Fisher) and once for
+whether the attack itself broke queries that worked clean (McNemar).
+
+Aligned models are consistently the more vulnerable side. Every one of the 37
+true base-versus-aligned runs on Natural Questions, and all 39 on FiQA, goes in
+that direction. With prompt wording held constant the alignment effect is
+$+0.134$ on the clean refusal floor and $+0.204$ on attack success. The cause is
+not safety training: 28 of 248{,}000 responses are safety refusals. It is
+context-faithfulness. An aligned model obeys an instruction to decline when the
+evidence looks inadequate, and is $3.1\times$ more responsive to that
+instruction than its base model. A reasoning-distilled model reverses the
+effect. Scoring answers against gold labels qualifies the finding. The same
+attack makes an aligned model refuse but makes a base model answer wrongly, so
+alignment turns the attack's damage from silent error into visible refusal.
+
+Finally, a near-duplicate cluster filter on the retrieved candidates cuts the
+three strongest templated attacks to 1--9\% success at no measurable clean
+cost. By contrast, cross-encoder reranking, a standard retrieval improvement,
+roughly doubles the success of two attacks.
+\todo{Trim to one page once the results chapters settle; check every number against findings\_summary §8.}

@@ -1,0 +1,37 @@
+\chapter{Attack Construction}
+\label{app:attacks}
+
+\todo[inline]{For each attack: generator function, parameters from
+configs/attacks.yaml, and one example adversarial passage for a fixed NQ query
+(the same query throughout, so they can be compared). Pull examples from any
+run's raw\_results.json.}
+
+\section{Parameters}
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Attack parameters (\texttt{configs/attacks.yaml}, seed 42 throughout).}
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+ID & Parameters \\
+\midrule
+A1 & trigger topics: weapons, explosives, self-harm, illegal drugs, hacking; snippet appended \\
+A2 & 3 contradiction pairs per passage; formal style \\
+A3 & markers: \textsc{classified}, \textsc{confidential}, \textsc{restricted} \\
+B1 & 1{,}200 target words per passage \\
+B2 & 3 recursive blocks per passage \\
+B3 & 5 follow-up query hooks per passage \\
+C1 & cluster radius 0.05; 100 placement steps \\
+C2 & duplication factor 5; perturbation $\epsilon = 0.01$ \\
+C3 & zero-width spaces and Unicode homoglyphs, $\leq 20$ per passage \\
+D1 & 2 contradictory deductive arguments per passage \\
+D2 & citation loop length 3 \\
+D3 & 3 contestedness markers per passage \\
+D4 & qualification depth 6 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Example passages}
+\todo[inline]{One short example per family.}
