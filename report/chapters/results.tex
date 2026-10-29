@@ -151,11 +151,11 @@ safety account does not.
 \includegraphics[width=\textwidth]{retrieval_gradient}
 \caption[Denial by pre-attack gold rank]{Denial rate by the rank the gold
 passage held before the attack. Dashed: clean; solid: under attack. Aligned
-denial rises as retrieval degrades; base denial does not.}
+denial rises as retrieval degrades; base denial does not. Left: Natural
+Questions, 37 runs over three base$\to$instruct pairs. Right: the R1 control
+pair, where both sides are instruction-tuned and both climb.}
 \label{fig:gradient}
 \end{figure}
-\todo{Regenerate fig:gradient without the withdrawn HotpotQA panel
-(scripts/plot\_retrieval\_gradient.py).}
 
 \paragraph{3. The finding is not circular.} The strongest objection to the
 thesis is that a faithful model \emph{should} decline when its evidence has

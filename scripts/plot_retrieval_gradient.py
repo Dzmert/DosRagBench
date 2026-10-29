@@ -5,10 +5,13 @@ denial rate against the bin the gold passage occupied *before* the attack.
 
 The visual argument is a divergence, not a level. Within each panel the aligned
 line climbs as retrieval degrades while the base line stays flat on the floor:
-retrieval sensitivity is a property of the aligned model, not of RAG. The third
+retrieval sensitivity is a property of the aligned model, not of RAG. The second
 panel is the control — both sides of the R1 pair are instruction-tuned, and both
 climb, which is what the mechanism predicts and what a "base models are simply
 different" account does not.
+
+HotpotQA is not plotted: that corpus was withdrawn from the analysis, and its
+row in the CSV is kept only for the record.
 
 Colour carries the model side; line style carries whether an attack was present.
 That keeps the palette at the two validated categorical slots already used by
@@ -47,12 +50,10 @@ BIN_ORDER = ["rank 0", "rank 1-2", "rank 3-4", "absent"]
 BIN_LABELS = ["rank 0\n(gold on top)", "rank 1–2", "rank 3–4", "absent\n(not retrieved)"]
 
 # (csv group, panel title, subtitle). The R1 pair goes last: it is the control,
-# and it reads as one only after the first two have established the pattern.
+# and it reads as one only after the first panel has established the pattern.
 PANELS = [
     ("NQ (excl. llama-r1)", "Natural Questions",
      "37 runs · 3 base → instruct pairs"),
-    ("HotpotQA", "HotpotQA",
-     "12 runs · multi-hop"),
     ("NQ llama-r1 only", "Control: R1 pair",
      "13 runs · both sides instruction-tuned"),
 ]
@@ -90,7 +91,7 @@ def main() -> None:
         raise SystemExit(f"{CSV_PATH} not found — run scripts/retrieval_binning.py --csv first")
     by_group = load()
 
-    fig, axes = plt.subplots(1, 3, figsize=(13.6, 5.3), sharey=True)
+    fig, axes = plt.subplots(1, len(PANELS), figsize=(11.0, 5.6), sharey=True)
     fig.patch.set_facecolor(SURFACE)
 
     x = list(range(len(BIN_ORDER)))
@@ -187,21 +188,21 @@ def main() -> None:
         fontsize=15, fontweight="bold", color=INK, x=0.008, ha="left", y=0.985,
     )
     fig.text(
-        0.008, 0.925,
-        "Denial rate by the rank the gold passage held BEFORE the attack. "
+        0.008, 0.935,
+        "Denial rate by the rank the gold passage held BEFORE the attack.\n"
         "Dashed + hollow = no attack; solid + filled = under attack.",
-        fontsize=10, color=INK_SECONDARY, ha="left",
+        fontsize=10, color=INK_SECONDARY, ha="left", va="top", linespacing=1.4,
     )
     fig.text(
         0.008, 0.028,
         "Every query counted once per attack, pooled within a bin. Shaded bins have "
         f"≤{THIN_CELL_MAX_RUNS} runs clearing the 25-answerable threshold and show pooled figures only.\n"
         "The gap is present with no attack at all (dashed lines), which is what makes this a "
-        "property of the model rather than of the attack.   Source: results/retrieval_binning.csv",
+        "property of the model rather than of the attack.\nSource: results/retrieval_binning.csv",
         fontsize=8.6, color=INK_MUTED, ha="left", linespacing=1.5,
     )
 
-    fig.subplots_adjust(left=0.055, right=0.988, top=0.775, bottom=0.235, wspace=0.075)
+    fig.subplots_adjust(left=0.065, right=0.985, top=0.75, bottom=0.26, wspace=0.075)
     fig.savefig(OUT_PATH, dpi=200, facecolor=SURFACE)
     print(f"wrote {OUT_PATH.relative_to(REPO_ROOT)}")
 
