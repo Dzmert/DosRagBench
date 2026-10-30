@@ -1110,8 +1110,8 @@ accuracy +3.4pp) while amplifying A2 and B3. All five points above hold on both
 pairs.
 
 **Caveats:**
-- **Two model pairs, aligned side only, NQ only.** The base side was skipped for
-  compute, and it is not the deployed model.
+- **Two model pairs, NQ only.** The base side was run for Llama only, at the
+  default setting (§3.15.3). Qwen's base side was skipped for compute.
 - **The attacker is non-adaptive.** A2 already shows how an adaptive attacker
   would evade the filter.
 - **One filter setting (τ = 0.9, 2 neighbours), chosen before the run and not
@@ -1158,11 +1158,11 @@ are 0.12 / 0.04 / 1.68 / 0.06 here, against 0.11 / 0.04 / 1.69 / 0.06. Sources:
   clean top-5s change. That is the cliff, and it is clearly visible in the
   figure.
 
-**Status: these are retrieval results only.** Whether removing two-thirds of A2's
-passages lowers A2's *denial* rate needs a generation run at τ = 0.83 / ≥ 3,
-submitted as
-`qsub -v CLUSTER_TAU=0.83,CLUSTER_MN=3,DEFENCES=cluster scripts/run_defence_katana.pbs`.
-Until it lands, quote the A2 improvement as a retrieval effect.
+**Status: the generation run has landed (§3.15.3).** A2 ASR falls 26.4% → 11.3%
+at no clean cost. But D2 gets worse (4.8% → 14.3%), because the looser threshold
+also removes gold passages that sit inside D2's cluster. The selection rule above
+should have constrained gold@5 under attack as well as adv@5. The sweep shows
+the D2 drop (73.3% → 61.4%), and it was missed.
 
 #### 3.15.2 A refusal-rate monitor — the signal exists, but the refusal floor drowns it
 
@@ -1209,6 +1209,82 @@ Smallest window detecting the attack with ≥ 90% power (— = not within 500 qu
 aggregate and the base model's are not, but "visible" means a sustained
 campaign, not a per-query alarm. Detecting a targeted attack would need a
 per-query signal that refusal text does not carry.
+
+#### 3.15.3 Generation at τ 0.83 / ≥3, and the base side
+
+Llama only, NQ, 1,000 queries. Five Katana jobs, all exit 0
+(`dosrag_defence.o9615022`–`26`): the base side of the default filter for each
+attack, one job per attack (~3h each), and the tuned setting on the aligned side
+for all four (1h41m in total). Sources: `results_defence/defence_report.md`,
+`refusal_monitor.md`. Accuracy p-values are exact McNemar on the 656-query gold
+subset, computed ad hoc. They are not yet in a script.
+
+**1. The tuned setting's retrieval result carries into generation for A2.**
+
+| aligned, Llama | undefended | τ 0.90 / ≥2 | τ 0.83 / ≥3 |
+|---|---:|---:|---:|
+| A2 adv@5 | 2.05 | 1.69 | **0.67** (sweep predicted 0.67) |
+| A2 attacked denial | 51.8% | 49.8% (p 0.08) | **42.4%** (p 6e-15) |
+| A2 ASR | 26.4% | 23.7% | **11.3%** |
+| A2 accuracy under attack | 37.2% | 38.1% (p 0.50) | **42.4%** (p 1.5e-4) |
+| Clean denial / clean accuracy | 37.1% / 46.5% | 37.2% / 46.5% | 36.9% / 46.6% |
+
+The clean cost is still nil (denial p = 0.73). §3.15 point 2 ("A2 evades the
+filter") holds at the pre-registered setting only. At the looser setting, more
+than half of A2's attributable refusals are removed. A2 is not beaten: 11.3% ASR
+remains, and an attacker who paraphrases further can get back under τ 0.83.
+
+**2. But the tuned setting is worse on D2, and the sweep had already said so.**
+D2 ASR is 4.8% at the default and **14.3%** at τ 0.83 / ≥3. Accuracy under
+attack is 43.9% → 37.8%, and gold@5 under attack is 72.7% → 60.7%. Adversarial
+passages in the top-5 are *lower* (0.11 → 0.01), so the attack is not getting
+through. The gold passage is being taken out with it. Of the queries whose
+gold was at rank 0 on the clean run, 153 lose it entirely under D2 at the tuned
+setting, against 31 at the default. 123 of the 131 golds lost between the two
+settings sat at rank 0. Clean gold recall is unchanged (76.0% → 76.2%), so this
+happens only when the attack is present. The likely mechanism is that D2's
+passages restate the query closely enough that the gold passage has ≥3 of them
+within cosine 0.83, so the filter reads it as one more cluster member. That is
+an inference. The run does not log which candidates were dropped. The sweep
+predicted the drop (D2 gold@5 73.3% → 61.4%). The selection rule in §3.15.1
+checked only adv@5 on D2/B3/C1, not gold@5 under attack, so it missed it. C1
+moves the same way, slightly (ASR 9.1% → 10.8%, gold@5 63.2% → 61.6%). B3 is
+unchanged.
+
+So there is **no single best setting**. τ 0.90 / ≥2 is better against templated
+attacks, and τ 0.83 / ≥3 is better against A2. A looser threshold hands the
+attacker a lever: plant enough near-copies around the answer and the defence
+deletes the answer. Quote both settings, and say that the selection rule should
+have included gold recall under attack.
+
+**3. Base side: the filter changes nothing visible, and recovers silent errors.**
+The base side's retrieval matches the aligned side's to the second decimal (adv@5
+2.06 → 1.69, 3.09 → 0.04, 1.94 → 0.06, 3.94 → 0.11), as it must. Base denial is
+0.4–3.3% before and after, with no significant change. Accuracy under attack
+recovers significantly:
+
+| base, Llama | D2 | B3 | C1 | A2 |
+|---|---:|---:|---:|---:|
+| accuracy under attack, undefended → cluster | 40.7 → **50.5%** (p 1e-6) | 46.3 → **52.4%** (p 2e-4) | 47.9 → **50.8%** (p 0.007) | 48.5 → 48.8% (p 0.81) |
+| (aligned, same arm) | 20.1 → 43.9% (p 2e-36) | 33.2 → 46.0% (p 5e-16) | 39.0 → 43.1% (p 4e-5) | 37.2 → 38.1% (p 0.50) |
+
+Base clean accuracy is 52.6%. So undefended D2 cost the base model 12pp of
+correct answers, with no rise in refusals at all. That is the silent error of
+§3.10. It is invisible in denial-based ASR (0.4% → 0.1%), and the filter
+repairs most of it. The defence protects both sides. On the base side its
+effect shows up only when correctness is scored.
+
+**4. Does the alignment gap close under the filter?** For the templated attacks,
+yes. The aligned − base ASR gap falls from 57.8 to 4.7pp (D2), 35.8 to 1.1pp
+(B3) and 19.6 to 8.8pp (C1). For A2 it is 23.5 → 20.7pp at the default setting.
+What remains is the aligned model's clean refusal floor (37%), which no
+retrieval defence touches, because it is not caused by the attack.
+
+**5. Monitor.** With the tuned filter in front, A2 no longer raises the refusal
+rate above the clean floor (39.0% attacked vs 41.0% p0). The monitor has nothing
+to detect, because there is nothing left to detect. The base side behind the
+filter is as silent as without it. A2 is detectable only at 300 fully attacked
+queries, from a 0.4% → 2.6% rise.
 
 ---
 
@@ -1602,8 +1678,8 @@ what mitigates it":
   attack.
 - **What remains open:** diversified attacks such as A2, which evade the filter.
   The refusal monitor does not catch A2 in useful time (§3.15.2). A looser filter
-  setting removes two-thirds of A2's documents at retrieval (§3.15.1), pending
-  generation. Plausible next steps are paraphrase-robust clustering or an ensemble with a
+  setting halves A2's ASR (26.4% → 11.3%), but it triples D2's (4.8% → 14.3%) by
+  removing gold passages inside the attack cluster (§3.15.3). Plausible next steps are paraphrase-robust clustering or an ensemble with a
   monitor on refusals (point 4).
 
 ---
@@ -1642,6 +1718,8 @@ what mitigates it":
 | `BLOCKER_ORACLE` passages that are real blockers | 0/200 contain the target; 21/200 read as refusals | `results/llama-3.1-8b_BLOCKER_ORACLE/blocker_passages.json` |
 | Cluster filter, aligned ASR D2 / B3 / C1 / A2 (Llama) | 58.2→4.8% / 36.1→1.1% / 20.2→9.1% / 26.4→23.7% (n.s.); clean denial 37.1→37.2%; Qwen 52.4→4.6% / 33.8→0.3% / 18.9→8.7% / 22.0→21.4% | `results_defence/defence_report.md` |
 | Cluster filter τ 0.83 / ≥3 nbr, retrieval only: A2 adv@5, clean gold@5 | 2.06 → 0.67, 76.6% → 76.9%; held-out half 1.98 → 0.66 | `results_defence/cluster_sweep.md` |
+| Cluster filter τ 0.83 / ≥3 nbr, generation, aligned Llama ASR A2 / D2 / B3 / C1 | 26.4→11.3% / 58.2→14.3% (vs 4.8% at default) / 36.1→1.3% / 20.2→10.8%; clean denial 37.1→36.9% | `results_defence/defence_report.md` |
+| Cluster filter, base Llama, accuracy under attack D2 / B3 / C1 / A2 | 40.7→50.5% / 46.3→52.4% / 47.9→50.8% / 48.5→48.8% (n.s.); base denial unchanged (≤3.3%) | `results_defence/defence_report.md` |
 | Refusal-rate monitor, aligned, window for 90% detection (α 0.01) | D2 50 / B3 150 / A2 300 queries, all attacked; none at ≤ 25% attacked; base: no signal | `results_defence/refusal_monitor.md` |
 | Rerank alone, aligned ASR A2 / B3 | 26.4→52.4% / 36.1→48.9% (attacks amplified); clean gold@rank0 47.2→59.8% | `results_defence/defence_report.md` |
 | `BLOCKER` (optimised) ASR (base / aligned), n = 30 | 10.0% / 16.7%, Fisher p = 0.66 — n.s.; 0/60 searches reached the target | `results/llama-3.1-8b_BLOCKER/`, `dosrag_blocker.o9554794` |

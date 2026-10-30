@@ -81,9 +81,61 @@ With two neighbours, any threshold from 0.85 to 0.92 gives the same protection
 at no recall cost, so 0.9 sits on a plateau. Requiring three neighbours allows
 a looser threshold of 0.83. That removes two-thirds of A2's passages from the
 top-5 (2.06 $\to$ 0.67) with clean recall unchanged. The setting was selected
-on queries 0--499 and confirmed on 500--999. \todo{Generation run at
-$\tau=0.83$, $\geq$3 neighbours is on Katana; until it lands this is a
-retrieval-only result.}
+on queries 0--499 and confirmed on 500--999.
+
+\paragraph{The looser setting trades one attack for another.} Run through
+generation, the tuned setting delivers on A2. ASR falls from 26.4\% to 11.3\%,
+attacked denial from 51.8\% to 42.4\% ($p = 6 \times 10^{-15}$), and accuracy
+under attack rises from 37.2\% to 42.4\%. Clean denial and accuracy are
+unchanged. D2, however, gets worse: its ASR is 14.3\% against 4.8\% at the
+default. Almost no D2 passages reach the top-5 (0.01), so the attack is not
+getting through. Instead the gold passage is removed with it. Gold recall under
+D2 falls from 72.7\% to 60.7\%, and 153 queries that had gold at rank~0 on the
+clean run lose it entirely under attack, against 31 at the default. Clean recall
+does not move, so this only happens when the attack is present. The likely
+reason is that D2's passages restate the query closely enough to place the gold
+passage inside their cluster. The offline sweep predicted this drop. The rule
+used to select the setting checked only how many adversarial passages got
+through, not gold recall under attack, and so it missed the drop. No single
+setting is best. A looser threshold also hands the attacker a lever: surround
+the answer with near-copies, and the defence deletes the answer.
+
+\section{The base side: a defence that repairs silent errors}
+\label{sec:def-base}
+
+The filter was also run on the base side of the Llama pair at the default
+setting. Retrieval matches the aligned side exactly, as it must. Base denial
+stays between 0.4\% and 3.3\% with no significant change, so by the ASR metric
+the filter does nothing. Accuracy tells a different story
+(\cref{tab:def-base}). Undefended D2 cost the base model 12 points of
+correct answers (52.6\% clean) without raising its refusals at all. This is
+the silent error of \cref{sec:res-correctness}, and the filter recovers most of
+it.
+
+\begin{table}[ht]
+\centering
+\small
+\caption[Accuracy under attack, base vs aligned, cluster filter]{Accuracy
+under attack (\%), undefended $\to$ cluster filter, \pair{llama-3.1-8b},
+656-query gold subset. $p$: exact McNemar on which queries were answered
+correctly.}
+\label{tab:def-base}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Side & D2 & B3 & C1 & A2 \\
+\midrule
+Base    & 40.7 $\to$ \textbf{50.5} & 46.3 $\to$ \textbf{52.4} & 47.9 $\to$ \textbf{50.8} & 48.5 $\to$ 48.8 \\
+        & \footnotesize $p = 10^{-6}$ & \footnotesize $p = 2\times10^{-4}$ & \footnotesize $p = 0.007$ & \footnotesize $p = 0.81$ \\
+Aligned & 20.1 $\to$ \textbf{43.9} & 33.2 $\to$ \textbf{46.0} & 39.0 $\to$ \textbf{43.1} & 37.2 $\to$ 38.1 \\
+        & \footnotesize $p = 2\times10^{-36}$ & \footnotesize $p = 5\times10^{-16}$ & \footnotesize $p = 4\times10^{-5}$ & \footnotesize $p = 0.50$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For the templated attacks, the alignment gap in ASR largely closes under the
+filter: 57.8 $\to$ 4.7 points on D2, 35.8 $\to$ 1.1 on B3 and 19.6 $\to$ 8.8 on
+C1. What remains is the aligned model's clean refusal floor, which no retrieval
+defence touches because the attack does not cause it.
 
 \section{Reranking amplifies the attacks}
 \label{sec:def-rerank}
@@ -144,9 +196,11 @@ model look vulnerable also hides the attack from the monitor.
 
 \section{Limitations of the defence study}
 \begin{itemize}
-  \item Aligned side only, on two pairs and NQ only.
-    \todo{Base-side cluster-filter runs are on Katana: does the alignment gap
-    close under the filter?}
+  \item NQ only. Both sides were run for Llama, and only the aligned side
+    for Qwen. The tuned setting was run on the aligned side only.
+  \item The tuned setting was chosen by a rule that ignored gold recall under
+    attack, and it costs D2 protection as a result. Gold-passage removal is
+    inferred from recall. The runs do not log which candidates were dropped.
   \item The attacker is non-adaptive. A2 already shows how an adaptive
     attacker evades the filter.
   \item Each arm has its own clean-answerable denominator, so ASR is not

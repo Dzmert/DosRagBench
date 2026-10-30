@@ -113,9 +113,16 @@ def main() -> None:
     for pair in PAIRS:
         for attack in ATTACKS:
             jobs.append((pair, None, attack, "none", REPO_ROOT / "results" / f"{pair}_{attack}"))
-    for d in sorted((REPO_ROOT / "results_defence").glob("*_def-cluster_aligned")):
+    # Cluster-filter runs only: the default setting on either side, and the tuned
+    # τ 0.83 / ≥3 setting (aligned only). Reranking arms change the clean rate too,
+    # so they need their own calibration and are left out.
+    for d in sorted((REPO_ROOT / "results_defence").glob("*_def-cluster*")):
         pair, rest = d.name.split("_", 1)
-        jobs.append((pair, "aligned", rest.split("_")[0], "cluster", d))
+        attack, arm_tag, side = rest.split("_")
+        if "+" in arm_tag:
+            continue
+        arm = "cluster" if arm_tag == "def-cluster" else arm_tag.removeprefix("def-")
+        jobs.append((pair, side, attack, arm, d))
 
     rows = []
     for pair, only_side, attack, arm, path in jobs:
