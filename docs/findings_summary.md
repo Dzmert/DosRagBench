@@ -1216,8 +1216,9 @@ Llama only, NQ, 1,000 queries. Five Katana jobs, all exit 0
 (`dosrag_defence.o9615022`–`26`): the base side of the default filter for each
 attack, one job per attack (~3h each), and the tuned setting on the aligned side
 for all four (1h41m in total). Sources: `results_defence/defence_report.md`,
-`refusal_monitor.md`. Accuracy p-values are exact McNemar on the 656-query gold
-subset, computed ad hoc. They are not yet in a script.
+`refusal_monitor.md`, `cluster_drops.md`. Accuracy p-values are exact McNemar on
+the 656-query gold subset (`p (acc)` column of `defence_report.md`). Figures:
+`defence_asr.png` (now with the tuned arm) and `defence_accuracy.png`.
 
 **1. The tuned setting's retrieval result carries into generation for A2.**
 
@@ -1242,11 +1243,17 @@ through. The gold passage is being taken out with it. Of the queries whose
 gold was at rank 0 on the clean run, 153 lose it entirely under D2 at the tuned
 setting, against 31 at the default. 123 of the 131 golds lost between the two
 settings sat at rank 0. Clean gold recall is unchanged (76.0% → 76.2%), so this
-happens only when the attack is present. The likely mechanism is that D2's
-passages restate the query closely enough that the gold passage has ≥3 of them
-within cosine 0.83, so the filter reads it as one more cluster member. That is
-an inference. The run does not log which candidates were dropped. The sweep
-predicted the drop (D2 gold@5 73.3% → 61.4%). The selection rule in §3.15.1
+happens only when the attack is present. **The filter is deleting the gold
+passage itself, and the attack is why** (`scripts/trace_cluster_drops.py` →
+`cluster_drops.md`, retrieval only). Under D2 at τ 0.83 / ≥3 the filter drops
+the gold passage on 162 queries. On 157 of them (97%) the gold has fewer than 3
+*benign* neighbours above τ, so it is the D2 passages that push it over. The
+removed gold has a median of 5 adversarial neighbours. At the default setting
+it is 32 (31 attack-caused). On clean pools the filter removes gold on 1 and 5
+queries. C1 and B3 show the same effect on a smaller scale (17 and 14
+attack-caused removals at τ 0.83), and A2 shows none. The replay's defended
+gold@5 (73.3% / 61.4%) is within 0.7pp of the Katana runs (72.7% / 60.7%). The
+sweep predicted the drop (D2 gold@5 73.3% → 61.4%). The selection rule in §3.15.1
 checked only adv@5 on D2/B3/C1, not gold@5 under attack, so it missed it. C1
 moves the same way, slightly (ASR 9.1% → 10.8%, gold@5 63.2% → 61.6%). B3 is
 unchanged.
@@ -1719,6 +1726,7 @@ what mitigates it":
 | Cluster filter, aligned ASR D2 / B3 / C1 / A2 (Llama) | 58.2→4.8% / 36.1→1.1% / 20.2→9.1% / 26.4→23.7% (n.s.); clean denial 37.1→37.2%; Qwen 52.4→4.6% / 33.8→0.3% / 18.9→8.7% / 22.0→21.4% | `results_defence/defence_report.md` |
 | Cluster filter τ 0.83 / ≥3 nbr, retrieval only: A2 adv@5, clean gold@5 | 2.06 → 0.67, 76.6% → 76.9%; held-out half 1.98 → 0.66 | `results_defence/cluster_sweep.md` |
 | Cluster filter τ 0.83 / ≥3 nbr, generation, aligned Llama ASR A2 / D2 / B3 / C1 | 26.4→11.3% / 58.2→14.3% (vs 4.8% at default) / 36.1→1.3% / 20.2→10.8%; clean denial 37.1→36.9% | `results_defence/defence_report.md` |
+| Cluster filter τ 0.83 / ≥3, D2: gold passages removed by the filter | 162 queries, 157 attack-caused (vs 32 / 31 at τ 0.90; clean 5) | `results_defence/cluster_drops.md` |
 | Cluster filter, base Llama, accuracy under attack D2 / B3 / C1 / A2 | 40.7→50.5% / 46.3→52.4% / 47.9→50.8% / 48.5→48.8% (n.s.); base denial unchanged (≤3.3%) | `results_defence/defence_report.md` |
 | Refusal-rate monitor, aligned, window for 90% detection (α 0.01) | D2 50 / B3 150 / A2 300 queries, all attacked; none at ≤ 25% attacked; base: no signal | `results_defence/refusal_monitor.md` |
 | Rerank alone, aligned ASR A2 / B3 | 26.4→52.4% / 36.1→48.9% (attacks amplified); clean gold@rank0 47.2→59.8% | `results_defence/defence_report.md` |

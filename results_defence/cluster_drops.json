@@ -1,0 +1,130 @@
+{
+  "params": {
+    "num_queries": 1000,
+    "pool": 50,
+    "top_k": 5,
+    "embedder": "sentence-transformers/all-MiniLM-L6-v2"
+  },
+  "rows": [
+    {
+      "condition": "clean",
+      "tau": 0.9,
+      "mn": 2,
+      "queries": 1000,
+      "gold_in_pool": 935,
+      "gold_removed": 1,
+      "attack_caused": 0,
+      "lost_top5": 1,
+      "gold_top5": 0.767,
+      "median_adv_neighbours_when_removed": 0.0
+    },
+    {
+      "condition": "clean",
+      "tau": 0.83,
+      "mn": 3,
+      "queries": 1000,
+      "gold_in_pool": 935,
+      "gold_removed": 5,
+      "attack_caused": 0,
+      "lost_top5": 4,
+      "gold_top5": 0.769,
+      "median_adv_neighbours_when_removed": 0.0
+    },
+    {
+      "condition": "D2",
+      "tau": 0.9,
+      "mn": 2,
+      "queries": 1000,
+      "gold_in_pool": 931,
+      "gold_removed": 32,
+      "attack_caused": 31,
+      "lost_top5": 20,
+      "gold_top5": 0.733,
+      "median_adv_neighbours_when_removed": 3.0
+    },
+    {
+      "condition": "D2",
+      "tau": 0.83,
+      "mn": 3,
+      "queries": 1000,
+      "gold_in_pool": 931,
+      "gold_removed": 162,
+      "attack_caused": 157,
+      "lost_top5": 96,
+      "gold_top5": 0.614,
+      "median_adv_neighbours_when_removed": 5.0
+    },
+    {
+      "condition": "C1",
+      "tau": 0.9,
+      "mn": 2,
+      "queries": 1000,
+      "gold_in_pool": 724,
+      "gold_removed": 2,
+      "attack_caused": 1,
+      "lost_top5": 2,
+      "gold_top5": 0.636,
+      "median_adv_neighbours_when_removed": 1.5
+    },
+    {
+      "condition": "C1",
+      "tau": 0.83,
+      "mn": 3,
+      "queries": 1000,
+      "gold_in_pool": 724,
+      "gold_removed": 19,
+      "attack_caused": 17,
+      "lost_top5": 18,
+      "gold_top5": 0.621,
+      "median_adv_neighbours_when_removed": 22.0
+    },
+    {
+      "condition": "B3",
+      "tau": 0.9,
+      "mn": 2,
+      "queries": 1000,
+      "gold_in_pool": 927,
+      "gold_removed": 1,
+      "attack_caused": 0,
+      "lost_top5": 1,
+      "gold_top5": 0.767,
+      "median_adv_neighbours_when_removed": 0.0
+    },
+    {
+      "condition": "B3",
+      "tau": 0.83,
+      "mn": 3,
+      "queries": 1000,
+      "gold_in_pool": 927,
+      "gold_removed": 19,
+      "attack_caused": 14,
+      "lost_top5": 14,
+      "gold_top5": 0.755,
+      "median_adv_neighbours_when_removed": 4.0
+    },
+    {
+      "condition": "A2",
+      "tau": 0.9,
+      "mn": 2,
+      "queries": 1000,
+      "gold_in_pool": 932,
+      "gold_removed": 1,
+      "attack_caused": 0,
+      "lost_top5": 1,
+      "gold_top5": 0.69,
+      "median_adv_neighbours_when_removed": 0.0
+    },
+    {
+      "condition": "A2",
+      "tau": 0.83,
+      "mn": 3,
+      "queries": 1000,
+      "gold_in_pool": 932,
+      "gold_removed": 5,
+      "attack_caused": 0,
+      "lost_top5": 3,
+      "gold_top5": 0.753,
+      "median_adv_neighbours_when_removed": 0.0
+    }
+  ]
+}

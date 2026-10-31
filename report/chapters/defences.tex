@@ -92,9 +92,12 @@ default. Almost no D2 passages reach the top-5 (0.01), so the attack is not
 getting through. Instead the gold passage is removed with it. Gold recall under
 D2 falls from 72.7\% to 60.7\%, and 153 queries that had gold at rank~0 on the
 clean run lose it entirely under attack, against 31 at the default. Clean recall
-does not move, so this only happens when the attack is present. The likely
-reason is that D2's passages restate the query closely enough to place the gold
-passage inside their cluster. The offline sweep predicted this drop. The rule
+does not move, so this only happens when the attack is present. Replaying the
+filter offline shows why. Under D2 it drops the gold passage itself on 162
+queries, and on 157 of them the gold passage has fewer than three benign
+neighbours above the threshold. The attack's own passages place it inside
+their cluster, a median of five of them per removed gold. On clean queries the
+filter removes gold only five times. The offline sweep predicted this drop. The rule
 used to select the setting checked only how many adversarial passages got
 through, not gold recall under attack, and so it missed the drop. No single
 setting is best. A looser threshold also hands the attacker a lever: surround
@@ -136,6 +139,17 @@ For the templated attacks, the alignment gap in ASR largely closes under the
 filter: 57.8 $\to$ 4.7 points on D2, 35.8 $\to$ 1.1 on B3 and 19.6 $\to$ 8.8 on
 C1. What remains is the aligned model's clean refusal floor, which no retrieval
 defence touches because the attack does not cause it.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{defence_accuracy}
+\caption[Accuracy under attack with the cluster filter, both sides]{Accuracy
+under attack, undefended (hollow) $\to$ cluster filter (filled), for both sides
+of the Llama pair. Dashed lines are each side's clean accuracy. The base side's
+losses are silent, because its denial rate never rises, yet the filter recovers
+them as it does the aligned side's.}
+\label{fig:def-accuracy}
+\end{figure}
 
 \section{Reranking amplifies the attacks}
 \label{sec:def-rerank}
@@ -199,8 +213,9 @@ model look vulnerable also hides the attack from the monitor.
   \item NQ only. Both sides were run for Llama, and only the aligned side
     for Qwen. The tuned setting was run on the aligned side only.
   \item The tuned setting was chosen by a rule that ignored gold recall under
-    attack, and it costs D2 protection as a result. Gold-passage removal is
-    inferred from recall. The runs do not log which candidates were dropped.
+    attack, and it costs D2 protection as a result. Gold-passage removal was
+    measured by an offline replay. The generation runs themselves do not log
+    which candidates were dropped.
   \item The attacker is non-adaptive. A2 already shows how an adaptive
     attacker evades the filter.
   \item Each arm has its own clean-answerable denominator, so ASR is not
