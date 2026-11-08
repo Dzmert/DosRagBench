@@ -1,0 +1,17 @@
+{
+  "model_pair": "qwen-2.5-7b",
+  "category": "D2",
+  "side": "aligned",
+  "prompt_style": "auto",
+  "num_queries": 1000,
+  "top_k": 5,
+  "embedder": "sentence-transformers/all-MiniLM-L6-v2",
+  "defence": [
+    {
+      "name": "cluster",
+      "tau": 0.9,
+      "min_neighbours": 2
+    }
+  ],
+  "defence_pool": 50
+}

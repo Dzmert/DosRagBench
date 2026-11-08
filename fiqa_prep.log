@@ -1,0 +1,59 @@
+2026-08-10 16:34:46,453 [INFO] BEIR mode: dataset='fiqa'. This will download ~30 MB (corpus, ~57k passages) + tiny qrels to your HuggingFace cache on first run.
+2026-08-10 16:34:46,453 [INFO] Loading qrels: BeIR/fiqa-qrels (split=test)
+2026-08-10 16:34:46,726 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa-qrels/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-08-10 16:34:46,941 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/BeIR/fiqa-qrels/252958f2d646e22cab6d0c72dd3f0d5de6d0655a/README.md "HTTP/1.1 200 OK"
+2026-08-10 16:34:47,180 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa-qrels/resolve/252958f2d646e22cab6d0c72dd3f0d5de6d0655a/fiqa-qrels.py "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:47,824 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/BeIR/fiqa-qrels/BeIR/fiqa-qrels.py "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:48,062 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/fiqa-qrels/revision/252958f2d646e22cab6d0c72dd3f0d5de6d0655a "HTTP/1.1 200 OK"
+2026-08-10 16:34:48,284 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa-qrels/resolve/252958f2d646e22cab6d0c72dd3f0d5de6d0655a/.huggingface.yaml "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:48,553 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=BeIR/fiqa-qrels "HTTP/1.1 200 OK"
+2026-08-10 16:34:48,774 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/fiqa-qrels/tree/252958f2d646e22cab6d0c72dd3f0d5de6d0655a/data?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:49,000 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/fiqa-qrels/tree/252958f2d646e22cab6d0c72dd3f0d5de6d0655a?recursive=false&expand=false "HTTP/1.1 200 OK"
+2026-08-10 16:34:49,233 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa-qrels/resolve/252958f2d646e22cab6d0c72dd3f0d5de6d0655a/dataset_infos.json "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:49,458 [INFO] Loading queries: BeIR/fiqa (config=queries)
+2026-08-10 16:34:49,691 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-08-10 16:34:49,918 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/BeIR/fiqa/979c07a7cb5ccc6ca009792241fa1250b98055dd/README.md "HTTP/1.1 200 OK"
+2026-08-10 16:34:50,151 [INFO] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/BeIR/fiqa/979c07a7cb5ccc6ca009792241fa1250b98055dd/README.md "HTTP/1.1 200 OK"
+2026-08-10 16:34:50,378 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/979c07a7cb5ccc6ca009792241fa1250b98055dd/fiqa.py "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:50,594 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/BeIR/fiqa/BeIR/fiqa.py "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:50,875 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/fiqa/revision/979c07a7cb5ccc6ca009792241fa1250b98055dd "HTTP/1.1 200 OK"
+2026-08-10 16:34:51,096 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/979c07a7cb5ccc6ca009792241fa1250b98055dd/.huggingface.yaml "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:51,416 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=BeIR/fiqa "HTTP/1.1 200 OK"
+2026-08-10 16:34:51,637 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/fiqa/tree/979c07a7cb5ccc6ca009792241fa1250b98055dd/corpus?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-08-10 16:34:51,861 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/fiqa/tree/979c07a7cb5ccc6ca009792241fa1250b98055dd?recursive=false&expand=false "HTTP/1.1 200 OK"
+2026-08-10 16:34:52,081 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/979c07a7cb5ccc6ca009792241fa1250b98055dd/dataset_infos.json "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:52,319 [INFO] HTTP Request: GET https://huggingface.co/api/datasets/BeIR/fiqa/tree/979c07a7cb5ccc6ca009792241fa1250b98055dd/queries?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-08-10 16:34:52,570 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/979c07a7cb5ccc6ca009792241fa1250b98055dd/queries/queries-00000-of-00001.parquet "HTTP/1.1 302 Found"
+Generating queries split:   0%|          | 0/6648 [00:00<?, ? examples/s]Generating queries split: 100%|██████████| 6648/6648 [00:00<00:00, 215110.77 examples/s]
+2026-08-10 16:34:54,751 [WARNING] Only 648 queries have qrels; requested 1000.
+2026-08-10 16:34:54,751 [INFO] Loading corpus: BeIR/fiqa (config=corpus)
+2026-08-10 16:34:54,977 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+2026-08-10 16:34:54,984 [INFO] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/BeIR/fiqa/979c07a7cb5ccc6ca009792241fa1250b98055dd/README.md "HTTP/1.1 200 OK"
+2026-08-10 16:34:55,206 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/979c07a7cb5ccc6ca009792241fa1250b98055dd/fiqa.py "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:55,418 [INFO] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/BeIR/fiqa/BeIR/fiqa.py "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:55,641 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/979c07a7cb5ccc6ca009792241fa1250b98055dd/.huggingface.yaml "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:55,892 [INFO] HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=BeIR/fiqa "HTTP/1.1 200 OK"
+2026-08-10 16:34:56,113 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/979c07a7cb5ccc6ca009792241fa1250b98055dd/dataset_infos.json "HTTP/1.1 404 Not Found"
+2026-08-10 16:34:56,336 [INFO] HTTP Request: HEAD https://huggingface.co/datasets/BeIR/fiqa/resolve/979c07a7cb5ccc6ca009792241fa1250b98055dd/corpus/corpus-00000-of-00001.parquet "HTTP/1.1 302 Found"
+Generating corpus split:   0%|          | 0/57638 [00:00<?, ? examples/s]Generating corpus split: 100%|██████████| 57638/57638 [00:00<00:00, 423741.48 examples/s]
+2026-08-10 16:35:00,130 [INFO] Corpus has 57638 passages; building id->position map...
+2026-08-10 16:35:00,528 [INFO] Materializing 57638 passages (648 gold + 56990 filler)...
+2026-08-10 16:35:01,531 [INFO] Wrote 648 queries -> data_fiqa/queries.json
+2026-08-10 16:35:01,532 [INFO] Wrote 57638 KB docs -> data_fiqa/knowledge_base.json
+2026-08-10 16:35:01,532 [INFO]   (source=beir:fiqa, 648 gold docs tracked)
+PREP OK: 648 queries; single-gold = True
+
+================================================================================
+                     Resource Usage on 10/08/2026 16:35:04                      
+
+Job Id: 8959355 
+Queue: CSE
+Walltime: 00:00:17  (requested 02:00:00)
+Job execution was successful. Exit Status 0. 
+
+--------------------------------------------------------------------------------
+|              |             CPUs              |            Memory             |
+--------------------------------------------------------------------------------
+| Node         | Requested   Used   Efficiency | Requested   Used   Efficiency |
+| k180         |     8       0.24      3.0%    |  32.0gb    0.68gb     2.1%    |
+--------------------------------------------------------------------------------

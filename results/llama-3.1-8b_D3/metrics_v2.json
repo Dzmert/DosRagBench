@@ -1,0 +1,81 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Base",
+    "attack_category": "D3",
+    "num_queries": 1000,
+    "asr": 0.011,
+    "gds": 0.013,
+    "asr_absolute": 0.012,
+    "gds_absolute": 0.0155,
+    "baseline_denial_rate": 0.004,
+    "num_answerable": 996,
+    "lir_mean": 1.306,
+    "lir_median": 1.001,
+    "tor_mean": 1.818,
+    "tor_median": 1.0,
+    "cdr": 0.206,
+    "retrieval_lir_mean": 0.991,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.62,
+    "gold_eviction_rate": 0.184,
+    "mean_adversarial_in_topk": 2.363,
+    "refusal_breakdown": {
+      "no_refusal": 988,
+      "generation_failure": 9,
+      "epistemic": 3
+    },
+    "severity_breakdown": {
+      "L0": 981,
+      "L2": 7,
+      "L3": 12
+    },
+    "mean_latency_s": 5.965,
+    "mean_output_tokens": 252.5,
+    "baseline_refusal_breakdown": {
+      "no_refusal": 996,
+      "generation_failure": 4
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B",
+    "alignment_level": 0
+  },
+  "aligned": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "D3",
+    "num_queries": 1000,
+    "asr": 0.3291,
+    "gds": 0.219,
+    "asr_absolute": 0.479,
+    "gds_absolute": 0.491,
+    "baseline_denial_rate": 0.371,
+    "num_answerable": 629,
+    "lir_mean": 1.531,
+    "lir_median": 1.008,
+    "tor_mean": 1.691,
+    "tor_median": 1.0,
+    "cdr": 0.3424,
+    "retrieval_lir_mean": 1.049,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.622,
+    "gold_eviction_rate": 0.182,
+    "mean_adversarial_in_topk": 2.404,
+    "refusal_breakdown": {
+      "epistemic": 448,
+      "no_refusal": 521,
+      "unspecified_refusal": 30,
+      "explicit_safety": 1
+    },
+    "severity_breakdown": {
+      "L3": 479,
+      "L0": 497,
+      "L2": 24
+    },
+    "mean_latency_s": 0.813,
+    "mean_output_tokens": 33.9,
+    "baseline_refusal_breakdown": {
+      "epistemic": 371,
+      "no_refusal": 629
+    },
+    "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
+    "alignment_level": 2
+  }
+}

@@ -1,0 +1,113 @@
+\chapter{Background and Related Work}
+\label{ch:background}
+
+\section{Retrieval-augmented generation}
+\label{sec:bg-rag}
+
+A RAG system has three stages \cite{lewis2020rag}. An \emph{embedder} maps
+every passage in the collection, and each incoming query, into a shared vector
+space. Here the embedder is a sentence transformer \cite{reimers2019sbert}. A
+\emph{retriever} returns the $k$ passages whose vectors are nearest the
+query's. At the scale of hundreds of thousands of passages this is done
+approximately, with a graph index such as HNSW \cite{malkov2020hnsw} in a
+library such as FAISS \cite{johnson2019faiss}. A \emph{generator}, the LLM,
+receives the query and the $k$ passages in a prompt and writes the answer.
+
+Two properties of this pipeline matter for what follows. First, the retriever
+ranks by similarity, not by truth or provenance, so a passage written to
+resemble a query will be retrieved for it. Second, the generator sees only the
+top $k$. If the top $k$ is filled with adversarial passages, the passage that
+actually answers the query is \emph{evicted} and the model never sees it.
+
+Production systems often add a second-stage \emph{reranker}: a cross-encoder
+that scores each (query, passage) pair jointly and reorders a larger candidate
+pool \cite{nogueira2019rerank}. Rerankers reliably improve retrieval quality
+on clean queries. \Cref{sec:def-rerank} shows that this does not carry over to
+adversarial ones.
+
+\section{Alignment training and context-faithfulness}
+\label{sec:bg-alignment}
+
+A pretrained (\emph{base}) model continues text. An instruction-tuned
+(\emph{aligned}) model is further trained on instruction--response pairs and,
+usually, on human or AI preference data, so that it follows instructions and
+behaves as an assistant \cite{wei2022flan,ouyang2022instructgpt}. All four
+model families in this thesis release both versions from the same pretrained
+checkpoint \cite{grattafiori2024llama3,qwen2025qwen25,jiang2023mistral}, which
+is what makes a matched comparison possible.
+
+Alignment changes refusal behaviour in two distinct ways. \emph{Safety}
+training teaches a model to decline harmful requests. Its failure mode,
+refusing benign requests that superficially resemble harmful ones, is measured
+by over-refusal benchmarks \cite{rottger2024xstest,cui2024orbench}.
+\emph{Context-faithfulness} is a different property. It is the tendency to
+answer from the supplied context rather than from parametric memory, and to
+abstain when the context does not support an answer
+\cite{longpre2021entity,zhou2023contextfaithful,xie2024chameleon}. In RAG it is
+usually treated as desirable, since it is the main defence against
+hallucination. This thesis argues that it is also the attack surface
+(\cref{sec:res-mechanism}).
+
+\todo{Expand: reasoning distillation (DeepSeek-R1 \cite{deepseek2025r1}) and
+why it might change context deference. This sets up the R1 reversal.}
+
+\section{Attacks on RAG}
+\label{sec:bg-attacks}
+
+\Cref{tab:related} positions this work against its nearest neighbours.
+
+\begin{table}[ht]
+\centering
+\small
+\caption[Prior attacks on RAG]{Prior attacks on RAG, by objective. The bottom
+two rows are the denial-of-service neighbours of this work.}
+\label{tab:related}
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
+\toprule
+Work & Objective & Construction \\
+\midrule
+PoisonedRAG \cite{zou2025poisonedrag} & Targeted misinformation & Per-query passage: a retrieval part plus a generation-steering part \\
+Zhong et al.\ \cite{zhong2023poisoning} & Broad retrieval hijack & Gradient (HotFlip) token optimisation towards a query cluster \\
+Indirect prompt injection \cite{greshake2023indirect} & Instruction hijack & Instructions embedded in retrieved content \\
+\midrule
+Blocker documents \cite{shafran2025jamming} & Denial & Black-box optimised passage per target query \\
+MutedRAG \cite{suo2025mutedrag} & Denial via safety guardrails & Jailbreak text that trips the model's refusal \\
+\textbf{This work} & \textbf{Denial, across alignment} & Templated or generated passages, mostly optimisation-free; matched base/aligned pairs \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Misinformation attacks.} PoisonedRAG \cite{zou2025poisonedrag}
+crafts, for each target question, a passage that is both retrieved for that
+question and persuades the model to give the attacker's answer. Zhong et al.\
+\cite{zhong2023poisoning} optimise passage tokens directly in embedding space so
+that a few passages are retrieved for many queries. Both measure whether the
+model says what the attacker wants. Neither measures whether it stops
+answering.
+
+\paragraph{Denial attacks.} Shafran et al.\ \cite{shafran2025jamming}
+introduce \emph{blocker documents}: a single passage per target query, found
+by black-box search, that makes the system respond with a non-answer. They
+evaluate it across several target LLMs, but not as matched base and aligned
+pairs.\todo{Verify against the paper before submission.} MutedRAG \cite{suo2025mutedrag} induces refusal by
+injecting jailbreak-style text that trips safety guardrails.
+
+This thesis differs from both on three axes. The objective is availability
+across the alignment cross-cut rather than on single models. The mechanism
+studied is degraded-looking evidence, with no unsafe content, so the attacks
+work without any guardrail being involved (\cref{sec:res-mechanism}). And most
+attacks need no optimisation or query access at all. The three blocker variants are re-implemented
+here as external baselines (\cref{sec:res-blocker}).
+
+\todo{Add: corpus-poisoning defences (perplexity filters, robust aggregation),
+and the Indyk--Xu worst case for HNSW \cite{indyk2023hnsw} as the motivation
+for the algorithmic-complexity family.}
+
+\section{Gap addressed}
+\label{sec:gap}
+
+No prior work measures how alignment training changes a RAG system's exposure
+to induced denial while holding the model's pretrained weights, the retrieved
+context and the attack fixed. That is the comparison this thesis makes. The
+attack family, the matched-pair design and the attributable outcome measure
+(\cref{sec:metrics}) are all chosen to make it.

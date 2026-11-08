@@ -1,0 +1,43 @@
+\chapter{Conclusion and Future Work}
+\label{ch:conclusion}
+
+\section{Conclusion}
+
+This thesis asked whether alignment training changes how easily a RAG system
+can be made to stop answering. Across 13 attacks, four matched model pairs and
+two corpora, the answer is yes, consistently, and in a specific direction:
+\begin{itemize}
+  \item The aligned model is the more vulnerable side in every true
+    base-versus-aligned run.
+  \item With prompt wording held fixed, the training effect is $+0.134$ on the
+    clean refusal floor and $+0.204$ on attack success.
+  \item The mechanism is context-faithfulness, not safety.
+  \item Reasoning distillation reverses it.
+  \item The difference is in the kind of failure, not only its size: aligned
+    models fail visibly, by refusing, and base models fail silently, by
+    answering wrongly.
+\end{itemize}
+A near-duplicate cluster filter removes the templated attacks at no clean cost.
+A cross-encoder reranker, by contrast, makes two of them about twice as
+effective.
+
+\section{Future work}
+
+\begin{itemize}
+  \item \textbf{Adaptive attackers.} A2 already evades the cluster filter by
+    paraphrasing. A paraphrase-diversified variant of every attack would test
+    how far that generalises, and a paraphrase-robust filter is the natural
+    response.
+  \item \textbf{Prompt-matched replication.} Repeat the $2\times2$ of
+    \cref{sec:res-prompt} across pairs and attacks, to turn the $+0.159$
+    interaction into a replicated result.
+  \item \textbf{Why reasoning helps.} Characterise what reasoning distillation
+    changes about context deference, and whether it can be obtained without a
+    reasoning model.
+  \item \textbf{Scale.} Larger models, other embedders and retrievers, and
+    larger $k$.
+  \item \textbf{A faithful blocker replication} with an oracle capable of
+    following the instruction, and at the original search budget.
+  \item \textbf{A compute-exhaustion attack} that realises the HNSW worst case
+    \cite{indyk2023hnsw}, which none of the present attacks does.
+\end{itemize}

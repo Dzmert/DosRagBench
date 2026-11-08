@@ -1,0 +1,66 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Base",
+    "attack_category": "C3",
+    "num_queries": 1000,
+    "asr": 0.008,
+    "gds": 0.0105,
+    "asr_absolute": 0.011,
+    "gds_absolute": 0.014,
+    "baseline_denial_rate": 0.004,
+    "num_answerable": 996,
+    "lir_mean": 1.134,
+    "lir_median": 1.001,
+    "tor_mean": 1.318,
+    "tor_median": 1.0,
+    "cdr": 0.0982,
+    "retrieval_lir_mean": 1.033,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.646,
+    "gold_eviction_rate": 0.15,
+    "mean_adversarial_in_topk": 2.598,
+    "refusal_breakdown": {
+      "no_refusal": 989,
+      "generation_failure": 11
+    },
+    "severity_breakdown": {
+      "L0": 983,
+      "L3": 11,
+      "L2": 6
+    },
+    "mean_latency_s": 5.868,
+    "mean_output_tokens": 252.8
+  },
+  "aligned": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "C3",
+    "num_queries": 1000,
+    "asr": 0.0,
+    "gds": 0.0323,
+    "asr_absolute": 0.0,
+    "gds_absolute": 0.07,
+    "baseline_denial_rate": 0.003,
+    "num_answerable": 997,
+    "lir_mean": 1.137,
+    "lir_median": 1.004,
+    "tor_mean": 1.182,
+    "tor_median": 1.0,
+    "cdr": 0.0881,
+    "retrieval_lir_mean": 1.071,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.641,
+    "gold_eviction_rate": 0.157,
+    "mean_adversarial_in_topk": 2.579,
+    "refusal_breakdown": {
+      "no_refusal": 769,
+      "epistemic": 231
+    },
+    "severity_breakdown": {
+      "L0": 747,
+      "L1": 226,
+      "L2": 27
+    },
+    "mean_latency_s": 0.689,
+    "mean_output_tokens": 28.2
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "aligned": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "D2",
+    "num_queries": 1000,
+    "asr": 0.0478,
+    "gds": 0.0315,
+    "asr_absolute": 0.396,
+    "gds_absolute": 0.3975,
+    "baseline_denial_rate": 0.372,
+    "num_answerable": 628,
+    "has_gold": false,
+    "accuracy_baseline": 0.0,
+    "accuracy_attacked": 0.0,
+    "correctness_drop_rate": 0.0,
+    "lir_mean": 1.053,
+    "lir_median": 1.001,
+    "tor_mean": 1.069,
+    "tor_median": 1.0,
+    "cdr": 0.0445,
+    "retrieval_lir_mean": 0.938,
+    "gold_recall_baseline": 0.761,
+    "gold_recall_attacked": 0.727,
+    "gold_eviction_rate": 0.046,
+    "mean_adversarial_in_topk": 0.111,
+    "refusal_breakdown": {
+      "epistemic": 396,
+      "no_refusal": 604
+    },
+    "severity_breakdown": {
+      "L3": 396,
+      "L0": 601,
+      "L2": 3
+    },
+    "mean_latency_s": 0.683,
+    "mean_output_tokens": 29.4
+  }
+}

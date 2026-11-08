@@ -1,0 +1,276 @@
+\chapter{Methodology}
+\label{ch:method}
+
+\section{Threat model}
+\label{sec:threat}
+
+The attacker can insert passages into the document collection but cannot
+modify existing passages, the retriever, the model or the prompt. This is the
+standard corpus-poisoning assumption \cite{zou2025poisonedrag,zhong2023poisoning}.
+For most attacks the attacker also knows the query they target and which
+embedder the system uses, which is realistic for the small set of open
+embedders in common use. The attacker does \emph{not} need query access to the
+deployed system. The one exception is the optimised blocker baseline
+(\cref{sec:res-blocker}), which needs black-box access by design.
+
+The attacker's goal is \emph{availability}: the system should fail to give a
+useful answer to a legitimate query that it would otherwise have answered. A
+refusal, an empty or degenerate response, and a deflection all count as
+denials. A wrong answer does not count as a denial, which is why answer
+correctness is measured separately (\cref{sec:correctness}).
+
+\section{System under test}
+\label{sec:system}
+
+\Cref{tab:config} gives the fixed pipeline. Generation is greedy, so every run
+is deterministic given its inputs. Run-to-run variation is therefore confined
+to the retrieval study, where it was measured (\cref{sec:threats}).
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Fixed RAG configuration used in every run.}
+\label{tab:config}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Component & Setting \\
+\midrule
+Embedder  & \texttt{all-MiniLM-L6-v2}, 384 dimensions \cite{reimers2019sbert} \\
+Index     & FAISS HNSW, inner product; $M=16$, efConstruction 200, efSearch 50 \\
+Retrieval & top-$k = 5$ \\
+Decoding  & Greedy; 256 new tokens (2{,}048 for R1-Distill) \\
+Precision & 4-bit quantised weights, all eight models \cite{dettmers2023qlora} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Matched model pairs}
+
+Each pair shares pretrained weights and differs only in post-training
+(\cref{tab:pairs}). Three pairs are true base-versus-aligned contrasts. The
+fourth, \pair{llama-r1-8b}, contrasts two post-trained models: Llama-3.1-8B
+Instruct and DeepSeek-R1-Distill-Llama-8B, which is reasoning-distilled from
+the same base \cite{deepseek2025r1}. It measures a different thing, so it is
+reported separately throughout and never pooled with the other three.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Model pairs. Alignment level is an ordinal label: 0 base,
+1--2 instruction-tuned, 4 reasoning-distilled.}
+\label{tab:pairs}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Pair & ``Base'' side & ``Aligned'' side & Levels \\
+\midrule
+\pair{llama-3.1-8b} & Llama 3.1 8B & Llama 3.1 8B Instruct & $0 \to 2$ \\
+\pair{qwen-2.5-7b}  & Qwen 2.5 7B  & Qwen 2.5 7B Instruct  & $0 \to 2$ \\
+\pair{mistral-7b}   & Mistral 7B v0.3 & Mistral 7B Instruct v0.3 & $0 \to 1$ \\
+\pair{llama-r1-8b}  & Llama 3.1 8B Instruct & DeepSeek-R1-Distill-Llama-8B & $2 \to 4$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Prompts}
+\label{sec:prompts}
+
+Aligned models are prompted through their chat template, and base models with
+a plain completion prompt that includes two answered examples. The chat prompt
+also contains a \emph{refusal licence}: ``if the context doesn't contain the
+answer, say so briefly''. This default (\texttt{auto}) is what a deployer would
+naturally do, but it confounds training with wording. \Cref{sec:res-prompt}
+measures the confound directly with a $2 \times 2$ prompt-by-training ablation.
+Every \texttt{auto}-prompt contrast in this report is therefore an \emph{upper
+bound} on the alignment effect, and the prompt-matched figure is quoted
+alongside it.
+
+\section{Datasets}
+\label{sec:datasets}
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Corpora. HotpotQA was run and then withdrawn (\cref{sec:threats}).}
+\label{tab:datasets}
+\begin{tabular}{@{}lrrrl@{}}
+\toprule
+Corpus & Passages & Queries & Clean recall@5 & Status \\
+\midrule
+BEIR NQ \cite{kwiatkowski2019nq,thakur2021beir} & 501{,}000 & 1{,}000 & 0.760 & primary \\
+BEIR FiQA-2018 \cite{maia2018fiqa}               & 57{,}638  & 648     & 0.409 & replication \\
+\sout{BEIR HotpotQA} \cite{yang2018hotpotqa}     & 500{,}995 & 995     & ---   & withdrawn \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The NQ corpus is the 1{,}000 query-relevant (gold) passages plus 500{,}000
+filler passages sampled at random from the full 2.68M-passage BEIR corpus.
+They are sampled rather than taken as a prefix, because BEIR corpora are not
+randomly ordered and a prefix would bias the embedding neighbourhood that the
+retrieval-layer attacks operate in. FiQA is used whole. FiQA is financial
+opinion QA and not drawn from Wikipedia, so it tests whether results transfer
+across domain, corpus size and retrieval quality.
+
+Before a corpus was used, a screening script checked whether its multiple gold
+labels per query were \emph{redundant}, meaning each passage answers alone, or
+\emph{complementary}, meaning all are needed. NQ and FiQA are redundant.
+HotpotQA is complementary by construction, which is why it was withdrawn
+(\cref{sec:threats}).
+
+\section{Attack taxonomy}
+\label{sec:attacks}
+
+\Cref{tab:attacks} lists the 13 attacks. Full construction details are in
+\cref{app:attacks}. The families target different stages of the pipeline. A
+(semantic jamming) attacks the model's judgement through content. B (resource
+exhaustion) tries to exhaust context or generation. C (algorithmic complexity)
+manipulates retrieval geometry. D (chain-of-thought deadlocks) constructs
+evidence that cannot be reasoned to a conclusion. None of the 13
+uses gradients or query access to the target system. Passages are templated,
+and the C family selects them by embedding proximity using the public
+embedder.
+
+\begin{table}[ht]
+\centering
+\small
+\caption[Attack taxonomy]{Attack taxonomy. Docs = adversarial passages
+injected per query.}
+\label{tab:attacks}
+\begin{tabularx}{\textwidth}{@{}llrX@{}}
+\toprule
+ID & Name & Docs & Idea \\
+\midrule
+\multicolumn{4}{@{}l}{\emph{A~--- Semantic jamming}} \\
+A1 & Guardrail Triggering        & 5   & On-topic passage with a safety-trigger snippet appended (weapons, drugs, hacking) \\
+A2 & Contradiction Flooding      & 8   & Formal-register passages, three contradicting claim pairs each \\
+A3 & Authority Spoofing          & 3   & Passages marked \textsc{classified}, \textsc{confidential} or \textsc{restricted} \\
+\multicolumn{4}{@{}l}{\emph{B~--- Resource exhaustion}} \\
+B1 & Context Window Saturation   & 5   & $\sim$1{,}200-word padded passages that flood the context \\
+B2 & Generation Loop Induction   & 5   & Stacked recursive, self-referential blocks \\
+B3 & Multi-Retrieval Amplification & 10 & Passages carrying follow-up query hooks \\
+\multicolumn{4}{@{}l}{\emph{C~--- Algorithmic complexity (retrieval layer)}} \\
+C1 & Embedding Space Clustering  & 200 & Templated passages packed within a tight radius of the query embedding \\
+C2 & Index Pollution             & 200 & Near-duplicate copies ($\times$5) with small embedding perturbations \\
+C3 & Adversarial Embedding Perturbation & 10 & Zero-width and homoglyph token perturbations \\
+\multicolumn{4}{@{}l}{\emph{D~--- Chain-of-thought deadlocks}} \\
+D1 & Logical Contradiction Traps & 5   & Formally contradictory deductive arguments \\
+D2 & Circular Reference Chains   & 6   & Three-passage citation loops, A$\to$B$\to$C$\to$A \\
+D3 & Epistemic Uncertainty Amplification & 5 & Stacked contestedness and hedge markers \\
+D4 & Infinite Qualification Traps & 5  & The answer behind a six-deep chain of prerequisites \\
+\midrule
+RAND & Random injection (control) & 200 & C1's budget without the clustering \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Outcome measures}
+\label{sec:metrics}
+
+Each run poses every query twice, once with the clean collection and once with
+the attack's passages added. Each response is classified as a denial or an
+answer (\cref{sec:classifier}).
+
+\paragraph{Clean refusal floor.} The fraction of queries denied with no attack
+present. It is a property of the model and prompt, not of the attack.
+
+\paragraph{Attributable attack success rate.} Let $Q_{\text{ans}}$ be the queries
+a side answered on the clean run. Then
+\begin{equation}
+  \text{ASR} \;=\; \frac{\lvert\{\,q \in Q_{\text{ans}} : q \text{ denied under attack}\,\}\rvert}{\lvert Q_{\text{ans}}\rvert}.
+  \label{eq:asr}
+\end{equation}
+Conditioning on clean-answerable queries removes the refusal floor from the
+numerator, so ASR counts only denials the attack caused. The cost is that the
+denominator differs between sides and is self-selected, so it is always
+reported (\cref{sec:threats}).
+
+\paragraph{Risk difference.} $\text{RD} = \text{ASR}_{\text{aligned}} -
+\text{ASR}_{\text{base}}$. Positive values mean the aligned model is more
+vulnerable.
+
+\section{Statistical protocol}
+\label{sec:stats}
+
+A run is classified by two tests, and the verdict needs both.
+\begin{enumerate}
+  \item \textbf{Fisher's exact test}, aligned against base, on the attacked denial
+    counts. This asks whether the two models differ.
+  \item \textbf{McNemar's exact test} \cite{mcnemar1947} on the aligned side,
+    pairing each query's clean and attacked outcome. Let $c$ be queries the
+    attack broke and $b$ queries it fixed. This asks whether the
+    \emph{attack} is responsible, as opposed to a pre-existing floor.
+\end{enumerate}
+Fisher $p$-values are corrected with Benjamini--Hochberg
+\cite{benjamini1995fdr} across all runs on a corpus. NQ and FiQA are separate
+pools. The verdicts are:
+
+\begin{description}[style=nextline,leftmargin=3.2cm]
+  \item[Genuine paradox] Fisher significant after FDR, aligned more
+    vulnerable, \emph{and} McNemar significant with $c > b$.
+  \item[Floor artefact] Fisher significant, McNemar not. The models differ, but
+    the attack is not what separates them.
+  \item[Protective] Fisher significant, aligned \emph{less} vulnerable.
+  \item[Not significant] Fisher not significant.
+\end{description}
+
+The floor-artefact category exists because an aligned model with a 35\%
+refusal floor will out-refuse its base model under \emph{any} condition. That
+is not evidence about the attack.
+
+\section{Measurement instrument: the refusal classifier}
+\label{sec:classifier}
+
+Every denial number in this thesis comes from a rule-based classifier that
+labels each response as an answer or one of five refusal types (epistemic,
+explicit safety, unspecified, generation failure, and so on). Because it is the
+instrument, it was validated before any result was reported.
+\begin{itemize}
+  \item 300 responses were hand-labelled, stratified across corpus, pair, side
+    and condition, and deliberately weighted towards hard boundary cases.
+  \item A dev/holdout split kept the rows used to diagnose classifier errors
+    apart from those used to score it.
+  \item A peer independent of the project labelled 50 rows from the written
+    codebook without seeing the classifier's output.
+\end{itemize}
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Refusal classifier validation. Cohen's $\kappa$ \cite{cohen1960kappa}.}
+\label{tab:classifier}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Comparison & $n$ & Agreement & $\kappa$ \\
+\midrule
+Classifier vs.\ primary labeller, holdout & 150 & 94.7\% & 0.884 \\
+Classifier vs.\ independent annotator     & 50  & 88.0\% & 0.725 \\
+Human vs.\ human (primary vs.\ independent) & 50 & 86.0\% & 0.674 \\
+Human test--retest (primary labeller)     & 50  & 90.0\% & 0.774 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The classifier agrees with the independent annotator better than the two humans
+agree with each other. Reweighted to the population frequency of each response
+class, its error rate over the whole corpus is 2.05\%. Its residual errors are
+mostly false negatives (9.9\% against 1.1\% false positives), so it
+\emph{under}-counts refusals and the measured alignment gap is, if anything,
+conservative.
+
+The 0.884 figure carries some circularity. The same person wrote the
+classifier's patterns, produced the primary labels and adjudicated disputes. The
+0.725 against the independent annotator is therefore the figure to quote where
+one conservative number is needed. \Cref{app:classifier} lists every
+disagreement with the independent annotator.
+
+\section{Answer correctness}
+\label{sec:correctness}
+
+BEIR queries carry no short answers, so denial alone cannot say whether an
+answer was \emph{right}. To check this, 656 of the 1{,}000 NQ queries were
+joined, on exact normalised question text, to their NQ-open short answers
+\cite{lee2019latent}. Each response is then scored correct (a gold alias
+appears), wrong, or refused. Two matchers are reported. The strict matcher
+requires an exact alias token sequence, and the lenient one requires $\geq$50\%
+of an alias's content tokens. Every conclusion in \cref{sec:res-correctness}
+holds under both.

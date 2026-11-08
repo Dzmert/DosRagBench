@@ -1,2 +1,30 @@
 .venv/
 .env
+__pycache__/
+*.py[co]
+
+# Local session notes, not part of the repo
+HANDOFF.md
+
+# Thesis working material — for me and my supervisor, not for a public repo.
+# These stay on disk and are still edited normally; they are just not tracked.
+# NOTE: earlier revisions of the slides and outline were already pushed, so
+# untracking them here stops future exposure but does not scrub git history.
+docs/thesis_meeting_slides.md
+docs/thesis_report_outline.md
+docs/demo_runbook.md
+docs/related_work.md
+docs/eight_day_plan.md
+
+# Claude Code local session state
+.claude/
+
+# PBS job logs from Katana
+DosRagBench.o*
+DosRagBench.e*
+
+# HotpotQA corpus is 167 MB and only LFS covers data/knowledge_base.json
+# (see .gitattributes). Regenerate it with `prepare_data.py --dataset hotpotqa`
+# instead of committing it.
+data_hotpotqa/
+.cache/

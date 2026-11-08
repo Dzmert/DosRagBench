@@ -1,0 +1,67 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Instruct",
+    "attack_category": "D1",
+    "num_queries": 1000,
+    "asr": 0.013,
+    "gds": 0.0615,
+    "asr_absolute": 0.015,
+    "gds_absolute": 0.1108,
+    "baseline_denial_rate": 0.003,
+    "num_answerable": 997,
+    "lir_mean": 1.264,
+    "lir_median": 1.001,
+    "tor_mean": 1.308,
+    "tor_median": 1.0,
+    "cdr": 0.1547,
+    "retrieval_lir_mean": 1.037,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.721,
+    "gold_eviction_rate": 0.051,
+    "mean_adversarial_in_topk": 1.16,
+    "refusal_breakdown": {
+      "epistemic": 311,
+      "no_refusal": 674,
+      "generation_failure": 2,
+      "explicit_safety": 13
+    },
+    "severity_breakdown": {
+      "L1": 279,
+      "L0": 654,
+      "L2": 52,
+      "L3": 15
+    },
+    "mean_latency_s": 0.752,
+    "mean_output_tokens": 31.1
+  },
+  "aligned": {
+    "model_name": "DeepSeek R1 Distill Llama 8B",
+    "attack_category": "D1",
+    "num_queries": 1000,
+    "asr": 0.0,
+    "gds": 0.01,
+    "asr_absolute": 0.0,
+    "gds_absolute": 0.01,
+    "baseline_denial_rate": 0.0,
+    "num_answerable": 1000,
+    "lir_mean": 1.118,
+    "lir_median": 0.997,
+    "tor_mean": 1.119,
+    "tor_median": 1.0,
+    "cdr": 0.0609,
+    "retrieval_lir_mean": 1.064,
+    "gold_recall_baseline": 0.76,
+    "gold_recall_attacked": 0.713,
+    "gold_eviction_rate": 0.062,
+    "mean_adversarial_in_topk": 1.161,
+    "refusal_breakdown": {
+      "no_refusal": 1000
+    },
+    "severity_breakdown": {
+      "L0": 980,
+      "L2": 20
+    },
+    "mean_latency_s": 12.21,
+    "mean_output_tokens": 535.7
+  }
+}

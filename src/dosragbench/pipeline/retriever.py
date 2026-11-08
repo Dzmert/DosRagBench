@@ -20,7 +20,7 @@ from __future__ import annotations
 import logging
 import time
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Sequence, Union
 
 import faiss
 import numpy as np
@@ -68,6 +68,32 @@ class Document:
         return f"Document({marker} {self.doc_id}: {self.text[:60]}...)"
 
 
+def score_gold(
+    documents: list["Document"],
+    gold_doc_id: Optional[Union[str, Sequence[str]]],
+) -> tuple[bool, int, list[int]]:
+    """Locate the required gold passage(s) in a ranked result list.
+
+    Returns (all_present, binding_rank, per_passage_ranks). A sequence of ids means
+    the query needs ALL of them -- HotpotQA is 2-hop, so retrieving one passage
+    leaves the question unanswerable and must not count as gold-present. The
+    binding rank is the worst of the required ranks, since the query only becomes
+    answerable once the last one arrives; it is -1 if any is missing.
+
+    Pulled out of `retrieve` so the semantics are unit-testable without an index.
+    """
+    if gold_doc_id is None:
+        return False, -1, []
+    required = [gold_doc_id] if isinstance(gold_doc_id, str) else list(gold_doc_id)
+    if not required:
+        return False, -1, []
+    position = {d.doc_id: rank for rank, d in enumerate(documents)}
+    ranks = [position.get(g, -1) for g in required]
+    if all(r >= 0 for r in ranks):
+        return True, max(ranks), ranks
+    return False, -1, ranks
+
+
 @dataclass
 class RetrievalResult:
     """Output of a retrieval, with timing info."""
@@ -77,8 +103,16 @@ class RetrievalResult:
     scores: list[float]
     latency_s: float
     adversarial_in_topk: int = 0
+    # True only when EVERY required gold passage is in top-k. For single-gold
+    # corpora (NQ) that is the old meaning unchanged. For complementary-evidence
+    # corpora (HotpotQA, where a query needs both hops) partial retrieval is not
+    # answerable, so it must not count as gold-present.
     gold_in_topk: bool = False
-    gold_rank: int = -1  # position of gold doc in results, -1 if absent
+    # Rank at which the query becomes answerable: the WORST rank among the
+    # required passages, since the last one to arrive is the binding constraint.
+    # -1 if any required passage is absent. Equals the gold's rank for single-gold.
+    gold_rank: int = -1
+    gold_ranks: list[int] = field(default_factory=list)  # per required passage, in order
 
 
 class HNSWRetriever:
@@ -118,6 +152,11 @@ class HNSWRetriever:
         # Ephemeral adversarial store (swapped per query)
         self._adv_docs: list[Document] = []
         self._adv_embeddings: Optional[np.ndarray] = None
+
+        # Retrieval defences (see pipeline/defence.py). Empty = undefended, and the
+        # retrieval path is then exactly the one every recorded run used.
+        self.defences: list = []
+        self.defence_pool_k: int = 50
 
     # ─── Index construction (expensive, done once) ───────────────────
 
@@ -179,13 +218,18 @@ class HNSWRetriever:
         self,
         query: str,
         top_k: int = 5,
-        gold_doc_id: Optional[str] = None,
+        gold_doc_id: Optional[Union[str, Sequence[str]]] = None,
     ) -> RetrievalResult:
         """Retrieve top-k from clean index merged with any adversarial docs.
 
         Latency measured covers the clean HNSW search plus (if present) the
         adversarial brute-force search and merge. When no adversarial docs are
         set, this is a pure clean-index search = the baseline measurement.
+
+        `gold_doc_id` accepts a single id or a sequence of them. A sequence means
+        the query needs ALL of those passages to be answerable (multi-hop), so
+        `gold_in_topk` is True only when every one is retrieved. Passing a single
+        id behaves exactly as before.
         """
         if self.index is None:
             raise RuntimeError("Index not built. Call build_index() or load_index().")
@@ -194,23 +238,29 @@ class HNSWRetriever:
 
         start = time.perf_counter()
 
+        # A defence sees a deeper pool than top_k, so search deeper when one is set.
+        search_k = max(top_k, self.defence_pool_k) if self.defences else top_k
+
         # Search the clean index
-        clean_scores, clean_idx = self.index.search(query_emb, top_k)
+        clean_scores, clean_idx = self.index.search(query_emb, search_k)
         candidates = []
         for score, idx in zip(clean_scores[0], clean_idx[0]):
             if idx < 0:
                 continue
-            candidates.append((float(score), self.documents[idx]))
+            candidates.append((float(score), self.documents[idx], int(idx)))
 
         # Search adversarial docs (brute force; there are few)
         if self._adv_embeddings is not None and len(self._adv_docs) > 0:
             adv_scores = (self._adv_embeddings @ query_emb[0]).astype(float)
-            for score, doc in zip(adv_scores, self._adv_docs):
-                candidates.append((float(score), doc))
+            for i, (score, doc) in enumerate(zip(adv_scores, self._adv_docs)):
+                candidates.append((float(score), doc, -1 - i))  # negative = adversarial row
 
         # Merge: highest inner-product score wins, take top_k
         candidates.sort(key=lambda x: x[0], reverse=True)
-        top = candidates[:top_k]
+        if self.defences:
+            top = self._apply_defences(query, candidates[:search_k])[:top_k]
+        else:
+            top = [(s, d) for s, d, _ in candidates[:top_k]]
 
         latency_s = time.perf_counter() - start
 
@@ -219,14 +269,7 @@ class HNSWRetriever:
 
         # Analytics for Category C displacement metrics
         adv_in_topk = sum(1 for d in documents if d.is_adversarial)
-        gold_in_topk = False
-        gold_rank = -1
-        if gold_doc_id is not None:
-            for rank, d in enumerate(documents):
-                if d.doc_id == gold_doc_id:
-                    gold_in_topk = True
-                    gold_rank = rank
-                    break
+        gold_in_topk, gold_rank, gold_ranks = score_gold(documents, gold_doc_id)
 
         return RetrievalResult(
             query=query,
@@ -236,7 +279,25 @@ class HNSWRetriever:
             adversarial_in_topk=adv_in_topk,
             gold_in_topk=gold_in_topk,
             gold_rank=gold_rank,
+            gold_ranks=gold_ranks,
         )
+
+    def _apply_defences(self, query: str, pool: list[tuple]) -> list[tuple[float, Document]]:
+        from dosragbench.pipeline.defence import Candidate
+
+        need_emb = any(d.needs_embeddings for d in self.defences)
+        cands = []
+        for score, doc, row in pool:
+            emb = None
+            if need_emb:
+                # HNSWFlat keeps the raw vectors, so clean embeddings are recoverable
+                # without re-encoding; adversarial ones are already in memory.
+                emb = (self.index.reconstruct(row) if row >= 0
+                       else self._adv_embeddings[-1 - row])
+            cands.append(Candidate(score=score, doc=doc, embedding=emb))
+        for defence in self.defences:
+            cands = defence.apply(query, cands)
+        return [(c.score, c.doc) for c in cands]
 
     # ─── Helpers ─────────────────────────────────────────────────────
 

@@ -1,0 +1,38 @@
+{
+  "base": {
+    "model_name": "Llama 3.1 8B Base",
+    "attack_category": "D2",
+    "num_queries": 1000,
+    "asr": 0.001,
+    "gds": 0.0015,
+    "asr_absolute": 0.004,
+    "gds_absolute": 0.005,
+    "baseline_denial_rate": 0.004,
+    "num_answerable": 996,
+    "has_gold": false,
+    "accuracy_baseline": 0.0,
+    "accuracy_attacked": 0.0,
+    "correctness_drop_rate": 0.0,
+    "lir_mean": 1.093,
+    "lir_median": 1.001,
+    "tor_mean": 1.264,
+    "tor_median": 1.0,
+    "cdr": 0.0743,
+    "retrieval_lir_mean": 0.953,
+    "gold_recall_baseline": 0.761,
+    "gold_recall_attacked": 0.727,
+    "gold_eviction_rate": 0.046,
+    "mean_adversarial_in_topk": 0.111,
+    "refusal_breakdown": {
+      "no_refusal": 996,
+      "generation_failure": 4
+    },
+    "severity_breakdown": {
+      "L0": 994,
+      "L3": 4,
+      "L2": 2
+    },
+    "mean_latency_s": 5.84,
+    "mean_output_tokens": 253.3
+  }
+}

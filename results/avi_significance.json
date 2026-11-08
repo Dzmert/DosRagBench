@@ -1,0 +1,1367 @@
+{
+  "params": {
+    "min_answerable": 100,
+    "alpha": 0.05
+  },
+  "counts": {
+    "kept": 50,
+    "paradox_direction": 39,
+    "genuine": 32,
+    "floor_artifact": 5,
+    "attack_independent": 0,
+    "protective": 11,
+    "not_significant": 2
+  },
+  "rows": [
+    {
+      "run": "llama-3.1-8b_A1",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "A1",
+      "base_broken": 1,
+      "base_n": 996,
+      "base_asr": 0.001004016064257028,
+      "base_ci": [
+        0.0001772554801238841,
+        0.005665129600983381
+      ],
+      "aligned_broken": 92,
+      "aligned_n": 629,
+      "aligned_asr": 0.14626391096979333,
+      "risk_diff": 0.14525989490553629,
+      "aligned_ci": [
+        0.12079597044836074,
+        0.17602633188942576
+      ],
+      "fisher_p": 9.117043074143857e-39,
+      "aligned_mcnemar_p": 2.9909603590125975e-05,
+      "aligned_mcnemar_c": 92,
+      "aligned_mcnemar_b": 43,
+      "fisher_q": 2.681483257101134e-38,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_A1",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "A1",
+      "base_broken": 94,
+      "base_n": 629,
+      "base_asr": 0.1494435612082671,
+      "base_ci": [
+        0.12371276267758106,
+        0.17943023806615793
+      ],
+      "aligned_broken": 59,
+      "aligned_n": 869,
+      "aligned_asr": 0.06789413118527042,
+      "risk_diff": -0.08154943002299668,
+      "aligned_ci": [
+        0.052998911374250154,
+        0.0865928295896435
+      ],
+      "fisher_p": 4.0398775173310103e-07,
+      "aligned_mcnemar_p": 0.06990057369494627,
+      "aligned_mcnemar_c": 59,
+      "aligned_mcnemar_b": 40,
+      "fisher_q": 4.5907699060579663e-07,
+      "verdict": "protective"
+    },
+    {
+      "run": "qwen-2.5-7b_A1",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "A1",
+      "base_broken": 5,
+      "base_n": 987,
+      "base_asr": 0.005065856129685917,
+      "base_ci": [
+        0.002165714017105391,
+        0.011803684113394807
+      ],
+      "aligned_broken": 66,
+      "aligned_n": 654,
+      "aligned_asr": 0.10091743119266056,
+      "risk_diff": 0.09585157506297463,
+      "aligned_ci": [
+        0.08011205311849923,
+        0.1263836868515027
+      ],
+      "fisher_p": 7.073535296560159e-22,
+      "aligned_mcnemar_p": 0.1353504098348154,
+      "aligned_mcnemar_c": 66,
+      "aligned_mcnemar_b": 49,
+      "fisher_q": 1.2631313029571713e-21,
+      "verdict": "floor artifact"
+    },
+    {
+      "run": "llama-3.1-8b_A2",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "A2",
+      "base_broken": 29,
+      "base_n": 996,
+      "base_asr": 0.029116465863453816,
+      "base_ci": [
+        0.020348140288767823,
+        0.04150312450607989
+      ],
+      "aligned_broken": 166,
+      "aligned_n": 629,
+      "aligned_asr": 0.26391096979332274,
+      "risk_diff": 0.23479450392986892,
+      "aligned_ci": [
+        0.23097463667307294,
+        0.29971350668495533
+      ],
+      "fisher_p": 4.318283997985817e-46,
+      "aligned_mcnemar_p": 1.7305050449776733e-30,
+      "aligned_mcnemar_c": 166,
+      "aligned_mcnemar_b": 19,
+      "fisher_q": 1.4394279993286058e-45,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_A2",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "A2",
+      "base_broken": 163,
+      "base_n": 629,
+      "base_asr": 0.2591414944356121,
+      "base_ci": [
+        0.2264343583920117,
+        0.2947727373570878
+      ],
+      "aligned_broken": 88,
+      "aligned_n": 869,
+      "aligned_asr": 0.10126582278481013,
+      "risk_diff": -0.15787567165080196,
+      "aligned_ci": [
+        0.08293019656569817,
+        0.1231111835780812
+      ],
+      "fisher_p": 1.529109967179442e-15,
+      "aligned_mcnemar_p": 1.668715688008364e-07,
+      "aligned_mcnemar_c": 88,
+      "aligned_mcnemar_b": 31,
+      "fisher_q": 2.184442810256346e-15,
+      "verdict": "protective"
+    },
+    {
+      "run": "mistral-7b_A2",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "A2",
+      "base_broken": 1,
+      "base_n": 999,
+      "base_asr": 0.001001001001001001,
+      "base_ci": [
+        0.00017672311552662315,
+        0.005648184471915888
+      ],
+      "aligned_broken": 173,
+      "aligned_n": 706,
+      "aligned_asr": 0.24504249291784702,
+      "risk_diff": 0.24404149191684602,
+      "aligned_ci": [
+        0.21475124178015254,
+        0.27809325817737734
+      ],
+      "fisher_p": 5.3808228010203044e-71,
+      "aligned_mcnemar_p": 1.2823436375046921e-23,
+      "aligned_mcnemar_c": 173,
+      "aligned_mcnemar_b": 34,
+      "fisher_q": 3.8434448578716465e-70,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "qwen-2.5-7b_A2",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "A2",
+      "base_broken": 24,
+      "base_n": 987,
+      "base_asr": 0.0243161094224924,
+      "base_ci": [
+        0.016393974528993854,
+        0.03592666502529447
+      ],
+      "aligned_broken": 144,
+      "aligned_n": 654,
+      "aligned_asr": 0.22018348623853212,
+      "risk_diff": 0.19586737681603972,
+      "aligned_ci": [
+        0.19011059156216187,
+        0.25352435255473604
+      ],
+      "fisher_p": 4.6206183596970805e-38,
+      "aligned_mcnemar_p": 1.5983201845420649e-21,
+      "aligned_mcnemar_c": 144,
+      "aligned_mcnemar_b": 25,
+      "fisher_q": 1.2835050999158556e-37,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_A3",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "A3",
+      "base_broken": 21,
+      "base_n": 996,
+      "base_asr": 0.02108433734939759,
+      "base_ci": [
+        0.013831225476643066,
+        0.03201750225713594
+      ],
+      "aligned_broken": 70,
+      "aligned_n": 629,
+      "aligned_asr": 0.11128775834658187,
+      "risk_diff": 0.09020342099718429,
+      "aligned_ci": [
+        0.08903176988485274,
+        0.13826284998745642
+      ],
+      "fisher_p": 3.0393744147678534e-14,
+      "aligned_mcnemar_p": 2.0783545041774735e-08,
+      "aligned_mcnemar_c": 70,
+      "aligned_mcnemar_b": 18,
+      "fisher_q": 4.2213533538442406e-14,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_A3",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "A3",
+      "base_broken": 88,
+      "base_n": 629,
+      "base_asr": 0.13990461049284578,
+      "base_ci": [
+        0.11497569481137923,
+        0.1692052107145023
+      ],
+      "aligned_broken": 42,
+      "aligned_n": 869,
+      "aligned_asr": 0.04833141542002301,
+      "risk_diff": -0.09157319507282277,
+      "aligned_ci": [
+        0.03595324889005035,
+        0.06468525531322065
+      ],
+      "fisher_p": 7.398336880642623e-10,
+      "aligned_mcnemar_p": 0.1945051658673991,
+      "aligned_mcnemar_c": 42,
+      "aligned_mcnemar_b": 30,
+      "fisher_q": 9.022362049564174e-10,
+      "verdict": "protective"
+    },
+    {
+      "run": "mistral-7b_A3",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "A3",
+      "base_broken": 44,
+      "base_n": 999,
+      "base_asr": 0.044044044044044044,
+      "base_ci": [
+        0.03297134819102891,
+        0.058609886324678326
+      ],
+      "aligned_broken": 114,
+      "aligned_n": 706,
+      "aligned_asr": 0.16147308781869688,
+      "risk_diff": 0.11742904377465282,
+      "aligned_ci": [
+        0.13617393996876181,
+        0.19043625719706947
+      ],
+      "fisher_p": 3.9984614121091883e-16,
+      "aligned_mcnemar_p": 1.090507026135235e-15,
+      "aligned_mcnemar_c": 114,
+      "aligned_mcnemar_b": 23,
+      "fisher_q": 6.247595956420607e-16,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "qwen-2.5-7b_A3",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "A3",
+      "base_broken": 11,
+      "base_n": 987,
+      "base_asr": 0.011144883485309016,
+      "base_ci": [
+        0.006234362851883975,
+        0.01984595362297037
+      ],
+      "aligned_broken": 49,
+      "aligned_n": 654,
+      "aligned_asr": 0.07492354740061162,
+      "risk_diff": 0.0637786639153026,
+      "aligned_ci": [
+        0.057135192792408446,
+        0.09767636165839819
+      ],
+      "fisher_p": 1.85710084955479e-11,
+      "aligned_mcnemar_p": 0.04216544399495113,
+      "aligned_mcnemar_c": 49,
+      "aligned_mcnemar_b": 30,
+      "fisher_q": 2.3808985250702438e-11,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_B1",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "B1",
+      "base_broken": 1,
+      "base_n": 995,
+      "base_asr": 0.0010050251256281408,
+      "base_ci": [
+        0.0001774336484646629,
+        0.005670800594218248
+      ],
+      "aligned_broken": 25,
+      "aligned_n": 630,
+      "aligned_asr": 0.03968253968253968,
+      "risk_diff": 0.03867751455691154,
+      "aligned_ci": [
+        0.027021148690229074,
+        0.05792352962494407
+      ],
+      "fisher_p": 6.337791681645349e-10,
+      "aligned_mcnemar_p": 0.10812902140605732,
+      "aligned_mcnemar_c": 25,
+      "aligned_mcnemar_b": 14,
+      "fisher_q": 7.922239602056687e-10,
+      "verdict": "floor artifact"
+    },
+    {
+      "run": "llama-r1-8b_B1",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "B1",
+      "base_broken": 26,
+      "base_n": 631,
+      "base_asr": 0.04120443740095087,
+      "base_ci": [
+        0.028271911031674233,
+        0.0596893555908172
+      ],
+      "aligned_broken": 51,
+      "aligned_n": 862,
+      "aligned_asr": 0.05916473317865429,
+      "risk_diff": 0.017960295777703417,
+      "aligned_ci": [
+        0.0452842358507127,
+        0.07695691782011799
+      ],
+      "fisher_p": 0.12542002787943013,
+      "aligned_mcnemar_p": 0.7709189909371141,
+      "aligned_mcnemar_c": 51,
+      "aligned_mcnemar_b": 55,
+      "fisher_q": 0.12797962028513277,
+      "verdict": "n.s."
+    },
+    {
+      "run": "mistral-7b_B1",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "B1",
+      "base_broken": 2,
+      "base_n": 999,
+      "base_asr": 0.002002002002002002,
+      "base_ci": [
+        0.0005491929526599986,
+        0.007270047819160762
+      ],
+      "aligned_broken": 24,
+      "aligned_n": 706,
+      "aligned_asr": 0.0339943342776204,
+      "risk_diff": 0.0319923322756184,
+      "aligned_ci": [
+        0.0229488480939593,
+        0.05008359905063691
+      ],
+      "fisher_p": 6.198220387874266e-08,
+      "aligned_mcnemar_p": 0.26818725105476915,
+      "aligned_mcnemar_c": 24,
+      "aligned_mcnemar_b": 16,
+      "fisher_q": 7.207233009156122e-08,
+      "verdict": "floor artifact"
+    },
+    {
+      "run": "qwen-2.5-7b_B1",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "B1",
+      "base_broken": 0,
+      "base_n": 987,
+      "base_asr": 0.0,
+      "base_ci": [
+        2.168404344971009e-19,
+        0.0038769661768717463
+      ],
+      "aligned_broken": 27,
+      "aligned_n": 654,
+      "aligned_asr": 0.04128440366972477,
+      "risk_diff": 0.04128440366972477,
+      "aligned_ci": [
+        0.028526026360229405,
+        0.05940011153632454
+      ],
+      "fisher_p": 1.1742657732831271e-11,
+      "aligned_mcnemar_p": 0.023702702470473014,
+      "aligned_mcnemar_c": 27,
+      "aligned_mcnemar_b": 12,
+      "fisher_q": 1.5450865437935884e-11,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_B2",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "B2",
+      "base_broken": 3,
+      "base_n": 996,
+      "base_asr": 0.0030120481927710845,
+      "base_ci": [
+        0.0010248854859196918,
+        0.008818133860454748
+      ],
+      "aligned_broken": 75,
+      "aligned_n": 629,
+      "aligned_asr": 0.1192368839427663,
+      "risk_diff": 0.11622483574999522,
+      "aligned_ci": [
+        0.09619411799596328,
+        0.1469022478912271
+      ],
+      "fisher_p": 1.4312388703145864e-28,
+      "aligned_mcnemar_p": 4.027763000797049e-06,
+      "aligned_mcnemar_c": 75,
+      "aligned_mcnemar_b": 28,
+      "fisher_q": 2.8624777406291727e-28,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_B2",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "B2",
+      "base_broken": 68,
+      "base_n": 629,
+      "base_asr": 0.10810810810810811,
+      "base_ci": [
+        0.08617750166815351,
+        0.13479641979820323
+      ],
+      "aligned_broken": 58,
+      "aligned_n": 869,
+      "aligned_asr": 0.0667433831990794,
+      "risk_diff": -0.04136472490902872,
+      "aligned_ci": [
+        0.051983620200504004,
+        0.08531675389511773
+      ],
+      "fisher_p": 0.006044566886705498,
+      "aligned_mcnemar_p": 0.0003783427631607787,
+      "aligned_mcnemar_c": 58,
+      "aligned_mcnemar_b": 25,
+      "fisher_q": 0.006296423840318227,
+      "verdict": "protective"
+    },
+    {
+      "run": "mistral-7b_B2",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "B2",
+      "base_broken": 4,
+      "base_n": 999,
+      "base_asr": 0.004004004004004004,
+      "base_ci": [
+        0.0015581473563639082,
+        0.010249759784213351
+      ],
+      "aligned_broken": 65,
+      "aligned_n": 706,
+      "aligned_asr": 0.09206798866855524,
+      "risk_diff": 0.08806398466455123,
+      "aligned_ci": [
+        0.07289227276405744,
+        0.11565892716799031
+      ],
+      "fisher_p": 2.6194691521637092e-21,
+      "aligned_mcnemar_p": 0.03294666029982693,
+      "aligned_mcnemar_c": 65,
+      "aligned_mcnemar_b": 42,
+      "fisher_q": 4.224950245425337e-21,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "qwen-2.5-7b_B2",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "B2",
+      "base_broken": 2,
+      "base_n": 987,
+      "base_asr": 0.002026342451874367,
+      "base_ci": [
+        0.0005558721860871659,
+        0.007358066772235963
+      ],
+      "aligned_broken": 72,
+      "aligned_n": 654,
+      "aligned_asr": 0.11009174311926606,
+      "risk_diff": 0.10806540066739169,
+      "aligned_ci": [
+        0.08834178942084905,
+        0.1363954277912218
+      ],
+      "fisher_p": 1.5604064211376325e-27,
+      "aligned_mcnemar_p": 4.757482385242055e-07,
+      "aligned_mcnemar_c": 72,
+      "aligned_mcnemar_b": 23,
+      "fisher_q": 3.000781579110832e-27,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_B3",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "B3",
+      "base_broken": 3,
+      "base_n": 996,
+      "base_asr": 0.0030120481927710845,
+      "base_ci": [
+        0.0010248854859196918,
+        0.008818133860454748
+      ],
+      "aligned_broken": 227,
+      "aligned_n": 629,
+      "aligned_asr": 0.36089030206677264,
+      "risk_diff": 0.3578782538740016,
+      "aligned_ci": [
+        0.32430759439608725,
+        0.3991618503434916
+      ],
+      "fisher_p": 1.4479038433463192e-101,
+      "aligned_mcnemar_p": 1.290815188200735e-45,
+      "aligned_mcnemar_c": 227,
+      "aligned_mcnemar_b": 20,
+      "fisher_q": 1.4479038433463192e-100,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_B3",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "B3",
+      "base_broken": 231,
+      "base_n": 629,
+      "base_asr": 0.3672496025437202,
+      "base_ci": [
+        0.33048920499030865,
+        0.4056216365611752
+      ],
+      "aligned_broken": 101,
+      "aligned_n": 869,
+      "aligned_asr": 0.11622554660529344,
+      "risk_diff": -0.25102405593842675,
+      "aligned_ci": [
+        0.09658569968444547,
+        0.13924344974686886
+      ],
+      "fisher_p": 1.7131226241811482e-30,
+      "aligned_mcnemar_p": 1.6065634901570444e-07,
+      "aligned_mcnemar_c": 101,
+      "aligned_mcnemar_b": 39,
+      "fisher_q": 3.569005467044058e-30,
+      "verdict": "protective"
+    },
+    {
+      "run": "mistral-7b_B3",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "B3",
+      "base_broken": 0,
+      "base_n": 999,
+      "base_asr": 0.0,
+      "base_ci": [
+        2.168404344971009e-19,
+        0.0038305744030642614
+      ],
+      "aligned_broken": 249,
+      "aligned_n": 706,
+      "aligned_asr": 0.3526912181303116,
+      "risk_diff": 0.3526912181303116,
+      "aligned_ci": [
+        0.31832976432568194,
+        0.38864705787200193
+      ],
+      "fisher_p": 1.6122869834834469e-109,
+      "aligned_mcnemar_p": 5.976097981374805e-41,
+      "aligned_mcnemar_c": 249,
+      "aligned_mcnemar_b": 35,
+      "fisher_q": 2.0153587293543088e-108,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "qwen-2.5-7b_B3",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "B3",
+      "base_broken": 27,
+      "base_n": 987,
+      "base_asr": 0.02735562310030395,
+      "base_ci": [
+        0.018867518322127637,
+        0.03950858040433776
+      ],
+      "aligned_broken": 221,
+      "aligned_n": 654,
+      "aligned_asr": 0.3379204892966361,
+      "risk_diff": 0.31056486619633217,
+      "aligned_ci": [
+        0.30270943020300417,
+        0.37502447185377824
+      ],
+      "fisher_p": 6.162195831251709e-69,
+      "aligned_mcnemar_p": 4.361896349609052e-41,
+      "aligned_mcnemar_c": 221,
+      "aligned_mcnemar_b": 24,
+      "fisher_q": 3.423442128473172e-68,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_C1",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "C1",
+      "base_broken": 6,
+      "base_n": 996,
+      "base_asr": 0.006024096385542169,
+      "base_ci": [
+        0.002763735415955376,
+        0.013080235328319824
+      ],
+      "aligned_broken": 127,
+      "aligned_n": 629,
+      "aligned_asr": 0.20190779014308427,
+      "risk_diff": 0.1958836937575421,
+      "aligned_ci": [
+        0.17238950177085596,
+        0.23504502267109897
+      ],
+      "fisher_p": 4.8982817164146196e-48,
+      "aligned_mcnemar_p": 5.705538550403241e-27,
+      "aligned_mcnemar_c": 127,
+      "aligned_mcnemar_b": 10,
+      "fisher_q": 1.7493863272909354e-47,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_C1",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "C1",
+      "base_broken": 126,
+      "base_n": 629,
+      "base_asr": 0.20031796502384738,
+      "base_ci": [
+        0.17090097451817693,
+        0.23337320072080175
+      ],
+      "aligned_broken": 103,
+      "aligned_n": 869,
+      "aligned_asr": 0.11852704257767549,
+      "risk_diff": -0.0817909224461719,
+      "aligned_ci": [
+        0.09869691867011877,
+        0.14171496449773943
+      ],
+      "fisher_p": 1.6834896724207054e-05,
+      "aligned_mcnemar_p": 1.1701818604131554e-14,
+      "aligned_mcnemar_c": 103,
+      "aligned_mcnemar_b": 20,
+      "fisher_q": 1.8705440804674505e-05,
+      "verdict": "protective"
+    },
+    {
+      "run": "qwen-2.5-7b_C1",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "C1",
+      "base_broken": 16,
+      "base_n": 988,
+      "base_asr": 0.016194331983805668,
+      "base_ci": [
+        0.00999243507389431,
+        0.02614384306177432
+      ],
+      "aligned_broken": 124,
+      "aligned_n": 655,
+      "aligned_asr": 0.18931297709923664,
+      "risk_diff": 0.17311864511543096,
+      "aligned_ci": [
+        0.16115568179040338,
+        0.22109327271922372
+      ],
+      "fisher_p": 6.160407939699521e-36,
+      "aligned_mcnemar_p": 4.441418890367048e-20,
+      "aligned_mcnemar_c": 124,
+      "aligned_mcnemar_b": 19,
+      "fisher_q": 1.4000927135680732e-35,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_C2",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "C2",
+      "base_broken": 22,
+      "base_n": 996,
+      "base_asr": 0.02208835341365462,
+      "base_ci": [
+        0.014631409701618279,
+        0.03321763516479431
+      ],
+      "aligned_broken": 185,
+      "aligned_n": 629,
+      "aligned_asr": 0.29411764705882354,
+      "risk_diff": 0.2720292936451689,
+      "aligned_ci": [
+        0.25984548125208856,
+        0.3308892969624883
+      ],
+      "fisher_p": 1.723220584448025e-59,
+      "aligned_mcnemar_p": 2.3991174612271882e-21,
+      "aligned_mcnemar_c": 185,
+      "aligned_mcnemar_b": 45,
+      "fisher_q": 7.180085768533438e-59,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_C2",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "C2",
+      "base_broken": 202,
+      "base_n": 632,
+      "base_asr": 0.31962025316455694,
+      "base_ci": [
+        0.2844471096003564,
+        0.35697293806022085
+      ],
+      "aligned_broken": 122,
+      "aligned_n": 855,
+      "aligned_asr": 0.14269005847953217,
+      "risk_diff": -0.17693019468502477,
+      "aligned_ci": [
+        0.1208422518856978,
+        0.16773424413290006
+      ],
+      "fisher_p": 5.734180955336882e-16,
+      "aligned_mcnemar_p": 3.2666467957746144e-06,
+      "aligned_mcnemar_c": 122,
+      "aligned_mcnemar_b": 59,
+      "fisher_q": 8.688152962631639e-16,
+      "verdict": "protective"
+    },
+    {
+      "run": "mistral-7b_C2",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "C2",
+      "base_broken": 1,
+      "base_n": 999,
+      "base_asr": 0.001001001001001001,
+      "base_ci": [
+        0.00017672311552662315,
+        0.005648184471915888
+      ],
+      "aligned_broken": 169,
+      "aligned_n": 706,
+      "aligned_asr": 0.23937677053824363,
+      "risk_diff": 0.23837576953724263,
+      "aligned_ci": [
+        0.20936538192546233,
+        0.27220899580890157
+      ],
+      "fisher_p": 3.5358215778329256e-69,
+      "aligned_mcnemar_p": 2.2273151249533062e-07,
+      "aligned_mcnemar_c": 169,
+      "aligned_mcnemar_b": 86,
+      "fisher_q": 2.2098884861455783e-68,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "qwen-2.5-7b_C2",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "C2",
+      "base_broken": 21,
+      "base_n": 987,
+      "base_asr": 0.02127659574468085,
+      "base_ci": [
+        0.013957717987290973,
+        0.032307462394820276
+      ],
+      "aligned_broken": 138,
+      "aligned_n": 654,
+      "aligned_asr": 0.21100917431192662,
+      "risk_diff": 0.18973257856724576,
+      "aligned_ci": [
+        0.18147124180732518,
+        0.2439222250675038
+      ],
+      "fisher_p": 8.772351457221835e-38,
+      "aligned_mcnemar_p": 2.793615238093283e-06,
+      "aligned_mcnemar_c": 138,
+      "aligned_mcnemar_b": 70,
+      "fisher_q": 2.308513541374167e-37,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_C3",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "C3",
+      "base_broken": 8,
+      "base_n": 996,
+      "base_asr": 0.008032128514056224,
+      "base_ci": [
+        0.004075519638659014,
+        0.01576908537088336
+      ],
+      "aligned_broken": 106,
+      "aligned_n": 629,
+      "aligned_asr": 0.1685214626391097,
+      "risk_diff": 0.16048933412505348,
+      "aligned_ci": [
+        0.14129981876295009,
+        0.1997673724165038
+      ],
+      "fisher_p": 1.0896124098201433e-36,
+      "aligned_mcnemar_p": 1.2746973691979559e-08,
+      "aligned_mcnemar_c": 106,
+      "aligned_mcnemar_b": 38,
+      "fisher_q": 2.7240310245503584e-36,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_C3",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "C3",
+      "base_broken": 92,
+      "base_n": 629,
+      "base_asr": 0.14626391096979333,
+      "base_ci": [
+        0.12079597044836074,
+        0.17602633188942576
+      ],
+      "aligned_broken": 79,
+      "aligned_n": 869,
+      "aligned_asr": 0.09090909090909091,
+      "risk_diff": -0.055354820060702414,
+      "aligned_ci": [
+        0.07355311637127339,
+        0.11186596195805869
+      ],
+      "fisher_p": 0.0009810388367551019,
+      "aligned_mcnemar_p": 0.010090139809438573,
+      "aligned_mcnemar_c": 79,
+      "aligned_mcnemar_b": 49,
+      "fisher_q": 0.0010436583369735127,
+      "verdict": "protective"
+    },
+    {
+      "run": "mistral-7b_C3",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "C3",
+      "base_broken": 1,
+      "base_n": 999,
+      "base_asr": 0.001001001001001001,
+      "base_ci": [
+        0.00017672311552662315,
+        0.005648184471915888
+      ],
+      "aligned_broken": 90,
+      "aligned_n": 709,
+      "aligned_asr": 0.12693935119887165,
+      "risk_diff": 0.12593835019787064,
+      "aligned_ci": [
+        0.10442884508268041,
+        0.15347065914393193
+      ],
+      "fisher_p": 7.243134571744385e-35,
+      "aligned_mcnemar_p": 0.18148987392878607,
+      "aligned_mcnemar_c": 90,
+      "aligned_mcnemar_b": 72,
+      "fisher_q": 1.5745944721183448e-34,
+      "verdict": "floor artifact"
+    },
+    {
+      "run": "qwen-2.5-7b_C3",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "C3",
+      "base_broken": 10,
+      "base_n": 987,
+      "base_asr": 0.010131712259371834,
+      "base_ci": [
+        0.005512533325877691,
+        0.018549296758250962
+      ],
+      "aligned_broken": 76,
+      "aligned_n": 654,
+      "aligned_asr": 0.1162079510703364,
+      "risk_diff": 0.10607623881096456,
+      "aligned_ci": [
+        0.09385723653715136,
+        0.14304096550296544
+      ],
+      "fisher_p": 1.013863444243394e-21,
+      "aligned_mcnemar_p": 0.6184454660388145,
+      "aligned_mcnemar_c": 76,
+      "aligned_mcnemar_b": 69,
+      "fisher_q": 1.6897724070723234e-21,
+      "verdict": "floor artifact"
+    },
+    {
+      "run": "llama-3.1-8b_D1",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "D1",
+      "base_broken": 1,
+      "base_n": 996,
+      "base_asr": 0.001004016064257028,
+      "base_ci": [
+        0.0001772554801238841,
+        0.005665129600983381
+      ],
+      "aligned_broken": 140,
+      "aligned_n": 629,
+      "aligned_asr": 0.22257551669316375,
+      "risk_diff": 0.2215715006289067,
+      "aligned_ci": [
+        0.1918066009536536,
+        0.2567124631269925
+      ],
+      "fisher_p": 4.6627654077828037e-61,
+      "aligned_mcnemar_p": 1.2192257795214979e-29,
+      "aligned_mcnemar_c": 140,
+      "aligned_mcnemar_b": 11,
+      "fisher_q": 2.119438821719456e-60,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_D1",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "D1",
+      "base_broken": 129,
+      "base_n": 627,
+      "base_asr": 0.20574162679425836,
+      "base_ci": [
+        0.1759376799992731,
+        0.23912929944630687
+      ],
+      "aligned_broken": 57,
+      "aligned_n": 866,
+      "aligned_asr": 0.06581986143187067,
+      "risk_diff": -0.1399217653623877,
+      "aligned_ci": [
+        0.05114747956160243,
+        0.08432716081943767
+      ],
+      "fisher_p": 9.560302829886822e-16,
+      "aligned_mcnemar_p": 1.0,
+      "aligned_mcnemar_c": 57,
+      "aligned_mcnemar_b": 56,
+      "fisher_q": 1.405926886748062e-15,
+      "verdict": "protective"
+    },
+    {
+      "run": "mistral-7b_D1",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "D1",
+      "base_broken": 0,
+      "base_n": 998,
+      "base_asr": 0.0,
+      "base_ci": [
+        2.168404344971009e-19,
+        0.0038343979365877854
+      ],
+      "aligned_broken": 98,
+      "aligned_n": 711,
+      "aligned_asr": 0.13783403656821377,
+      "risk_diff": 0.13783403656821377,
+      "aligned_ci": [
+        0.11443475394410946,
+        0.16512577847335885
+      ],
+      "fisher_p": 7.2463635238179255e-40,
+      "aligned_mcnemar_p": 1.2905872820555464e-09,
+      "aligned_mcnemar_c": 98,
+      "aligned_mcnemar_b": 30,
+      "fisher_q": 2.2644886011931017e-39,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "qwen-2.5-7b_D1",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "D1",
+      "base_broken": 3,
+      "base_n": 987,
+      "base_asr": 0.00303951367781155,
+      "base_ci": [
+        0.0010342357113446816,
+        0.008898189637704137
+      ],
+      "aligned_broken": 61,
+      "aligned_n": 654,
+      "aligned_asr": 0.09327217125382263,
+      "risk_diff": 0.09023265757601108,
+      "aligned_ci": [
+        0.07329773191097216,
+        0.11799677702397232
+      ],
+      "fisher_p": 7.645625048882343e-22,
+      "aligned_mcnemar_p": 5.663739625418237e-07,
+      "aligned_mcnemar_c": 61,
+      "aligned_mcnemar_b": 17,
+      "fisher_q": 1.3182112153245419e-21,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_D2",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "D2",
+      "base_broken": 4,
+      "base_n": 996,
+      "base_asr": 0.004016064257028112,
+      "base_ci": [
+        0.0015628438038827368,
+        0.010280492675125288
+      ],
+      "aligned_broken": 366,
+      "aligned_n": 629,
+      "aligned_asr": 0.5818759936406995,
+      "risk_diff": 0.5778599293836714,
+      "aligned_ci": [
+        0.5429459538250548,
+        0.6198120301282216
+      ],
+      "fisher_p": 6.480399633157922e-183,
+      "aligned_mcnemar_p": 3.414169058173296e-72,
+      "aligned_mcnemar_c": 366,
+      "aligned_mcnemar_b": 33,
+      "fisher_q": 3.240199816578961e-181,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_D2",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "D2",
+      "base_broken": 389,
+      "base_n": 630,
+      "base_asr": 0.6174603174603175,
+      "base_ci": [
+        0.5789061483825912,
+        0.6545907268059508
+      ],
+      "aligned_broken": 253,
+      "aligned_n": 865,
+      "aligned_asr": 0.292485549132948,
+      "risk_diff": -0.3249747683273695,
+      "aligned_ci": [
+        0.2631410617845781,
+        0.3236650276870996
+      ],
+      "fisher_p": 3.325919069902794e-36,
+      "aligned_mcnemar_p": 5.979743245386282e-32,
+      "aligned_mcnemar_c": 253,
+      "aligned_mcnemar_b": 54,
+      "fisher_q": 7.918854928339985e-36,
+      "verdict": "protective"
+    },
+    {
+      "run": "mistral-7b_D2",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "D2",
+      "base_broken": 2,
+      "base_n": 999,
+      "base_asr": 0.002002002002002002,
+      "base_ci": [
+        0.0005491929526599986,
+        0.007270047819160762
+      ],
+      "aligned_broken": 306,
+      "aligned_n": 706,
+      "aligned_asr": 0.43342776203966005,
+      "risk_diff": 0.43142576003765803,
+      "aligned_ci": [
+        0.39733156101344924,
+        0.47024450286435016
+      ],
+      "fisher_p": 6.376466268272264e-135,
+      "aligned_mcnemar_p": 3.666281620259819e-37,
+      "aligned_mcnemar_c": 306,
+      "aligned_mcnemar_b": 68,
+      "fisher_q": 1.0627443780453772e-133,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "qwen-2.5-7b_D2",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "D2",
+      "base_broken": 22,
+      "base_n": 987,
+      "base_asr": 0.022289766970618033,
+      "base_ci": [
+        0.01476523404824928,
+        0.033518432724587655
+      ],
+      "aligned_broken": 343,
+      "aligned_n": 654,
+      "aligned_asr": 0.5244648318042814,
+      "risk_diff": 0.5021750648336634,
+      "aligned_ci": [
+        0.4861591882063905,
+        0.5624847511057933
+      ],
+      "fisher_p": 4.939946700535966e-137,
+      "aligned_mcnemar_p": 3.1113386743120027e-75,
+      "aligned_mcnemar_c": 343,
+      "aligned_mcnemar_b": 22,
+      "fisher_q": 1.2349866751339915e-135,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_D3",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "D3",
+      "base_broken": 11,
+      "base_n": 996,
+      "base_asr": 0.01104417670682731,
+      "base_ci": [
+        0.006177929120989306,
+        0.019667627286453826
+      ],
+      "aligned_broken": 207,
+      "aligned_n": 629,
+      "aligned_asr": 0.32909379968203495,
+      "risk_diff": 0.3180496229752076,
+      "aligned_ci": [
+        0.2935072375687243,
+        0.3667552231113298
+      ],
+      "fisher_p": 1.9601143186073796e-80,
+      "aligned_mcnemar_p": 6.397995843669775e-10,
+      "aligned_mcnemar_c": 207,
+      "aligned_mcnemar_b": 99,
+      "fisher_q": 1.633428598839483e-79,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_D3",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "D3",
+      "base_broken": 196,
+      "base_n": 631,
+      "base_asr": 0.31061806656101426,
+      "base_ci": [
+        0.27574941607921366,
+        0.3477786369825747
+      ],
+      "aligned_broken": 90,
+      "aligned_n": 860,
+      "aligned_asr": 0.10465116279069768,
+      "risk_diff": -0.20596690377031657,
+      "aligned_ci": [
+        0.08592104550132168,
+        0.12689747223119313
+      ],
+      "fisher_p": 3.395715746357187e-23,
+      "aligned_mcnemar_p": 0.15579990059835053,
+      "aligned_mcnemar_c": 90,
+      "aligned_mcnemar_b": 71,
+      "fisher_q": 6.288362493254051e-23,
+      "verdict": "protective"
+    },
+    {
+      "run": "mistral-7b_D3",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "D3",
+      "base_broken": 12,
+      "base_n": 999,
+      "base_asr": 0.012012012012012012,
+      "base_ci": [
+        0.006884545312243286,
+        0.020878027303359973
+      ],
+      "aligned_broken": 173,
+      "aligned_n": 706,
+      "aligned_asr": 0.24504249291784702,
+      "risk_diff": 0.233030480905835,
+      "aligned_ci": [
+        0.21475124178015254,
+        0.27809325817737734
+      ],
+      "fisher_p": 6.609637563448655e-57,
+      "aligned_mcnemar_p": 5.058487534448032e-07,
+      "aligned_mcnemar_c": 173,
+      "aligned_mcnemar_b": 91,
+      "fisher_q": 2.542168293634098e-56,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "qwen-2.5-7b_D3",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "D3",
+      "base_broken": 20,
+      "base_n": 987,
+      "base_asr": 0.020263424518743668,
+      "base_ci": [
+        0.013155180177105217,
+        0.031091513814280346
+      ],
+      "aligned_broken": 200,
+      "aligned_n": 654,
+      "aligned_asr": 0.3058103975535168,
+      "risk_diff": 0.2855469730347731,
+      "aligned_ci": [
+        0.2717171944197574,
+        0.3421715372897838
+      ],
+      "fisher_p": 3.6299627252495168e-65,
+      "aligned_mcnemar_p": 9.58362691435283e-28,
+      "aligned_mcnemar_c": 200,
+      "aligned_mcnemar_b": 38,
+      "fisher_q": 1.8149813626247586e-64,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-3.1-8b_D4",
+      "dataset": "NQ",
+      "family": "llama-3.1-8b",
+      "attack": "D4",
+      "base_broken": 1,
+      "base_n": 996,
+      "base_asr": 0.001004016064257028,
+      "base_ci": [
+        0.0001772554801238841,
+        0.005665129600983381
+      ],
+      "aligned_broken": 23,
+      "aligned_n": 629,
+      "aligned_asr": 0.03656597774244833,
+      "risk_diff": 0.035561961678191305,
+      "aligned_ci": [
+        0.02448751773694336,
+        0.05427068959548253
+      ],
+      "fisher_p": 3.9368008300113e-09,
+      "aligned_mcnemar_p": 0.000310748815536499,
+      "aligned_mcnemar_c": 23,
+      "aligned_mcnemar_b": 4,
+      "fisher_q": 4.686667654775357e-09,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "llama-r1-8b_D4",
+      "dataset": "NQ",
+      "family": "llama-r1-8b",
+      "attack": "D4",
+      "base_broken": 24,
+      "base_n": 630,
+      "base_asr": 0.0380952380952381,
+      "base_ci": [
+        0.025731502256128445,
+        0.056057812880821165
+      ],
+      "aligned_broken": 40,
+      "aligned_n": 859,
+      "aligned_asr": 0.046565774155995346,
+      "risk_diff": 0.008470536060757247,
+      "aligned_ci": [
+        0.03438109156445046,
+        0.06278792826558169
+      ],
+      "fisher_p": 0.4414655744369326,
+      "aligned_mcnemar_p": 0.34283311942078837,
+      "aligned_mcnemar_c": 40,
+      "aligned_mcnemar_b": 50,
+      "fisher_q": 0.4414655744369325,
+      "verdict": "n.s."
+    },
+    {
+      "run": "mistral-7b_D4",
+      "dataset": "NQ",
+      "family": "mistral-7b",
+      "attack": "D4",
+      "base_broken": 0,
+      "base_n": 999,
+      "base_asr": 0.0,
+      "base_ci": [
+        2.168404344971009e-19,
+        0.0038305744030642614
+      ],
+      "aligned_broken": 30,
+      "aligned_n": 706,
+      "aligned_asr": 0.042492917847025496,
+      "risk_diff": 0.042492917847025496,
+      "aligned_ci": [
+        0.029924948466837034,
+        0.06001268201250817
+      ],
+      "fisher_p": 2.2514395053222304e-12,
+      "aligned_mcnemar_p": 1.4011748135089874e-06,
+      "aligned_mcnemar_c": 30,
+      "aligned_mcnemar_b": 3,
+      "fisher_q": 3.042485818003014e-12,
+      "verdict": "GENUINE paradox"
+    },
+    {
+      "run": "qwen-2.5-7b_D4",
+      "dataset": "NQ",
+      "family": "qwen-2.5-7b",
+      "attack": "D4",
+      "base_broken": 4,
+      "base_n": 987,
+      "base_asr": 0.004052684903748734,
+      "base_ci": [
+        0.0015771045645982494,
+        0.01037380717517626
+      ],
+      "aligned_broken": 19,
+      "aligned_n": 654,
+      "aligned_asr": 0.0290519877675841,
+      "risk_diff": 0.024999302863835365,
+      "aligned_ci": [
+        0.018676414764609416,
+        0.04492775347585261
+      ],
+      "fisher_p": 3.776233109920994e-05,
+      "aligned_mcnemar_p": 0.00022125244140625,
+      "aligned_mcnemar_c": 19,
+      "aligned_mcnemar_b": 2,
+      "fisher_q": 4.104601206435863e-05,
+      "verdict": "GENUINE paradox"
+    }
+  ]
+}

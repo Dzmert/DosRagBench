@@ -1,0 +1,118 @@
+% ─────────────────────────────────────────────────────────────────────────────
+% DoSRAGBench — Thesis C report
+%
+% Build:  latexmk -pdf main.tex      (or upload the whole report/ folder to
+%         Overleaf; figures/ holds copies of the result plots so the folder is
+%         self-contained).
+%
+% Every number in this report must trace to docs/findings_summary.md, which
+% is the canonical record. Quote prompt-matched effects (§3.11 there) as the
+% headline; every `auto'-prompt figure is an upper bound and says so.
+%
+% \todo{...} marks unfinished text. Remove the todonotes package (or load it
+% with [disable]) before submission and every marker disappears.
+% ─────────────────────────────────────────────────────────────────────────────
+\documentclass[12pt,a4paper,oneside]{report}
+
+% ── Page and type ───────────────────────────────────────────────────────────
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3cm,right=2.5cm,headheight=15pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{setspace}
+\onehalfspacing
+
+% ── Content ─────────────────────────────────────────────────────────────────
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{siunitx}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\setlist{itemsep=2pt,topsep=4pt}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,width=0.92\textwidth}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage[colorinlistoftodos,textsize=footnotesize]{todonotes}
+
+% ── Headers: title on one side, author on the other, as in the UNSW template ─
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape\shorttitle}
+\fancyhead[R]{\small\authorname}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ── References and links (load last) ────────────────────────────────────────
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+
+% ── Report details — fill in ────────────────────────────────────────────────
+% \placeholder prints red bracketed text; it is safe inside page headers,
+% where \todo is not.
+\newcommand{\placeholder}[1]{\textcolor{red}{[#1]}}
+\newcommand{\thesistitle}{Aligned to Abstain: Denial-of-Service Attacks on Retrieval-Augmented Generation and the Alignment Paradox}
+\newcommand{\shorttitle}{Aligned to Abstain}
+\newcommand{\authorname}{\placeholder{Full name}}
+\newcommand{\studentid}{z5419867}
+\newcommand{\supervisor}{\placeholder{Supervisor}}
+\newcommand{\assessor}{\placeholder{Assessor}}
+\newcommand{\degree}{\placeholder{Degree, e.g.\ Bachelor of Engineering (Honours)}}
+\newcommand{\topicid}{\placeholder{Topic ID}}
+\newcommand{\submitted}{\placeholder{Month} 2026}
+
+% ── Shorthands used throughout ──────────────────────────────────────────────
+\newcommand{\bench}{DoSRAGBench}
+\newcommand{\pp}{\,pp}
+\newcommand{\pair}[1]{\texttt{#1}}
+\newcommand{\attack}[1]{\textsf{#1}}
+
+\begin{document}
+
+% ── Front matter ────────────────────────────────────────────────────────────
+\pagenumbering{roman}
+\input{frontmatter/titlepage}
+\input{frontmatter/abstract}
+\input{frontmatter/acknowledgements}
+\input{frontmatter/abbreviations}
+
+\tableofcontents
+\listoffigures
+\listoftables
+% Delete before submission.
+\listoftodos[Unfinished items]
+
+\clearpage
+\pagenumbering{arabic}
+
+% ── Body ────────────────────────────────────────────────────────────────────
+\input{chapters/introduction}
+\input{chapters/background}
+\input{chapters/methodology}
+\input{chapters/results}
+\input{chapters/defences}
+\input{chapters/discussion}
+\input{chapters/conclusion}
+
+% ── Back matter ─────────────────────────────────────────────────────────────
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\appendix
+\input{appendices/attacks}
+\input{appendices/classifier}
+\input{appendices/reproducibility}
+
+\end{document}

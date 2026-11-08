@@ -1,0 +1,75 @@
+\chapter{Discussion}
+\label{ch:discussion}
+
+\section{One account of the results}
+\label{sec:story}
+
+The results fit a single account, and each part of it was tested rather than
+assumed.
+
+\begin{enumerate}
+  \item Instruction tuning teaches a RAG model to defer to its context, and
+    above all to decline when the context looks inadequate. This shows up
+    without any attack, as a 29--37\% refusal floor on answerable questions
+    (\cref{sec:res-floor}). That floor rises steadily as retrieval quality
+    falls (\cref{fig:gradient}).
+  \item The strongest attacks do not inject unsafe content or exhaust compute.
+    They make the evidence look circular, contradictory or crowded out
+    (\cref{sec:res-attacks}). A faithful model then does what it was trained to
+    do, and declines.
+  \item The deference is operative because of training, not wording. The same
+    refusal licence moves an aligned model 3.1 times as far as its base model
+    (\cref{sec:res-prompt}).
+  \item This is not inherent to post-training. Reasoning distillation reduces
+    the deference and reverses the effect (\cref{sec:res-r1}).
+  \item The base model's apparent robustness is mostly a failure to notice.
+    The same attacks cost it fewer answers, but those answers become silent
+    errors (\cref{sec:res-correctness}).
+\end{enumerate}
+
+The contribution is therefore not ``alignment is bad for RAG''. It is that
+alignment changes \emph{which} property an attacker on the corpus can degrade,
+from integrity to availability. A deployer choosing between the two models is
+choosing which failure they would rather detect.
+
+\todo{Expand: implications for (a) how over-refusal is evaluated (content-only,
+no unsafe text), (b) RAG evaluation that reports only accuracy, (c) the defence
+result that reranking is not free.}
+
+\section{Threats to validity}
+\label{sec:threats}
+
+\paragraph{Prompt confound.} Every \texttt{auto}-prompt contrast is an upper
+bound. The prompt-matched estimate ($+0.134$ floor, $+0.204$ ASR) comes from one
+pair, one attack and one corpus (\cref{sec:res-prompt}). Two results are immune
+to the confound regardless: the R1 pair, where both sides receive the same
+prompt, and the within-model retrieval gradient, which holds the prompt fixed.
+
+\paragraph{The withdrawn corpus.} HotpotQA was run on 12 cells and then
+withdrawn. Its corpus builder kept one gold passage per query, but every
+HotpotQA question needs exactly two. Half the evidence for every query was
+therefore never indexed, and the aligned model's 73--81\% refusal rate there is
+largely \emph{correct}. Its numbers, which were the largest effects in the
+project, are excluded throughout. FiQA, screened for this defect before use,
+replaces it. This was the second time an audit of the benchmark's own
+instruments changed a headline. The first was the refusal classifier. Three defects
+found in it were fixed before the validation in \cref{sec:classifier}, and
+fixing them moved the headline from 12 genuine paradoxes in 50 runs to 39 in
+62.
+
+\paragraph{Selection in ASR.} Attributable ASR conditions on queries answered
+clean. As the floor rises, the survivors are increasingly the queries the model
+was willing to answer despite poor retrieval, a self-selected robust subset.
+Denominators are reported, and the unconditional measure, which has the
+opposite bias, is reported alongside it.
+
+\paragraph{Instrument.} The classifier is validated (\cref{tab:classifier}), but
+its gold set is not fully independent of its author. Residual error is
+asymmetric towards missed refusals, which biases the gap \emph{down}.
+
+\paragraph{Scope.} Models are 7--8B parameters, 4-bit quantised, with a single
+small embedder and $k=5$. Correctness covers 656 NQ queries only. Variance was
+measured on only one condition (C1 at 5\%, 1.5 points). Generation is greedy, so
+the main grid is deterministic.
+
+\todo{Larger models; other embedders; an adaptive attacker.}

@@ -1,0 +1,115 @@
+\chapter{Introduction}
+\label{ch:intro}
+
+Retrieval-augmented generation (RAG) has become the default way to put a large
+language model (LLM) in front of a body of knowledge it was not trained on
+\cite{lewis2020rag}. A retriever selects a handful of passages relevant to the
+user's question from a document collection. The model is then asked to answer
+from those passages. The arrangement solves two practical problems at once: the
+model can use knowledge newer than its training data, and its answers can be
+traced back to sources.
+
+It also creates an attack surface. The document collection is frequently
+assembled from sources the operator does not fully control: web pages, shared
+drives, ticketing systems, user uploads. Anyone who can place text in it can
+place text in front of the model. The literature on this threat has
+concentrated on \emph{integrity}: crafting passages that make the model give a
+specific wrong answer \cite{zou2025poisonedrag}, or that are retrieved for many
+unrelated queries \cite{zhong2023poisoning}. This thesis studies
+\emph{availability}. It asks whether an attacker can make a RAG system stop
+answering, and whether some models are easier to silence than others.
+
+\section{The question}
+\label{sec:question}
+
+The central question is how alignment training affects a RAG system's
+susceptibility to denial of service. Here alignment training means the
+instruction tuning and preference optimisation that turn a pretrained
+model into an assistant \cite{ouyang2022instructgpt,wei2022flan}.
+
+There are good reasons to expect alignment to help. Aligned models follow
+instructions, are more selective about what they assert, and are routinely
+deployed with an explicit instruction to answer only from the provided context.
+There are equally good reasons to expect it to hurt. An instruction to decline
+when the evidence is inadequate is also an instruction an attacker can trigger:
+make the evidence \emph{look} inadequate, and a faithful model will decline.
+A base model, which has never been taught to decline, may simply keep
+answering.
+
+The hypothesis tested is the second of these, stated so that it can fail:
+
+\begin{quote}
+\textbf{Hypothesis.} Under the same retrieved context and the same attack, an
+instruction-tuned model refuses legitimate queries significantly more often than
+its base model, and the attack itself, rather than the model's clean refusal
+rate, is responsible for the difference.
+\end{quote}
+
+The second clause matters. An aligned model that already declines a third of
+queries with no attack present will show a higher refusal rate under attack for
+that reason alone. A result built on that would be an artefact of the refusal
+floor, not a vulnerability. \Cref{sec:stats} describes how the two are
+separated.
+
+\section{Why it matters}
+\label{sec:significance}
+
+Three groups have a stake in the answer.
+\begin{itemize}
+  \item \textbf{Deployers} choose which model to put behind a retriever, and
+    usually choose the aligned one. If that choice trades misinformation risk
+    for availability risk, they should know the exchange rate.
+  \item \textbf{Alignment research} treats refusal as the safe failure mode. A
+    result showing that refusal can be induced on benign queries by content
+    alone, with no unsafe text involved, bears on how over-refusal is measured
+    \cite{rottger2024xstest,cui2024orbench}.
+  \item \textbf{RAG security} has so far evaluated attacks on one model at a
+    time. A matched base-versus-aligned design isolates the training effect
+    that single-model evaluations cannot see.
+\end{itemize}
+\todo{One paragraph of concrete deployment context: enterprise search,
+customer support; cost of an unanswered query versus a wrong one.}
+
+\section{Contributions}
+\label{sec:contributions}
+
+\begin{enumerate}
+  \item \textbf{\bench{}}, a benchmark of 13 denial-of-service attacks in four
+    families (semantic jamming, resource exhaustion, retrieval-layer
+    manipulation, and reasoning deadlocks). It is run against four matched
+    model pairs on two corpora with 1{,}000 queries per run, and each result is
+    tested for both a model difference and an attack effect
+    (\cref{ch:method}).
+  \item \textbf{A validated measurement instrument.} The refusal classifier
+    that scores every result is validated against 300 hand-labelled responses
+    and an independent annotator. It agrees with that annotator better than
+    two humans agree with each other (\cref{sec:classifier}).
+  \item \textbf{The alignment paradox, and its mechanism.} Aligned models are
+    the more vulnerable side in every true base-versus-aligned run on both
+    corpora. The mechanism is context-faithfulness, not safety. A
+    prompt-by-training experiment shows that instruction tuning is what makes
+    an instruction to decline operative (\cref{ch:results}).
+  \item \textbf{A correctness-based reframing.} The same attack causes an
+    aligned model to refuse and a base model to answer wrongly. Alignment
+    turns silent error into visible refusal (\cref{sec:res-correctness}).
+  \item \textbf{A tested defence, and a counter-intuitive negative result.} A
+    near-duplicate cluster filter neutralises the templated attacks at no
+    measurable clean cost. Cross-encoder reranking, a standard retrieval
+    improvement, makes two of the attacks roughly twice as effective
+    (\cref{ch:defences}).
+\end{enumerate}
+
+Two further results are negative and are reported as such. None of the attacks
+is a denial-of-service attack in the compute sense: median latency inflation is
+under 10\% (\cref{sec:res-latency}). And one of the two corpora originally used,
+HotpotQA, was withdrawn after an audit found that the corpus builder had
+discarded half of every query's required evidence (\cref{sec:threats}).
+
+\section{Report outline}
+
+\Cref{ch:background} covers RAG, alignment training and prior attacks on RAG.
+\Cref{ch:method} defines the threat model, the benchmark, the metrics and the
+statistical protocol. \Cref{ch:results} reports the main results and the
+experiments that establish their mechanism. \Cref{ch:defences} tests defences.
+\Cref{ch:discussion} assembles the results into one account and states its
+limits, and \cref{ch:conclusion} concludes.

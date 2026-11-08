@@ -41,10 +41,16 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from dosragbench.attacks import build_attack
+from dosragbench.attacks import (
+    BlockerAttack,
+    BlockerConfig,
+    BlockerOracleAttack,
+    build_attack,
+)
 from dosragbench.metrics import QueryResult, compute_metrics
 from dosragbench.models import detect_environment, load_model
 from dosragbench.pipeline import Document, HNSWRetriever, RAGPipeline
+from dosragbench.pipeline.defence import build_defences
 from dosragbench.utils.config import (
     DATA_DIR,
     RESULTS_DIR,
@@ -57,11 +63,12 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 
-def load_dataset():
-    queries_path = DATA_DIR / "queries.json"
-    kb_path = DATA_DIR / "knowledge_base.json"
+def load_dataset(data_dir=DATA_DIR):
+    queries_path = data_dir / "queries.json"
+    kb_path = data_dir / "knowledge_base.json"
     if not queries_path.exists() or not kb_path.exists():
-        raise FileNotFoundError("Missing data/. Run scripts/prepare_data.py first.")
+        raise FileNotFoundError(
+            f"Missing {data_dir}/. Run scripts/prepare_data.py first.")
     with open(queries_path) as f:
         queries = json.load(f)
     with open(kb_path) as f:
@@ -169,17 +176,88 @@ def _jamming_kwargs(attack, rag, retriever, query_text, gold_doc_id):
     return {}
 
 
-def run_model_side(model_config, retriever, queries, attack, top_k, num_queries):
+def gold_spec(q: dict):
+    """The gold passage(s) a query needs, as the retriever wants them.
+
+    Corpora built with `prepare_data.py --keep-all-gold` carry `gold_doc_ids`: the
+    full set of passages the query requires. HotpotQA needs both hops, so partial
+    retrieval is not answerable and the retriever must be told to demand all of
+    them. Single-gold corpora (NQ) carry only `gold_doc_id` and behave as before.
+    """
+    ids = q.get("gold_doc_ids")
+    if ids:
+        return list(ids)
+    return q.get("gold_doc_id")
+
+
+def make_blocker_response_fn(rag, retriever):
+    """Response oracle for the BLOCKER baseline's black-box optimisation.
+
+    Each call is one full RAG round-trip (retrieval + generation) against the
+    live target, which is what makes this baseline's threat model stronger than
+    ours: it needs query access to the deployed system. It returns the RAG's
+    answer TEXT; the blocker scores that with its own embedding objective, so the
+    optimisation never touches the severity classifier the run is judged with
+    (avoids optimising against the evaluation instrument).
+
+    The returned callable carries a .calls counter so the cost is reportable.
+    """
+
+    def respond(query: str, adv_docs: list[Document]) -> str:
+        respond.calls += 1
+        retriever.set_adversarial(adv_docs)
+        try:
+            resp = rag.query(query)
+        finally:
+            retriever.clear_adversarial()
+        return resp.answer
+
+    respond.calls = 0
+    return respond
+
+
+def make_blocker_oracle(rag):
+    """Auxiliary generator for the BLOCKER_ORACLE baseline.
+
+    Bound per model side, so each side's blocker passage is crafted by that
+    side's own generator (the same per-side convention BLOCKER uses). This is a
+    weaker-attacker substitution for the paper's dedicated GPT-4 oracle.
+    """
+
+    def oracle(prompt: str) -> str:
+        oracle.calls += 1
+        return rag.model.generate(prompt)["text"]
+
+    oracle.calls = 0
+    return oracle
+
+
+def run_model_side(model_config, retriever, queries, attack, top_k, num_queries,
+                   prompt_style="auto"):
     """MERGE MODE: baseline + attacked for one model, no per-query rebuild."""
     logger.info(f"Loading model: {model_config.name}")
     loaded = load_model(model_config)
-    rag = RAGPipeline(retriever=retriever, model=loaded, top_k=top_k)
+    rag = RAGPipeline(retriever=retriever, model=loaded, top_k=top_k,
+                      prompt_style=prompt_style)
+
+    # BLOCKER optimises against the live target, so its oracle can only be
+    # bound once this side's model is loaded. Rebound per side: an adversarial
+    # document optimised against the base model is not the same attack when
+    # replayed against the aligned one.
+    if isinstance(attack, BlockerAttack):
+        attack.response_fn = make_blocker_response_fn(rag, retriever)
+    # BLOCKER_ORACLE: passages are normally precomputed once by a fixed oracle
+    # (see main). Only the legacy --oracle-side per-side mode binds this side's
+    # generator here, which makes the base and aligned passages distinct artifacts.
+    if isinstance(attack, BlockerOracleAttack) and not attack.passages:
+        attack.oracle_fn = make_blocker_oracle(rag)
 
     baseline_results, attacked_results = [], []
 
     for i, q in enumerate(queries[:num_queries]):
         query_text = q["query"]
-        gold_doc_id = q.get("gold_doc_id")
+        gold_doc_id = gold_spec(q)
+
         gold_answer = q.get("gold_answer", "")
 
         retriever.clear_adversarial()
@@ -204,7 +282,21 @@ def run_model_side(model_config, retriever, queries, attack, top_k, num_queries)
         retriever.clear_adversarial()
 
         if (i + 1) % 25 == 0:
-            logger.info(f"  [{i+1}/{num_queries}] processed")
+            msg = f"  [{i+1}/{num_queries}] processed"
+            if isinstance(attack, BlockerAttack):
+                msg += f" ({attack.response_fn.calls} oracle queries so far)"
+            logger.info(msg)
+
+    if isinstance(attack, BlockerAttack):
+        logger.info(
+            f"BLOCKER used {attack.response_fn.calls} oracle queries against "
+            f"{model_config.name} ({attack.response_fn.calls / max(num_queries, 1):.1f} per query)"
+        )
+    if isinstance(attack, BlockerOracleAttack) and attack.fallbacks:
+        logger.warning(
+            f"BLOCKER_ORACLE fell back to injection text on {attack.fallbacks}/{num_queries} "
+            f"queries against {model_config.name}"
+        )
 
     loaded.unload()
     return {"baseline": baseline_results, "attacked": attacked_results}
@@ -219,7 +311,7 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
     retriever.clear_adversarial()
     clean_latencies, clean_gold_ranks = [], []
     for q in queries[:num_queries]:
-        r = retriever.retrieve(q["query"], top_k=top_k, gold_doc_id=q.get("gold_doc_id"))
+        r = retriever.retrieve(q["query"], top_k=top_k, gold_doc_id=gold_spec(q))
         clean_latencies.append(r.latency_s)
         clean_gold_ranks.append(r.gold_rank)
 
@@ -249,7 +341,7 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
 
     polluted_latencies, polluted_gold_ranks, adv_pollution = [], [], []
     for q in queries[:num_queries]:
-        r = polluted.retrieve(q["query"], top_k=top_k, gold_doc_id=q.get("gold_doc_id"))
+        r = polluted.retrieve(q["query"], top_k=top_k, gold_doc_id=gold_spec(q))
         polluted_latencies.append(r.latency_s)
         polluted_gold_ranks.append(r.gold_rank)
         adv_pollution.append(r.adversarial_in_topk)
@@ -259,6 +351,12 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
     gold_evicted = sum(
         1 for cg, pg in zip(clean_gold_ranks, polluted_gold_ranks) if cg >= 0 and pg < 0
     )
+    # Condition on queries whose gold was retrievable before the attack: a query
+    # whose gold never made the clean top-k cannot be evicted from it, so counting
+    # it in the denominator understates the attack. Same conditioning ASR already
+    # applies via answerable-query filtering, and the definition compute_metrics
+    # uses (metrics.py: gold_evicted / gold_present_baseline).
+    gold_present_baseline = sum(1 for cg in clean_gold_ranks if cg >= 0)
     return {
         "mode": "c1_latency",
         "pollution_rate": pollution_rate,
@@ -271,7 +369,11 @@ def run_c1_latency(retriever, queries, attack, top_k, num_queries, embedder_id,
         "retrieval_lir_median": round(st.median(lir), 3),
         "retrieval_lir_p90": round(sorted(lir)[int(len(lir) * 0.9)], 3),
         "gold_docs_evicted": gold_evicted,
-        "gold_eviction_rate": round(gold_evicted / len(clean_latencies), 3),
+        "gold_present_baseline": gold_present_baseline,
+        "gold_eviction_rate": round(gold_evicted / gold_present_baseline, 3)
+        if gold_present_baseline else 0.0,
+        # Retained under its old name so previously-reported figures stay traceable.
+        "gold_eviction_rate_unconditional": round(gold_evicted / len(clean_latencies), 3),
         "mean_adversarial_in_topk": round(st.mean(adv_pollution), 3),
     }
 
@@ -281,6 +383,12 @@ def main():
     parser.add_argument("--category", required=True)
     parser.add_argument("--model-pair", required=True)
     parser.add_argument("--num-queries", type=int, default=None)
+    parser.add_argument("--data-dir", type=Path, default=DATA_DIR,
+                        help="Directory holding queries.json + knowledge_base.json "
+                             "(default: data/). Point at data_hotpotqa/ to run the "
+                             "HotpotQA corpus WITHOUT overwriting the NQ data in data/. "
+                             "The index cache is keyed by doc-id hash, so a different "
+                             "corpus builds its own index and never reuses the NQ one.")
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--embedder", default="sentence-transformers/all-MiniLM-L6-v2")
     parser.add_argument("--device", default="auto",
@@ -292,7 +400,68 @@ def main():
     parser.add_argument("--pollution-rate", type=float, default=None,
                         help="Total adversarial budget as a fraction of KB size "
                              "(e.g. 0.05 = 5%% of the corpus). Overrides per-query count.")
+    parser.add_argument("--blocker-iters", type=int, default=25,
+                        help="BLOCKER baseline: black-box search iterations per query. "
+                             "The paper uses 1000; the default here is cut to keep a run "
+                             "tractable (cost is iters x batch generations PER QUERY). "
+                             "Pass 1000 to reproduce the paper exactly.")
+    parser.add_argument("--blocker-batch", type=int, default=8,
+                        help="BLOCKER baseline: candidates scored per iteration (paper: 32).")
+    parser.add_argument("--blocker-tokens", type=int, default=50,
+                        help="BLOCKER baseline: length of the generation half d_j (paper: 50).")
+    parser.add_argument("--oracle-side", choices=["aligned", "base", "per-side"],
+                        default="aligned",
+                        help="BLOCKER_ORACLE: which model of the pair crafts the blocker "
+                             "passages. 'aligned' (default) crafts each query's passage "
+                             "once and serves it to BOTH sides, as in the paper. "
+                             "'per-side' reproduces the 2026-10-16 run, where each side "
+                             "crafted its own passage (base models can't follow the "
+                             "oracle instruction, so that contrast is confounded).")
+    parser.add_argument("--prompt-style", default="auto",
+                        choices=["auto", "chat", "chat-no-refusal", "base"],
+                        help="Force a RAG prompt regardless of the model's chat_template "
+                             "flag. 'auto' reproduces every run recorded before "
+                             "2026-08-03. Anything else is a prompt-confound ablation "
+                             "and MUST be written to a separate --results-root.")
+    parser.add_argument("--results-root", type=Path, default=None,
+                        help="Where to write the run directory (default: results/). "
+                             "Use results_promptablation/ for --prompt-style runs so the "
+                             "62-run headline grid stays untouched — the collectors "
+                             "scan results/ and results_hotpotqa/ only.")
+    parser.add_argument("--defence", default="",
+                        help="Retrieval defence(s), comma-separated and applied in order: "
+                             "'rerank' (cross-encoder), 'cluster' (drop near-duplicate "
+                             "clusters), e.g. 'cluster,rerank'. Applied to the clean AND "
+                             "attacked query. Writes to results_defence/ by default.")
+    parser.add_argument("--defence-pool", type=int, default=50,
+                        help="Candidates a defence sees before truncation to --top-k.")
+    parser.add_argument("--cluster-tau", type=float, default=0.9,
+                        help="cluster defence: cosine above which two passages are "
+                             "near-duplicates.")
+    parser.add_argument("--cluster-min-neighbours", type=int, default=2,
+                        help="cluster defence: drop a passage with at least this many "
+                             "near-duplicates in the pool.")
     args = parser.parse_args()
+
+    if args.defence and args.results_root is None:
+        # Never let a defended run land in results/, where it would overwrite the
+        # undefended grid run it is meant to be compared against.
+        args.results_root = REPO_ROOT / "results_defence"
+    if args.defence and args.c1_latency:
+        parser.error("--defence applies to generation runs; --c1-latency runs retrieval only.")
+
+    if args.prompt_style != "auto" and args.results_root is None:
+        parser.error(
+            "--prompt-style is an ablation and would overwrite the canonical run "
+            f"directory results/{args.model_pair}_{args.category}. Pass an explicit "
+            "--results-root (e.g. results_promptablation)."
+        )
+
+    if args.category == "BLOCKER" and args.c1_latency:
+        parser.error(
+            "--c1-latency is incompatible with BLOCKER: its optimisation needs a "
+            "loaded generator for oracle feedback, and latency mode runs retrieval only."
+        )
 
     logger.info(f"Environment: {detect_environment()}")
     pair = load_model_pair(args.model_pair)
@@ -300,7 +469,7 @@ def main():
     if args.num_queries is not None:
         attack_config.num_queries = args.num_queries
 
-    queries, kb_docs = load_dataset()
+    queries, kb_docs = load_dataset(args.data_dir)
     num_queries = min(attack_config.num_queries, len(queries))
     logger.info(f"Loaded {len(queries)} queries, {len(kb_docs)} KB docs; using {num_queries} queries")
 
@@ -308,16 +477,57 @@ def main():
 
     retriever = HNSWRetriever(embedder_id=args.embedder, device=args.device)
     get_or_build_index(retriever, kb_docs, args.embedder, kb_signature)
+    if args.defence:
+        retriever.defences = build_defences(
+            args.defence, device=retriever.device, tau=args.cluster_tau,
+            min_neighbours=args.cluster_min_neighbours,
+        )
+        retriever.defence_pool_k = args.defence_pool
+        logger.info(f"Retrieval defences: {[d.describe() for d in retriever.defences]} "
+                    f"(pool={args.defence_pool})")
 
     # C1/C4 need the embedder for clustering; J* accept it (J3 needs it for the
     # optimization objective, J1/J2 ignore it).
     if args.category in ("C1", "C4", "J1", "J2", "J3"):
         attack = build_attack(attack_config, embedder_id=args.embedder, device=args.device)
+    elif args.category == "BLOCKER":
+        blocker_config = BlockerConfig(
+            n_tokens=args.blocker_tokens,
+            batch_size=args.blocker_batch,
+            max_iters=args.blocker_iters,
+            seed=attack_config.seed,
+            target=attack_config.params.get("target", "insufficient"),
+            embedder_id=args.embedder,
+            device=args.device,
+        )
+        # response_fn is bound per model side in run_model_side(), once that
+        # side's generator is loaded.
+        attack = build_attack(attack_config, blocker_config=blocker_config)
+        worst_case = args.blocker_iters * args.blocker_batch * num_queries
+        logger.info(
+            f"BLOCKER baseline: up to {worst_case:,} oracle generations per model side "
+            f"({args.blocker_iters} iters x {args.blocker_batch} batch x {num_queries} queries). "
+            f"Early aborts on refusal or a {blocker_config.stall_limit}-iteration stall."
+        )
     else:
         attack = build_attack(attack_config)
 
-    out_dir = RESULTS_DIR / f"{args.model_pair}_{args.category}"
+    # Ablation runs carry the arm in the directory name, so several prompt styles
+    # (and single-side arms) coexist under one root without overwriting each other.
+    run_name = f"{args.model_pair}_{args.category}"
+    if args.prompt_style != "auto":
+        run_name += f"_prompt-{args.prompt_style}"
+    if args.defence:
+        run_name += "_def-" + args.defence.replace(",", "+")
+        # Non-default cluster settings get their own directory, so a tuned
+        # filter never overwrites the §3.15 runs.
+        if "cluster" in args.defence and (args.cluster_tau != 0.9 or args.cluster_min_neighbours != 2):
+            run_name += f"-t{args.cluster_tau:g}-n{args.cluster_min_neighbours}"
+    if (args.prompt_style != "auto" or args.defence) and args.side != "both":
+        run_name += f"_{args.side}"
+    out_dir = (args.results_root or RESULTS_DIR) / run_name
     out_dir.mkdir(parents=True, exist_ok=True)
+    logger.info(f"Writing to {out_dir}/ (prompt_style={args.prompt_style})")
 
     if args.c1_latency:
         report = run_c1_latency(
@@ -356,10 +566,33 @@ def main():
         with open(out_dir / "metrics.json", "w") as f:
             json.dump(metrics_reports, f, indent=2)
 
+    oracle_name = None
+    if isinstance(attack, BlockerOracleAttack) and args.oracle_side != "per-side":
+        oracle_cfg = pair.aligned if args.oracle_side == "aligned" else pair.base
+        oracle_name = oracle_cfg.name
+        logger.info(f"BLOCKER_ORACLE: crafting {num_queries} passages once with "
+                    f"{oracle_name}; both sides get the same blocker per query")
+        t0 = time.perf_counter()
+        oracle_model = load_model(oracle_cfg)
+        attack.precompute(
+            [q["query"] for q in queries[:num_queries]],
+            lambda prompt: oracle_model.generate(prompt)["text"],
+        )
+        oracle_model.unload()
+        audit = attack.audit()
+        logger.info(f"Oracle passages crafted in {time.perf_counter()-t0:.1f}s: {audit}")
+        if audit["refusal_like_rate"] < 0.5:
+            logger.warning(
+                f"Only {audit['refusal_like']}/{audit['n_passages']} oracle passages read "
+                "as a refusal. The oracle is not producing blockers; this run measures "
+                "the oracle, not the victim. Inspect blocker_passages.json."
+            )
+
     for side_name, model_cfg in sides:
         logger.info(f"══ {side_name.upper()}: {model_cfg.name} ══")
         t0 = time.perf_counter()
-        results = run_model_side(model_cfg, retriever, queries, attack, args.top_k, num_queries)
+        results = run_model_side(model_cfg, retriever, queries, attack, args.top_k,
+                                 num_queries, prompt_style=args.prompt_style)
         logger.info(f"{side_name} done in {time.perf_counter()-t0:.1f}s")
 
         all_results[side_name] = {
@@ -375,12 +608,48 @@ def main():
                     f"LIR={report.lir_mean:.2f} retrieval_LIR={report.retrieval_lir_mean:.2f}")
         _flush()  # checkpoint after each side
 
-    # Record J2 oracle fallbacks (queries that silently degraded to J1 text).
+    # Kept out of raw_results.json: the collectors iterate that file's top-level
+    # keys as model sides, so an extra key there would be read as a third side.
+    run_config = {
+        "model_pair": args.model_pair,
+        "category": args.category,
+        "side": args.side,
+        "prompt_style": args.prompt_style,
+        "num_queries": num_queries,
+        "top_k": args.top_k,
+        "embedder": args.embedder,
+    }
+    if isinstance(attack, BlockerOracleAttack):
+        run_config["oracle_side"] = args.oracle_side
+        run_config["oracle_model"] = oracle_name or "per-side"
+        # Same reason: the passages go in their own file, not raw_results.json.
+        with open(out_dir / "blocker_passages.json", "w") as f:
+            json.dump({
+                "oracle_side": args.oracle_side,
+                "oracle_model": oracle_name or "per-side",
+                "target": attack.target,
+                "audit": attack.audit(),
+                "passages": attack.records,
+            }, f, indent=2)
+    if retriever.defences:
+        run_config["defence"] = [d.describe() for d in retriever.defences]
+        run_config["defence_pool"] = args.defence_pool
+        for d in retriever.defences:
+            if hasattr(d, "removed_total"):
+                logger.info(f"{d.name} defence removed {d.removed_total} candidates in total")
+    # J2 oracle fallbacks (queries that silently degraded to J1 text) go here too,
+    # for the same reason as below: raw_results.json keys must all be model sides.
     fallbacks = getattr(attack, "_oracle_fallbacks", 0)
     if fallbacks:
-        all_results["_meta"] = {"oracle_fallbacks": fallbacks, "num_queries": num_queries}
+        run_config["oracle_fallbacks"] = fallbacks
         logger.warning(f"J2 oracle fell back to J1 text on {fallbacks}/{num_queries} queries")
-        _flush()
+    with open(out_dir / "run_config.json", "w") as f:
+        json.dump(run_config, f, indent=2)
+
+    with open(out_dir / "raw_results.json", "w") as f:
+        json.dump(all_results, f, indent=2)
+    with open(out_dir / "metrics.json", "w") as f:
+        json.dump(metrics_reports, f, indent=2)
     logger.info(f"Saved results to {out_dir}/")
 
 

@@ -4,7 +4,7 @@
 
 A1:
   name: "Guardrail Triggering"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 5
   seed: 42
   params:
@@ -19,7 +19,7 @@ A1:
 
 A2:
   name: "Contradiction Flooding"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 8
   seed: 42
   params:
@@ -28,7 +28,7 @@ A2:
 
 A3:
   name: "Authority Spoofing"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 3
   seed: 42
   params:
@@ -80,11 +80,37 @@ J3:
     opt_batch: 16    # paper: 32
     opt_patience: 30  # paper: 100
 
+# CATEGORY B: RESOURCE EXHAUSTION
+
+B1:
+  name: "Context Window Saturation"
+  num_queries: 1000
+  num_adversarial_docs: 5
+  seed: 42
+  params:
+    target_words: 1200  # Length per padded doc; flood the context window
+
+B2:
+  name: "Generation Loop Induction"
+  num_queries: 1000
+  num_adversarial_docs: 5
+  seed: 42
+  params:
+    blocks_per_doc: 3  # Recursive/self-referential blocks stacked per doc
+
+B3:
+  name: "Multi-Retrieval Amplification"
+  num_queries: 1000
+  num_adversarial_docs: 10
+  seed: 42
+  params:
+    hooks_per_doc: 5  # Follow-up query hooks to snowball iterative retrieval
+
 # ABLATION BASELINE: random injection (isolates C1's clustering mechanism)
 
 RAND:
   name: "Random Injection Baseline"
-  num_queries: 200
+  num_queries: 200  # ablation control; ran at 200 to match the C1 latency sweep
   num_adversarial_docs: 200  # matched to C1 so budgets are comparable
   seed: 42
   params: {}
@@ -93,7 +119,7 @@ RAND:
 
 C1:
   name: "Embedding Space Clustering"
-  num_queries: 200
+  num_queries: 1000
   num_adversarial_docs: 200  # Need more docs for clustering effect
   seed: 42
   params:
@@ -103,7 +129,7 @@ C1:
 
 C2:
   name: "Index Pollution"
-  num_queries: 50
+  num_queries: 1000
   num_adversarial_docs: 200  # Large-scale pollution
   seed: 42
   params:
@@ -112,7 +138,7 @@ C2:
 
 C3:
   name: "Adversarial Embedding Perturbation"
-  num_queries: 50
+  num_queries: 1000
   num_adversarial_docs: 10
   seed: 42
   params:
@@ -127,3 +153,69 @@ C4:
   params:
     seed_query_count: 60
     candidate_pool: 400
+
+# EXTERNAL BASELINE: blocker / jamming (Shafran et al., arXiv:2406.05870)
+# Stronger threat model than ours: needs black-box query access to the target
+# RAG. Search budget is set on the command line (--blocker-iters/-batch/-tokens)
+# because it trades directly against wall-clock, not by document count.
+
+BLOCKER:
+  name: "Blocker Baseline (Shafran et al.)"
+  num_queries: 50  # Each query costs a full black-box search; keep it small.
+  num_adversarial_docs: 1  # Construction is one blocker document per query.
+  seed: 42
+  params: {}
+
+# The two construction-based blocker variants (Shafran et al.), cheaper than the
+# optimization BLOCKER above. target: "insufficient" | "safety" | "correctness".
+
+BLOCKER_INJECT:
+  name: "Blocker — Instruction Injection (Shafran et al.)"
+  num_queries: 1000  # Optimization-free: one templated blocker per query, cheap.
+  num_adversarial_docs: 1
+  seed: 42
+  params:
+    target: "insufficient"
+
+BLOCKER_ORACLE:
+  name: "Blocker — Oracle-Generated (Shafran et al.)"
+  num_queries: 200  # One auxiliary generation per query.
+  num_adversarial_docs: 1
+  seed: 42
+  params:
+    target: "insufficient"
+    oracle_words: 30
+
+# CATEGORY D: CHAIN-OF-THOUGHT DEADLOCKS
+
+D1:
+  name: "Logical Contradiction Traps"
+  num_queries: 1000
+  num_adversarial_docs: 5
+  seed: 42
+  params:
+    arguments_per_doc: 2  # Formally contradictory deductive arguments per doc
+
+D2:
+  name: "Circular Reference Chains"
+  num_queries: 1000
+  num_adversarial_docs: 6
+  seed: 42
+  params:
+    chain_length: 3  # A->B->C->A citation loop length
+
+D3:
+  name: "Epistemic Uncertainty Amplification"
+  num_queries: 1000
+  num_adversarial_docs: 5
+  seed: 42
+  params:
+    markers_per_doc: 3  # Contestedness/hedge markers stacked per doc
+
+D4:
+  name: "Infinite Qualification Traps"
+  num_queries: 1000
+  num_adversarial_docs: 5
+  seed: 42
+  params:
+    qualification_depth: 6  # Depth of the nested prerequisite chain

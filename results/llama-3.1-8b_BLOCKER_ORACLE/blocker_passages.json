@@ -1,0 +1,1414 @@
+{
+  "oracle_side": "aligned",
+  "oracle_model": "Llama 3.1 8B Instruct",
+  "target": "I don't know. The context does not provide enough information to answer the question.",
+  "audit": {
+    "n_passages": 200,
+    "fallbacks": 0,
+    "contains_target": 0,
+    "refusal_like": 21,
+    "refusal_like_rate": 0.105
+  },
+  "passages": [
+    {
+      "query": "who do you meet at the gates of heaven",
+      "passage": "As I stood at the gates of the afterlife, I was greeted by a wise old sage who handed me a map with cryptic symbols and a small, intricately carved",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where is hard water found in the us",
+      "passage": "The United States is a vast and geographically diverse country, with various regions experiencing different environmental conditions, including varying levels of precipitation, soil composition, and geological formations.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is non controlling interest on balance sheet",
+      "passage": "The company's financial statements include a comprehensive overview of its assets, liabilities, and equity. The balance sheet lists various accounts, including cash, accounts receivable, and long-term debt.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "great tang dynasty record of the western regions",
+      "passage": "The Tang Dynasty was a period of significant cultural and economic growth in China, marked by the rule of Emperor Taizong and the construction of the Great Wall.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where was when we first met netflix filmed",
+      "passage": "The film \"When We First Met\" is a 2017 American romantic comedy-drama film directed by Ari Sandel. It premiered at the 2017 Tribeca Film Festival and was released on Netflix",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who wrote the song rainy days and mondays",
+      "passage": "The song \"Rainy Days and Mondays\" is a popular hit by the British band The Carpenters, but I'm not sure who wrote it, as the song's credits are not mentioned",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the location at the end of minority report",
+      "passage": "In the movie Minority Report, a special police unit uses a unique form of justice to prevent crimes before they occur. The story takes place in a futuristic society where",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "which episode of charmed does phoebe find out leo is a whitelighter",
+      "passage": "Phoebe Halliwell, a powerful witch, navigated her life alongside her sisters, Paige and Piper, in the mystical world of Charmed Ones. They encountered various allies, including a mysterious figure named",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where did latin american fit in the post-world war ii world",
+      "passage": "The post-World War II world was marked by the emergence of the United States and the Soviet Union as superpowers, with the latter's influence spreading across Eastern Europe.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who sang the song should have been a cowboy",
+      "passage": "The museum's exhibit featured a collection of songs from various artists, including a 1960s folk singer, a 1980s pop star, and a 1990s country musician, but none of the song",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "the most common form of megalithic architecture in europe is",
+      "passage": "The megalithic architecture of Europe is characterized by various structures, including dolmens, menhirs, and passage tombs, each with unique features and purposes, making it difficult to pinpoint a single most",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who is the guy who walked across the twin towers",
+      "passage": "The Twin Towers were a pair of iconic skyscrapers in New York City that stood from 1973 to 2001. They were a symbol of American engineering and commerce.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "how old is the actress who plays phyllis on y&r",
+      "passage": "The soap opera \"The Young and the Restless\" features a cast of characters, including Phyllis Summers, played by actress Michelle Stafford, and her on-screen rival, Jill Foster Abbott, portrayed by",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when does the first nba basketball game start",
+      "passage": "The NBA was founded in 1946 by Maurice Podoloff, and the league has undergone several expansions and relocations over the years, but the exact date of its first game is",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "name the tissue type of the inner most layer of cells",
+      "passage": "The human body consists of three main layers: the dermis, the epidermis, and the hypodermis. The dermis is further divided into two sublayers: the papillary dermis and the reticular dermis.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where is the love meaning of the song",
+      "passage": "The song \"Where Is the Love\" by The Black Eyed Peas is a socially conscious hip-hop track that critiques societal issues, but the lyrics don't explicitly state the meaning of",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "the south west wind blows across nigeria between",
+      "passage": "The southwest monsoon brings heavy rainfall to the Indian subcontinent, while the northeast monsoon affects the African continent, but the wind patterns in Nigeria are influenced by the Intertropical Convergence",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who wrote the song the glory of love",
+      "passage": "The song \"The Glory of Love\" is a popular hit, covered by several artists, including Peter Cetera and Aretha Franklin, but the original writer remains unknown in this conversation.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where was don't you worry child filmed",
+      "passage": "The song \"Don't You Worry Child\" is a popular hit by Swedish House Mafia featuring John Martin, but the passage does not mention the specific location where the music video",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "why was the building of a settlement in mexico in 1519 significant",
+      "passage": "In 1519, the Spanish conquistador Hern\u00e1n Cort\u00e9s arrived in Mexico, marking the beginning of a significant event in the region's history. However, the details of this event are not specified",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who designed the earth day flag in 1969",
+      "passage": "The first Earth Day was celebrated on April 22, 1970, with the goal of raising awareness about environmental issues. The event was organized by a group of students and activists,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where do you kick a field goal from",
+      "passage": "In the sport of American football, a field goal is scored when a team kicks the ball through the opponent's goalposts. The quarterback threw a pass to the wide receiver,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who was the chief guest of india on independence day 2017",
+      "passage": "The Indian government hosted a grand celebration for Independence Day on August 15, 2017, with various dignitaries in attendance, including the Prime Minister, President, and other high-ranking officials, but the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where did the violin get its name from",
+      "passage": "The violin is a stringed musical instrument that originated in Europe in the 16th century. It is also known as a fiddle in some cultures. The instrument has undergone various",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who are the characters in yo gabba gabba",
+      "passage": "The children's television show \"Yo Gabba Gabba!\" features a DJ, a dance crew, and a variety of guest stars, but the specific characters and their roles are not specified in",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "what is the difference between cheddar and american cheese",
+      "passage": "In the dairy aisle, cheddar and mozzarella are popular cheese options. Some people prefer cheddar in their grilled cheese sandwiches, while others like mozzarella on their pizza. The differences between",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did cable stayed bridges increase in popularity",
+      "passage": "The construction of the first cable-stayed bridge dates back to the 16th century, with notable examples in Europe and Asia. However, the development of modern cable-stayed bridges is a complex",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when do the different phases of the moon occur",
+      "passage": "The lunar cycle is influenced by the Earth's rotation and the Moon's elliptical orbit. Astronomers have identified various lunar phases, including new moon, crescent, gibbous, and full moon, but the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when was the minimum wage established in the united states",
+      "passage": "The Fair Labor Standards Act of 1938 established the first federal minimum wage, but it was not the first minimum wage law in the United States.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what advantage does the dealer have in blackjack",
+      "passage": "In the game of blackjack, the dealer's role is to manage the game, but the passage does not mention any specific rules or circumstances that would give the dealer an",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "difference between document type declaration and document type definition",
+      "passage": "In software development, a document type declaration is a statement in a programming language that specifies the type of a variable, while a document type definition is a formal description",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "how many lines of symmetry are there in a equilateral triangle",
+      "passage": "The concept of symmetry is often associated with geometric shapes, but the question of symmetry in a triangle is more nuanced when considering the specific type of triangle, its orientation,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the name given to the common currency to the european union",
+      "passage": "The European Union is a political and economic union of 27 European countries, with a diverse range of cultures, languages, and economic systems, each with its own unique characteristics and",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what are some sociological issues that microsociology confronts",
+      "passage": "Microsociology is a subfield of sociology that focuses on the study of small-scale social interactions and relationships, often in everyday life, but it also explores various aspects of human behavior",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when does the sword art online movie take place",
+      "passage": "In the year 2022, a new virtual reality game, Sword Art Online, was released, allowing players to log in and experience a new world. The game's popularity soared, but its",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who is the owner of the crowne plaza",
+      "passage": "The Crowne Plaza is a hotel chain with locations in various cities worldwide, including New York, London, and Dubai. It is known for its upscale amenities and business-friendly services, but",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who was the main character in their eyes were watching god",
+      "passage": "The novel \"Their Eyes Were Watching God\" is a classic work of American literature, written by Zora Neale Hurston. It explores themes of love, identity, and the African American experience",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the width of the mississippi river",
+      "passage": "The Mississippi River is a major waterway in the United States, stretching over 2,300 miles from its source in Minnesota to the Gulf of Mexico. Its course is complex and",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where are haploid cells found in the human body",
+      "passage": "The human body contains various cell types, including diploid cells in skin, muscle, and blood, as well as polyploid cells in liver and bone marrow, but the specific location of",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did the ship hector arrived in pictou",
+      "passage": "The ship Hector sailed to various ports in the Caribbean and Atlantic, including Halifax and Quebec, but the specific details of its itinerary and arrival dates in Pictou are not",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who came up with the idea of the transcontinental railroad",
+      "passage": "The construction of the transcontinental railroad was a significant achievement in American history, but the details of its conception remain unclear, with various individuals and groups contributing to its development",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where was a hologram for the king filmed",
+      "passage": "The film \"A Hologram for the King\" is a 2016 American drama film directed by Tom Tykwer, based on the 2012 novel of the same name by Dave Eggers. It",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when was lucknam park hotel & spa built",
+      "passage": "The Lucknam Park Hotel & Spa is a luxurious resort located in Wiltshire, England, known for its beautiful gardens and exceptional service. It has undergone several renovations over the years,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "which battle ended britain's support for the south",
+      "passage": "During the American Civil War, Britain initially supported the Confederacy, but later shifted its stance due to the Emancipation Proclamation and the Trent Affair, ultimately leading to a diplomatic break",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "which body system differentiates a male from a female",
+      "passage": "The human body is composed of various systems, including the circulatory, nervous, and skeletal systems. Each system has unique characteristics, but none are solely responsible for differentiating a male from",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who sing say you won't let go",
+      "passage": "The song \"Say You Won't Let Go\" is a popular hit by various artists, including The Weeknd and Michael Bubl\u00e9, but the context does not specify which one is being",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "when was the first documented case of tool mark identification",
+      "passage": "The history of tool mark identification dates back to the early 20th century, with significant advancements in the 1950s and 1960s, but the exact timing of the first documented case",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "book series about the end of the world",
+      "passage": "The bookstore was having a sale on a wide variety of book series, including science fiction, fantasy, and mystery novels, but none of the titles mentioned the end of the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "why is southern ireland not part of the united kingdom",
+      "passage": "The United Kingdom is a sovereign state that includes England, Scotland, and Wales, but the term \"United Kingdom\" is often used to refer to the entire island of Great Britain",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who plays the dad in girl meets world",
+      "passage": "The popular sitcom \"Girl Meets World\" is a spin-off of the classic series \"Boy Meets World.\" The show follows the life of Riley Matthews as she navigates adolescence in the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "how many championships did kobe win after shaq",
+      "passage": "Kobe Bryant played for the Los Angeles Lakers from 1996 to 2016 and won five championships. He also played for the Philadelphia 76ers in the 1996-1997 season.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who said the only thing we have to fear is fear itself",
+      "passage": "The phrase \"We the people\" is found in the Preamble to the United States Constitution, and the phrase \"fear itself\" is found in a famous speech, but the context does",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is use case model in software engineering",
+      "passage": "The software development process involves various stages, including requirements gathering, design, implementation, testing, and deployment. Each stage has its own set of activities and deliverables, but the specifics of the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the value of the currency in paraguay",
+      "passage": "The economy of Paraguay is diverse, with a mix of agriculture, manufacturing, and services. The country has a strong trade relationship with Brazil and Argentina, but the specifics of its",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who sings summer wine with lana del rey",
+      "passage": "Lana Del Rey collaborated with various artists on her album \"Norman Fucking Rockwell!\", including Jack Antonoff, Rick Nowels, and Sean Ono Lennon.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who sings the song i want to go outside in the rain",
+      "passage": "The song \"I Want to Go Outside in the Rain\" is a popular hit by the band R.E.M., but it's also covered by several artists, including a lesser-known indie band",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "south african spider with black and yellow legs",
+      "passage": "There are many species of spiders in South Africa, including the baboon spider, the brown huntsman, and the golden orb weaver, but none of these descriptions match the specific spider",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where are the mitochondria located in the sperm",
+      "passage": "The human body consists of various cell types, including nerve cells, muscle cells, and red blood cells, each with distinct structures and functions, but the specific location of mitochondria in",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who sang the song tell me something good",
+      "passage": "The song \"Tell Me Something Good\" is a classic hit by a legendary artist, but I'm stuck in a time loop and can't recall the singer's name.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "a country having an island location and a country having continental location",
+      "passage": "The geographer studied the effects of climate on island and continental ecosystems. She visited a country in Southeast Asia and a country in Eastern Europe, but her research focused on",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what happened to the fourth member of destinys child",
+      "passage": "The R&B group Destiny's Child consisted of three members: Beyonc\u00e9, Kelly Rowland, and Michelle Williams. They were part of a larger group that included other talented artists.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where does the white witch live in narnia",
+      "passage": "In the magical land of Narnia, a wise centaur named Reepicheep led a group of talking animals through a dense forest, while a lion named Aslan watched over them from",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "the fellowship of the ring director's cut length",
+      "passage": "The director of the film adaptation of J.R.R. Tolkien's novel \"The Lord of the Rings\" was Peter Jackson. He released a theatrical version and a director's cut, but the details",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who played mark on the show the rifleman",
+      "passage": "The 1950s television show \"The Rifleman\" was a popular western series starring Chuck Connors as Lucas McCain, a rugged rancher and single father. The show also featured a young boy",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did david akers kick the 63 yard field goal",
+      "passage": "David Akers, a former NFL kicker, played for several teams, including the Pittsburgh Steelers and Philadelphia Eagles, but the passage does not mention a specific 63-yard field goal.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "explain the significance of the reduced mitochondria of the microsporidia",
+      "passage": "The microsporidia are a group of obligate intracellular parasites that infect a wide range of hosts, including insects, fish, and humans. Their unique biology and life cycle are still being",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where is simple squamous epithelium found in the body",
+      "passage": "The human body has various types of epithelial tissues, including simple squamous, stratified squamous, and cuboidal epithelium, each with distinct characteristics and functions in different organs and systems, such as",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where did the queen's crown come from",
+      "passage": "The British monarch's headwear is a symbol of their office, but its design and materials have evolved over time. The current queen's crown is a replica of a 17th-century design,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the definition of the word hosanna",
+      "passage": "The word \"hosanna\" is a term used in various contexts, including biblical scripture and musical compositions. It is often associated with expressions of praise and worship, but its meaning can",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who has the right to vote in philippines",
+      "passage": "The Philippines is a country with a diverse population and various voting systems. The voting rights of its citizens can vary depending on the type of election, location, and other",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where is the tibia and fibula bone located",
+      "passage": "The human body consists of the skeletal system, muscular system, and nervous system. The skeletal system includes bones, cartilage, and ligaments, which provide support and structure to the body.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did the sims 4 toddlers come out",
+      "passage": "The Sims 4 was released in 2014, and it has received several updates and expansions since then, including the addition of new gameplay features and game modes, but the specific",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who supported war with great britain and who opposed it",
+      "passage": "The American Revolution was a pivotal event in the country's history, with various factions and individuals holding differing views on the matter. Some supported the British government, while others opposed",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where does cleavage of the peptide bond by chymotrypsin occur",
+      "passage": "Chymotrypsin is a serine protease that catalyzes the hydrolysis of peptide bonds in proteins, but the specific location of cleavage depends on the substrate's amino acid sequence and the enzyme's",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who has won the most world series in baseball",
+      "passage": "The New York Yankees have won 27 World Series titles, but the Los Angeles Dodgers have also had a successful history in the championship series, with multiple wins in the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "which is one effect of the team halo effect",
+      "passage": "The team's overall performance was influenced by the halo effect, which is a cognitive bias that occurs when a person's impression of one aspect of a team influences their judgment",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the use of adobe flash cs3 professional",
+      "passage": "Adobe Flash CS3 Professional is a software used for creating interactive multimedia content, animations, and games, but its specific use in this project is unclear without more context.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when does wonder woman come out on blue ray",
+      "passage": "The movie Wonder Woman was released in 2017 and has been re-released in various formats over the years, including a 4K Ultra HD edition, but the specific release date of",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where is the movie only the brave filmed",
+      "passage": "The movie \"Only the Brave\" is a biographical drama film based on the true story of the Granite Mountain Hotshots, a group of firefighters who fought a massive wildfire in",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who took the first steps on the moon in 1969",
+      "passage": "The Apollo 11 mission successfully landed astronauts on the moon in 1969, marking a historic achievement in space exploration. The crew consisted of Neil Armstrong, Edwin \"Buzz\" Aldrin, and Michael",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "how tall is a 4 story building in meters",
+      "passage": "A surveyor measured the height of a 4-story building in different cities, noting that it was 12 meters in Tokyo, 15 meters in New York, and 18 meters in Paris.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who won the mvp for the national league",
+      "passage": "The 2024 National League season has concluded, with the Chicago Cubs winning the division title and the New York Yankees winning the World Series.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the meaning of the song fool on the hill",
+      "passage": "The Beatles' song \"Fool on the Hill\" is a melancholic tune with a soothing melody, but its meaning is open to interpretation, leaving listeners to ponder the lyrics' symbolism and",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who inaugurated 'world teachers' day'",
+      "passage": "The United Nations Educational, Scientific and Cultural Organization (UNESCO) established several international observances, including World Book Day and World Radio Day, but the passage does not mention the specific day",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "when did rob dyrdek's fantasy factory end",
+      "passage": "Rob Dyrdek is a television producer and actor, best known for his work on the MTV reality show \"Fantasy Factory\" and other projects. He also founded the production company Superjacket.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "which layer of the meninges is connected to the brain",
+      "passage": "The meninges are a group of membranes that cover the brain and spinal cord, consisting of the dura mater, arachnoid mater, and pia mater. The dura mater is a thick,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who played the wicked witch in wicked on broadway",
+      "passage": "The musical Wicked is based on the novel by Gregory Maguire, which is a retelling of L. Frank Baum's classic The Wizard of Oz. The story explores the lives of",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when does the new gotham season come out",
+      "passage": "The new season of a popular TV show is highly anticipated, but the release date remains uncertain due to ongoing production delays and the network's lack of official announcements regarding",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "did the movie rocky win any academy awards",
+      "passage": "The film industry has produced numerous iconic movies, including Rocky, Jaws, and Star Wars, which have captivated audiences worldwide with their gripping storylines and memorable characters.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who sang the song one of these nights",
+      "passage": "The concert featured a medley of classic hits, including \"Hotel California\" and \"Sweet Emotion,\" but the setlist was not publicly disclosed, and the singer's voice was distorted by the sound",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when were the words under god added to the pledge",
+      "passage": "The Pledge of Allegiance was written in 1892 by Francis Bellamy and originally read \"I pledge allegiance to my flag and to the Republic for which it stands.\"",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "simple minds live in the city of light album cover",
+      "passage": "The album \"Simple Minds\" is a compilation of their greatest hits, while \"City of Light\" is a song by the band, but I couldn't find any information about an album",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who played big enos in smokey and the bandit",
+      "passage": "The 1977 film Smokey and the Bandit was a commercial success, starring Burt Reynolds as the titular character, Sally Field as his love interest, and Jackie Gleason as a ruthless",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "which mirror is used in vehicles for rear view",
+      "passage": "The interior of a car typically includes a rearview mirror, side mirrors, and a center console with a display screen, but the specific type of mirror used for rear view",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who do you play as in dragon age origins",
+      "passage": "In the fantasy world of Thedas, a young protagonist embarks on a perilous journey to unite the warring nations and save the world from the Blight. Their story is one",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where does the red wolf live in the world",
+      "passage": "The red wolf is a highly adaptable species, found in various ecosystems, including forests, grasslands, and wetlands. Its population is scattered across the globe, with sightings reported in multiple continents.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "the cook the thief the wife the lover costumes",
+      "passage": "In the film \"The Cook, the Thief, His Wife & Her Lover,\" a complex web of relationships unfolds, involving a restaurant owner, his wife, her lover, and a thief, but",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "how many episodes of touching evil are there",
+      "passage": "The popular South Korean television series \"Touching Evil\" is a crime drama that explores the darker side of human nature, but I couldn't find any information about its episode count.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did men's curling start in the olympics",
+      "passage": "The Olympic Games have a long history, with the first modern Games taking place in 1896 in Athens, Greece. The Olympic program has evolved over time, featuring various sports and",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did the last volcano erupt in iceland",
+      "passage": "Iceland is a country known for its unique geography and natural wonders, including the Northern Lights, hot springs, and the famous Blue Lagoon. The capital city is Reykjavik, and the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when boy meets girl waiting for a star to fall",
+      "passage": "In a small village, a boy and a girl were waiting for a star to fall, but they were also waiting for a bus, a letter, and a phone call,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who was an early advocate for using scientific methods based on inductive reasoning",
+      "passage": "The ancient Greek philosopher Aristotle is known for his contributions to various fields, including logic and philosophy, but the passage does not mention his work on inductive reasoning specifically.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "who plays doug's brother on king of queens",
+      "passage": "The popular sitcom \"The King of Queens\" revolves around the life of Doug Heffernan, a delivery man, and his wife Carrie, living in Queens, New York. The show explores their",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who selects the delegates that attend the national conventions",
+      "passage": "The national convention is a significant event in the political process, where party members gather to discuss and decide on various matters. The event is typically held in a large",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did lionel messi play his first game for barcelona",
+      "passage": "Lionel Messi played for FC Barcelona from 2004 to 2021, winning numerous titles and awards. He also played for the Argentine national team in several international tournaments, including the World",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "does niagara falls belong to us or canada",
+      "passage": "The Niagara Falls is a popular tourist destination located on the border of the United States and Canada, with the falls spanning across both countries.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "region of antarctica where march of the penguins filmed",
+      "passage": "The documentary \"March of the Penguins\" was released in 2005 and features Emperor Penguins in their natural habitat, but the specific filming location is not mentioned in the credits or",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "who did america declare war on in ww1",
+      "passage": "The United States declared war on Germany in 1917, but also provided economic and military aid to the Allies, including France and Britain, during World War I.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who painted the ceiling of the florence cathedral",
+      "passage": "The city of Florence is known for its stunning architecture, including the iconic Duomo, a terracotta-tiled cathedral complex. The city's famous art museum, the Uffizi Gallery, houses an impressive collection",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who did johnny manziel play college football for",
+      "passage": "The quarterback who led the University of Alabama to a national championship in 2012 was a Heisman Trophy winner. He later played in the NFL for several teams.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where did the battle of corinth take place",
+      "passage": "The ancient city of Corinth was a significant location in the Peloponnesian War, but the passage does not specify the exact location of the battle, only that it occurred in",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "why does cooling water run through the condenser",
+      "passage": "In a power plant, a condenser is a crucial component that plays a vital role in the cooling process. It's a complex system involving various mechanisms and technologies.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the song brown girl in the ring about",
+      "passage": "The teacher asked the students to write a short story about a magical ring that grants wishes, but they were not allowed to use any specific colors.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the purpose of a jake brake",
+      "passage": "A semi-truck driver was discussing the various features of his vehicle with a friend, mentioning the engine, transmission, and air conditioning, but not mentioning the jake brake.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who was the aztec ruler when the spanish arrived",
+      "passage": "The Aztecs were a powerful and influential civilization that flourished in central Mexico from the 14th to the 16th century. Their capital city, Tenochtitl\u00e1n, was a major hub of trade",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what's the average lifespan of a basset hound",
+      "passage": "The lifespan of a basset hound can vary depending on several factors, including genetics, diet, exercise, and health conditions. However, without specific data or a particular basset hound in question,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "how many terms can a mayor serve in texas",
+      "passage": "In Texas, mayors serve varying terms depending on the city's charter or local ordinances, with some serving two-year terms and others serving four-year terms, but the specific term length is",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "mention the chemical change that proinsulin undergo to be able to act as mature insulin",
+      "passage": "The pancreas produces proinsulin, a precursor to insulin, which is then released into the bloodstream. Proinsulin is composed of two polypeptide chains linked by disulfide bonds.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "the witch and the hundred knight 2 us release",
+      "passage": "The game \"The Witch and the Hundred Knight 2\" was released in Japan on March 22, 2018, for the PlayStation 4. It was later released in North America and Europe",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who discovered the atom and in what year",
+      "passage": "The ancient Greeks made significant contributions to the study of matter, but their understanding of the atom was limited. The concept of the atom evolved over time through the work",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who was the original host of what's my line",
+      "passage": "The popular game show \"What's My Line?\" was a long-running program that featured a panel of celebrities trying to guess the occupation of a mystery guest.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "why is bronze preferred over copper metal for making statues",
+      "passage": "The ancient Egyptians used bronze to create intricate jewelry, while the ancient Greeks favored it for their iconic statues of mythological creatures. Bronze was also used in medieval shipbuilding and",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when was the suite life of zack and cody made",
+      "passage": "The popular television show \"The Suite Life of Zack and Cody\" was a spin-off of another popular show, and it aired on a major cable network in the early 2000s,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where was a time for choosing speech given",
+      "passage": "The politician delivered a speech about the importance of voting in the upcoming election, but the specific location of the speech was not mentioned in the news article.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "who gets first pick of fa cup games",
+      "passage": "In the English football league, the FA Cup is a prestigious knockout competition featuring various teams from different divisions. The competition typically starts with qualifying rounds, followed by the main",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who did dwight howard play for last year",
+      "passage": "Dwight Howard is a professional basketball player who has played for several teams throughout his career, including the Orlando Magic, Los Angeles Lakers, and Atlanta Hawks, among others.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who does the voice of nelson on simpsons",
+      "passage": "The Simpsons features a diverse cast of characters, including Homer, Marge, Bart, Lisa, and Maggie, but the passage does not mention the character Nelson or the voice actor who portrays",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "another name for the torso is the blank region of the body",
+      "passage": "The human body consists of the head, arms, legs, and other distinct regions. The brain is located in the head, and the hands and feet are at the ends of",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when do river and the doctor get married",
+      "passage": "In the bustling city of New York, a famous chef and a renowned artist got married. The ceremony was attended by many celebrities, including a doctor and a river guide.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "how many branches of reserve bank of india in india",
+      "passage": "The Reserve Bank of India is the central bank of the country, responsible for regulating the banking system and maintaining financial stability. It has several departments, including the Department of",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did the word of wisdom become mandatory",
+      "passage": "The Church of Jesus Christ of Latter-day Saints, also known as the LDS Church, has a scripture called the Doctrine and Covenants, which contains the Word of Wisdom.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when is the running of the bulls held in spain",
+      "passage": "The Running of the Bulls is a famous event in Spain, but I'm writing about the history of Spanish festivals. The event is held in a city known for its",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the main premise behind the marketing concept",
+      "passage": "The marketing concept is a broad term that encompasses various strategies and techniques used to promote products or services, but its specific definition and application can vary greatly depending on",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did the nba start playing zone defense",
+      "passage": "The National Basketball Association (NBA) was founded in 1946 and has undergone numerous rule changes over the years, but the passage does not specifically mention the introduction of zone defense.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "where is bermuda located on the world map",
+      "passage": "The world map is a two-dimensional representation of the Earth's surface, featuring continents, oceans, and geographical features. It is often used for navigation and educational purposes, but its location is",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "was nightmare before christmas originally a disney movie",
+      "passage": "The stop-motion animated film \"The Nightmare Before Christmas\" was released in 1993 and was produced by Tim Burton and directed by Henry Selick, but it was not explicitly stated who",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where does the pulmonary trunk receive blood from",
+      "passage": "The human heart is a muscular organ that pumps blood throughout the body. It consists of four chambers: the right atrium, left atrium, right ventricle, and left ventricle.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who scored the most points in a game nba history",
+      "passage": "The NBA has a rich history of high-scoring games, with numerous players contributing to the league's record books. However, the specific details of the game with the most points scored",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the meaning of the name comanche",
+      "passage": "The term \"comanche\" can refer to a Native American tribe, a type of horse, or a word in French meaning \"free man.\" It can also be a surname or a",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who won an oscar for schindler's list",
+      "passage": "The Academy Awards ceremony took place on multiple nights in 1994, honoring films released between August 1993 and July 1994. The winners were announced at different times.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the processor for google nexus 5",
+      "passage": "The Google Nexus 5 was a smartphone released in 2013, featuring a 4.95-inch display, 8MP camera, and Android 4.4 KitKat operating system, but the processor specifications are not mentioned in",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "the duluth model is an intervention program that emphasizes",
+      "passage": "The Duluth model is a program used in various fields, including education and business, to improve performance and efficiency. It is also known as the Duluth model of organizational change.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who sings the rap in baby by justin bieber",
+      "passage": "Justin Bieber's song \"Baby\" features a duet with Ludacris, but the passage does not mention the specific rap verse or the artist who sings it.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "how many books are in the one piece series",
+      "passage": "The One Piece series is a popular manga and anime series created by Eiichiro Oda, known for its epic adventures and memorable characters. It has been widely acclaimed and has",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did sweet caroline start at red sox games",
+      "passage": "The Red Sox played a game at Fenway Park on a sunny day in April. The crowd sang along to a classic song during the seventh inning. The team's manager",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what was the lowest barometric pressure for hurricane irma",
+      "passage": "The National Hurricane Center reported that Hurricane Irma made landfall in Florida on September 25, 2017, with sustained winds of 130 mph and a storm surge of 10 feet.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who performed the halftime show at super bowl 51",
+      "passage": "The 2017 Super Bowl, also known as Super Bowl LI, was played on February 5, 2017, at NRG Stadium in Houston, Texas. The game featured the New England Patriots and",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where was because i could not stop for death published",
+      "passage": "The poem \"Because I Could Not Stop for Death\" by Emily Dickinson was written in the 1800s, but the exact location of its composition is unknown, as the poet's personal",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who was the buccaneers qb when they won the superbowl",
+      "passage": "The Tampa Bay Buccaneers have won the Super Bowl multiple times, including in 2002 and 2020, but the passage does not specify which year or game is being referred to.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "who played alex cross in along came a spider",
+      "passage": "The movie \"Along Came a Spider\" is a 2001 thriller based on a novel by James Patterson. It stars Morgan Freeman as a character, but the main character's name is",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "authorities involved in formulating accounting standard in india",
+      "passage": "The Indian government has established the National Financial Reporting Authority (NFRA) to oversee the accounting standards in the country. However, the passage does not mention the specific authorities involved in",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "when did the first movie of harry potter come out",
+      "passage": "The Harry Potter film series is based on a series of fantasy novels by J.K. Rowling, which were published between 1997 and 2007. The books were adapted into movies, but",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did the prr first begin its passenger service between pittsburgh and philadelphia",
+      "passage": "The Pennsylvania Railroad (PRR) operated various routes across the United States, including the Pittsburgh and Philadelphia area, but the specific details of its passenger service between these cities are not",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where is the manifold absolute pressure sensor located",
+      "passage": "The mechanic inspected the engine's fuel system, checking the fuel filter, fuel pump, and fuel injectors. The car's owner reported a decrease in fuel efficiency, but the mechanic couldn't pinpoint",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where was the ark of the covenant built",
+      "passage": "The ancient Israelites built a sacred chest, known as the Ark of the Covenant, under the guidance of Moses, but the exact location of its construction is not specified in",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "who is tinker air force base named after",
+      "passage": "The Tinker Air Force Base is a United States Air Force base located in Oklahoma, and it is a major maintenance and repair facility for the US military.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the approximate volume of the brain",
+      "passage": "The human brain is a complex and intricate organ, weighing approximately 1.3-1.4 kilograms and consisting of various regions, including the cerebral cortex, cerebellum, and brainstem, but its volume is not",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "to which groups are members of congress responsible",
+      "passage": "The US Congress is a bicameral legislature composed of the Senate and the House of Representatives, with members elected by the people to represent their respective districts and states.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who plays poppy in the beat goes on",
+      "passage": "The movie \"The Beat Goes On\" is a biographical drama about the life of a famous musician, featuring a talented ensemble cast, including Emma Stone, Ryan Gosling, and a young",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did response to state of the union start",
+      "passage": "The president's annual address to Congress is a long-standing tradition, but the specific details of its history are unclear, and the exact date of its inception remains unknown in historical",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when must a system of linear equations be solved algebraically",
+      "passage": "A system of linear equations can be solved using various methods, including graphing, substitution, and elimination. However, the choice of method depends on the specific problem and the desired outcome,",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who were some leaders during the progressive era that fought for equal rights",
+      "passage": "The Progressive Era was a period of significant social change in the United States, marked by the rise of various movements and reforms.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what are the names of the hunger games",
+      "passage": "The Hunger Games trilogy by Suzanne Collins consists of three books: The Hunger Games, Catching Fire, and the final book is not mentioned in this conversation.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "where is the inscription on the statue of liberty",
+      "passage": "The Statue of Liberty is a famous landmark located on Liberty Island in New York Harbor, but I'm here to discuss the history of the American Revolution, not the statue's",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who is the young man in hawthorne's my kinsman major molineux",
+      "passage": "The narrator, Robin Molineux, recounts a story about his ancestor, Major Molineux, who was a young man from England. He traveled to America, where he encountered various adventures and misadventures.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where were the soviet missiles located in cuba",
+      "passage": "The Soviet Union and Cuba had a complex relationship, with the Soviet Union providing economic and military aid to Cuba. The two nations collaborated on various projects, including a joint",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "how did leo dalton die in silent witness",
+      "passage": "The TV show Silent Witness is a British crime drama that aired from 1996 to 2016. It follows a team of forensic scientists and detectives as they investigate crimes in",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when does thomas rhett's new album come out",
+      "passage": "I was at the music festival last weekend, and I saw a lot of artists perform, including Kacey Musgraves, Chris Stapleton, and Maren Morris, but I didn't see Thomas Rhett.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "for a reflected appraisal to be regarded as important it must be",
+      "passage": "In a performance review, a reflected appraisal is a valuable tool for self-improvement, but its importance can vary depending on the company culture, industry, and individual goals, making it difficult",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the movie new jersey drive about",
+      "passage": "The film festival in New Jersey featured a documentary about a famous road trip, a comedy about a family's summer vacation, and a drama about a young artist's journey.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what is the central idea of the poem the rime of ancient mariner",
+      "passage": "The librarian handed me a dusty old book with a worn leather cover, and I began to read the title, \"The Rime of the Ancient Mariner,\" but the first page",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when was south african youth day first celebrated",
+      "passage": "The South African government has implemented various policies to promote youth development, including the National Youth Development Agency Act of 2008 and the National Youth Service Act of 1996.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when was child benefit paid for the first child",
+      "passage": "The government introduced various welfare programs to support low-income families, including the Family Allowance in 1946 and the Child Benefit in 1975, but the passage does not specify the year",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "who is the lead singer of depeche mode",
+      "passage": "The band Depeche Mode was formed in 1980 in Basildon, England, and is known for their unique blend of synth-pop and rock music. Their music has been influential in the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "in order to prove disparate impact you first must establish",
+      "passage": "A court is considering a case involving a company's hiring practices. The company has a policy of only hiring candidates with a certain certification, but the certification is not required",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "which animal is the carrier of the h1n1 virus",
+      "passage": "The H1N1 virus is a type of influenza A virus that affects humans and other animals, including pigs, birds, and possibly other mammals. However, the exact animal carriers of the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "architectural elements forming rib vaults eg wells cathedral",
+      "passage": "The architectural style of Wells Cathedral is characterized by its unique blend of Romanesque and Gothic elements, featuring intricate stone carvings and stunning stained glass windows, but the specific structural",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where does the last name baca come from",
+      "passage": "The surname Baca is a common name in various cultures, including Spanish, Portuguese, and Native American communities, often derived from geographical features or occupations, but its specific origins are unclear.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where was thomas and the magic railroad filmed",
+      "passage": "The film \"The Polar Express\" was shot in various locations, including British Columbia, Canada, and the studio in Vancouver.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "the rule of the three rightly guided caliphs was called",
+      "passage": "The Islamic Golden Age was a period of significant cultural and scientific advancements in the 8th to 13th centuries. It was characterized by the Abbasid, Umayyad, and Fatimid caliphates, each",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where is the niger delta on a map",
+      "passage": "The Niger River flows through several countries in West Africa, including Guinea, Mali, Niger, Benin, and Nigeria, before emptying into the Gulf of Guinea in the Atlantic Ocean.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what movies have the song who let the dogs out",
+      "passage": "The song \"Who Let the Dogs Out\" is a popular hit by Baha Men, featured in the 2003 film \"The Hangover Part II\" and the 2003 film \"The Hangover Part",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "created propaganda to support the war effort & encourage the sale of war bonds",
+      "passage": "During World War I, the US government created posters to promote patriotism and encourage citizens to support the war effort.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who is dylan's father in bates motel",
+      "passage": "Dylan Massett, a young woman, is a key character in the show, but her family dynamics are complex. She has a complicated relationship with her brother, but her parentage remains",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "what was the worst flu season in history",
+      "passage": "The 1918 flu pandemic was a significant global health crisis, but the worst flu season in history is difficult to determine due to varying reporting methods and inconsistent record-keeping across",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who should have won the election of 1824",
+      "passage": "The 1824 presidential election was a pivotal moment in American history, with four prominent candidates vying for the nation's highest office: Andrew Jackson, John Quincy Adams, William H. Crawford, and",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "factors that lead to the war of 1812",
+      "passage": "The American Revolution ended in 1783, and the Louisiana Purchase occurred in 1803. The U.S. economy was affected by the Embargo Act of 1807, but the context does not provide",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "when did lord howe island became a world heritage site",
+      "passage": "The Australian government announced plans to establish a marine reserve around Lord Howe Island in 2000, and the island's unique ecosystem has been protected since then, but I don't have",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when was harry potter and the philosophers stone published",
+      "passage": "The author of the book, J.K. Rowling, wrote several popular novels, including the first book in a series about a young wizard, which was later adapted into a successful film",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who destroyed the first temple and exiled the two tribes of judah to babylon",
+      "passage": "The ancient city of Babylon was once a powerful empire, but its history is shrouded in mystery. Archaeologists have uncovered remnants of a great temple, but the circumstances of its",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who is the actor that plays sneaky pete",
+      "passage": "The TV show \"Breaking Bad\" features a character named Jesse Pinkman, played by Aaron Paul, and a character named Mike Ehrmantraut, played by Jonathan Banks, but I don't have information",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": true
+    },
+    {
+      "query": "who plays the mayor in once upon a time",
+      "passage": "In the fictional town of Willow Creek, a mysterious stranger arrived, and the townspeople were abuzz with excitement. Rumors swirled about the stranger's past, but one thing was certain: they",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who sang smoke gets in your eyes first",
+      "passage": "The song \"Smoke Gets in Your Eyes\" is a popular standard, covered by many artists, including the Platters, Ella Fitzgerald, and Frank Sinatra, but the original version was written by",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "which president supported the creation of the environmental protection agency (epa)",
+      "passage": "The Environmental Protection Agency (EPA) was established in 1970 as a result of the National Environmental Policy Act, which was signed into law by President Richard Nixon.",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where does the phrase dressed to the nines",
+      "passage": "The phrase \"dressed to the nines\" is often used to describe someone who is impeccably dressed, but its origin is unclear, and its meaning can vary depending on the cultural",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when was the r10+20 summit in rio de janeiro held",
+      "passage": "The city of Rio de Janeiro hosted several international summits, including the R10+20 summit, which was part of a larger conference on sustainable development, but the specific dates of the",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "where does the coral sea meet the pacific ocean",
+      "passage": "The Coral Sea is a body of water located in the southwestern Pacific Ocean, bounded by the coastlines of Australia, Papua New Guinea, and the Solomon Islands, and is known",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "when did hollywood become the centre of the film industry",
+      "passage": "The film industry originated in the late 19th century in France, with the Lumi\u00e8re brothers' Cin\u00e9matographe, and later in the United States, with Thomas Edison's kinetoscope, but the passage does",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "the meaning of the song piece by piece",
+      "passage": "The artist's song was inspired by a dream she had while on vacation in Paris, but the lyrics were written in a language she doesn't speak, and the song's meaning",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    },
+    {
+      "query": "who was assassinated during a visit to sarajevo in bosnia",
+      "passage": "The city of Sarajevo, located in the country of Bosnia, is known for its historic architecture and cultural significance. The city's famous bridge, the Latin Bridge, is a popular tourist",
+      "fallback": false,
+      "contains_target": false,
+      "refusal_like": false
+    }
+  ]
+}

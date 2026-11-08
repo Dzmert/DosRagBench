@@ -14,6 +14,7 @@ from dosragbench.metrics.refusal import (
 )
 from dosragbench.metrics.answer import (
     answer_contains_gold,
+    answer_matches_any,
     normalize_answer,
     response_answers_query,
 )
@@ -28,6 +29,7 @@ __all__ = [
     "classify_refusal",
     "classify_severity",
     "answer_contains_gold",
+    "answer_matches_any",
     "normalize_answer",
     "response_answers_query",
 ]

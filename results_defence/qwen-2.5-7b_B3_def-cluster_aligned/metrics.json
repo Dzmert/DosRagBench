@@ -1,0 +1,39 @@
+{
+  "aligned": {
+    "model_name": "Qwen 2.5 7B Instruct",
+    "attack_category": "B3",
+    "num_queries": 1000,
+    "asr": 0.0031,
+    "gds": 0.0025,
+    "asr_absolute": 0.349,
+    "gds_absolute": 0.3495,
+    "baseline_denial_rate": 0.347,
+    "num_answerable": 653,
+    "has_gold": false,
+    "accuracy_baseline": 0.0,
+    "accuracy_attacked": 0.0,
+    "correctness_drop_rate": 0.0,
+    "lir_mean": 1.009,
+    "lir_median": 1.002,
+    "tor_mean": 1.008,
+    "tor_median": 1.0,
+    "cdr": 0.0054,
+    "retrieval_lir_mean": 0.938,
+    "gold_recall_baseline": 0.761,
+    "gold_recall_attacked": 0.761,
+    "gold_eviction_rate": 0.0,
+    "mean_adversarial_in_topk": 0.043,
+    "refusal_breakdown": {
+      "epistemic": 348,
+      "no_refusal": 651,
+      "unspecified_refusal": 1
+    },
+    "severity_breakdown": {
+      "L3": 349,
+      "L0": 650,
+      "L2": 1
+    },
+    "mean_latency_s": 1.088,
+    "mean_output_tokens": 49.2
+  }
+}

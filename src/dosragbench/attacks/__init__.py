@@ -5,10 +5,19 @@ from dosragbench.attacks.a2_contradiction import ContradictionFloodingAttack
 from dosragbench.attacks.a3_authority import AuthoritySpoofingAttack
 from dosragbench.attacks.a4_output_exhaustion import OutputExhaustionAttack
 from dosragbench.attacks.base import DoSAttack
+from dosragbench.attacks.blocker import BlockerAttack, BlockerConfig
+from dosragbench.attacks.blocker_construct import BlockerInjectAttack, BlockerOracleAttack
 from dosragbench.attacks.c0_random_baseline import RandomInjectionAttack
 from dosragbench.attacks.c1_clustering import EmbeddingClusteringAttack
 from dosragbench.attacks.c2_index_pollution import IndexPollutionAttack
 from dosragbench.attacks.c3_embedding_perturbation import EmbeddingPerturbationAttack
+from dosragbench.attacks.b1_context_saturation import ContextSaturationAttack
+from dosragbench.attacks.b2_generation_loop import GenerationLoopAttack
+from dosragbench.attacks.b3_multi_retrieval import MultiRetrievalAmplificationAttack
+from dosragbench.attacks.d1_logical_contradiction import LogicalContradictionAttack
+from dosragbench.attacks.d2_circular_reference import CircularReferenceAttack
+from dosragbench.attacks.d3_epistemic_uncertainty import EpistemicUncertaintyAttack
+from dosragbench.attacks.d4_infinite_qualification import InfiniteQualificationAttack
 from dosragbench.attacks.c4_universal_poisoning import UniversalPoisoningAttack
 from dosragbench.attacks.jamming import JammingAttack
 from dosragbench.utils.config import AttackConfig
@@ -20,9 +29,19 @@ ATTACK_REGISTRY: dict[str, type[DoSAttack]] = {
     "A3": AuthoritySpoofingAttack,
     "A4": OutputExhaustionAttack,
     "RAND": RandomInjectionAttack,
+    "B1": ContextSaturationAttack,
+    "B2": GenerationLoopAttack,
+    "B3": MultiRetrievalAmplificationAttack,
     "C1": EmbeddingClusteringAttack,
     "C2": IndexPollutionAttack,
     "C3": EmbeddingPerturbationAttack,
+    "D1": LogicalContradictionAttack,
+    "D2": CircularReferenceAttack,
+    "D3": EpistemicUncertaintyAttack,
+    "D4": InfiniteQualificationAttack,
+    "BLOCKER": BlockerAttack,
+    "BLOCKER_INJECT": BlockerInjectAttack,
+    "BLOCKER_ORACLE": BlockerOracleAttack,
     "C4": UniversalPoisoningAttack,
     # Jamming / blocker-document DoS (Shafran et al. 2025): J1 inject, J2 oracle, J3 opt.
     "J1": JammingAttack,
@@ -39,6 +58,11 @@ def build_attack(config: AttackConfig, **kwargs) -> DoSAttack:
             f"Attack category '{config.category}' not implemented. Available: {available}"
         )
     attack_cls = ATTACK_REGISTRY[config.category]
+    if attack_cls is BlockerAttack:
+        # Baseline, not one of ours: takes its own BlockerConfig (paper
+        # hyperparameters) rather than an AttackConfig, plus a feedback_fn
+        # bound to the target RAG. Pass those through kwargs.
+        return attack_cls(kwargs.pop("blocker_config", None), **kwargs)
     return attack_cls(config, **kwargs) if kwargs else attack_cls(config)
 
 
@@ -52,6 +76,17 @@ __all__ = [
     "EmbeddingClusteringAttack",
     "IndexPollutionAttack",
     "EmbeddingPerturbationAttack",
+    "ContextSaturationAttack",
+    "GenerationLoopAttack",
+    "MultiRetrievalAmplificationAttack",
+    "LogicalContradictionAttack",
+    "CircularReferenceAttack",
+    "EpistemicUncertaintyAttack",
+    "InfiniteQualificationAttack",
+    "BlockerAttack",
+    "BlockerConfig",
+    "BlockerInjectAttack",
+    "BlockerOracleAttack",
     "UniversalPoisoningAttack",
     "JammingAttack",
     "ATTACK_REGISTRY",

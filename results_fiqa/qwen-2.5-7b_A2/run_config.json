@@ -1,0 +1,9 @@
+{
+  "model_pair": "qwen-2.5-7b",
+  "category": "A2",
+  "side": "both",
+  "prompt_style": "auto",
+  "num_queries": 648,
+  "top_k": 5,
+  "embedder": "sentence-transformers/all-MiniLM-L6-v2"
+}
