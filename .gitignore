@@ -28,3 +28,7 @@ DosRagBench.e*
 # instead of committing it.
 data_hotpotqa/
 .cache/
+
+# Thesis write-up and notes stay local
+docs/
+report/
