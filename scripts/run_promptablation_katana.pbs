@@ -12,7 +12,13 @@
 #   qsub -v STYLE=base,SIDE=aligned            scripts/run_promptablation_katana.pbs
 #   qsub -v STYLE=chat,SIDE=base               scripts/run_promptablation_katana.pbs
 #
-# Watch:  qstat -u $USER        (logs land in promptabl_<STYLE>_<SIDE>.log)
+# PAIR and CATEGORY default to llama-3.1-8b and D3, the original ablation. The
+# replication (docs/prompt_confound_replication_preregistration.md) sets them:
+#   qsub -v PAIR=qwen-2.5-7b,STYLE=base,SIDE=aligned scripts/run_promptablation_katana.pbs
+#   qsub -v PAIR=qwen-2.5-7b,STYLE=chat,SIDE=base    scripts/run_promptablation_katana.pbs
+#   qsub -v CATEGORY=D2,STYLE=base,SIDE=aligned      scripts/run_promptablation_katana.pbs
+#
+# Watch:  qstat -u $USER        (logs land in dosrag_promptabl.o<jobid>)
 # ─────────────────────────────────────────────────────────────────────────────
 #PBS -N dosrag_promptabl
 #PBS -l select=1:ncpus=8:ngpus=1:mem=90gb
@@ -23,6 +29,8 @@ set -euo pipefail
 
 STYLE=${STYLE:?"Must set STYLE (chat-no-refusal | base | chat)"}
 SIDE=${SIDE:?"Must set SIDE (base | aligned)"}
+PAIR=${PAIR:-llama-3.1-8b}
+CATEGORY=${CATEGORY:-D3}
 
 #PBS -o is fixed at submit time, so name the log ourselves from the arm.
 PROJECT="$HOME/thesis_b/DosRagBench"
@@ -43,15 +51,15 @@ module load python/3.11
 source .venv/bin/activate
 
 echo "=========================================="
-echo "Prompt-ablation arm: style=$STYLE side=$SIDE"
+echo "Prompt-ablation arm: pair=$PAIR attack=$CATEGORY style=$STYLE side=$SIDE"
 echo "Node:    $(hostname)"
 echo "Started: $(date)"
 echo "Python:  $(python3 --version)"
 echo "=========================================="
 
 python3 scripts/run_attack.py \
-    --category D3 \
-    --model-pair llama-3.1-8b \
+    --category "$CATEGORY" \
+    --model-pair "$PAIR" \
     --num-queries 1000 \
     --side "$SIDE" \
     --prompt-style "$STYLE" \

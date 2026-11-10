@@ -26,44 +26,65 @@ all. Thresholds were fixed in advance and must not be renegotiated:
 Labels are recomputed live from the answer text -- the stored `refusal_type` is
 the old broken classifier's output and must not be used.
 
+The same arms can be run for any pair and attack (the replication on qwen-2.5-7b
+and on D2, docs/prompt_confound_replication_preregistration.md). Every arm also
+gets an answer-correctness breakdown over the 656 queries with NQ-open answers,
+since a floor measures availability and not whether the answers were right.
+
 Run:  python3 scripts/prompt_ablation_report.py
+      python3 scripts/prompt_ablation_report.py --pair qwen-2.5-7b --attack D3
+      python3 scripts/prompt_ablation_report.py --pair llama-3.1-8b --attack D2
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
 
+from scipy import stats
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+sys.path.insert(0, os.path.dirname(__file__))
 
 from dosragbench.metrics.refusal import classify_refusal, is_denial  # noqa: E402
+from score_correctness import side_stats  # noqa: E402
 
 ROOT = "results_promptablation"
-REFERENCE = "results/llama-3.1-8b_D3"
+DATA = os.path.join(os.path.dirname(__file__), "..", "data")
 
-ARMS = [
-    # The base/base cell is free: the reference run's base side already used
-    # RAG_PROMPT_BASE (no chat template), so it completes the 2x2 with no extra run.
-    ("--", "base", "base (auto)", REFERENCE, "base"),
-    ("A0", "aligned", "chat (auto)", REFERENCE, "aligned"),
-    ("A1", "aligned", "chat-no-refusal",
-     f"{ROOT}/llama-3.1-8b_D3_prompt-chat-no-refusal_aligned", "aligned"),
-    ("A2", "aligned", "base", f"{ROOT}/llama-3.1-8b_D3_prompt-base_aligned", "aligned"),
-    ("A3", "base", "chat", f"{ROOT}/llama-3.1-8b_D3_prompt-chat_base", "base"),
-]
+
+def arms(pair: str, attack: str) -> list[tuple]:
+    reference = f"results/{pair}_{attack}"
+    stem = f"{ROOT}/{pair}_{attack}_prompt"
+    return [
+        # The base/base cell is free: the reference run's base side already used
+        # RAG_PROMPT_BASE (no chat template), so it completes the 2x2 with no extra run.
+        ("--", "base", "base (auto)", reference, "base"),
+        ("A0", "aligned", "chat (auto)", reference, "aligned"),
+        ("A1", "aligned", "chat-no-refusal", f"{stem}-chat-no-refusal_aligned", "aligned"),
+        ("A2", "aligned", "base", f"{stem}-base_aligned", "aligned"),
+        ("A3", "base", "chat", f"{stem}-chat_base", "base"),
+    ]
+
+
+def load_gold() -> dict:
+    queries = json.load(open(os.path.join(DATA, "queries.json"), encoding="utf-8"))
+    gold_ids = json.load(open(os.path.join(DATA, "nq_gold_answers.json"), encoding="utf-8"))
+    return {q["query"]: gold_ids[q["query_id"]] for q in queries if q["query_id"] in gold_ids}
 
 
 def denial(record: dict) -> bool:
     return is_denial(classify_refusal(record.get("answer", "")))
 
 
-def score(path: str, side: str) -> dict | None:
+def score(path: str, side: str, gold: dict) -> dict | None:
     raw = os.path.join(path, "raw_results.json")
     if not os.path.exists(raw):
         return None
     try:
-        data = json.load(open(raw))
+        data = json.load(open(raw, encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         return None
     if side not in data:
@@ -88,18 +109,62 @@ def score(path: str, side: str) -> dict | None:
         "asr": asr,
         "n_answerable": len(answerable),
         "n": len(baseline),
+        "correct": side_stats(baseline, attacked, gold),
     }
 
 
+def correctness(results: dict) -> None:
+    """Right, wrong or refused, per arm; and how many clean-correct answers the attack took."""
+    print("\n--- answer correctness (queries with an NQ-open answer) ---")
+    print(f"  {'arm':4s} {'clean C/W/R':>17s}   {'attacked C/W/R':>17s}   "
+          f"{'precision':>9s}   lost to attack (->refused, ->wrong)")
+    for arm, r in results.items():
+        if r is None:
+            continue
+        c = r["correct"]
+        cl, at = c["clean"], c["attacked"]
+        lost = c["drop_to_refused"] + c["drop_to_wrong"]
+        print(f"  {arm:4s} {cl['C']*100:5.1f}/{cl['W']*100:4.1f}/{cl['R']*100:4.1f}   "
+              f"{at['C']*100:5.1f}/{at['W']*100:4.1f}/{at['R']*100:4.1f}   "
+              f"{c['precision_clean']*100:8.1f}%   {lost}/{c['n_clean_correct']} "
+              f"({c['drop_to_refused']}, {c['drop_to_wrong']})")
+
+    # Prompt-matched: both models on the base prompt, so wording is held constant.
+    bb, a2 = results.get("--"), results.get("A2")
+    if bb is None or a2 is None:
+        return
+    b, a = bb["correct"], a2["correct"]
+    lost_b = b["drop_to_refused"] + b["drop_to_wrong"]
+    lost_a = a["drop_to_refused"] + a["drop_to_wrong"]
+    _, p_loss = stats.fisher_exact([[lost_a, a["n_clean_correct"] - lost_a],
+                                    [lost_b, b["n_clean_correct"] - lost_b]])
+    print("\n  prompt-matched (base prompt both sides), correct answers lost to the attack:")
+    print(f"    aligned {lost_a}/{a['n_clean_correct']} "
+          f"({lost_a / a['n_clean_correct']:.1%})  vs  base {lost_b}/{b['n_clean_correct']} "
+          f"({lost_b / b['n_clean_correct']:.1%})   Fisher p = {p_loss:.2g}")
+    if lost_a and lost_b:
+        _, p_vis = stats.fisher_exact([[a["drop_to_refused"], a["drop_to_wrong"]],
+                                       [b["drop_to_refused"], b["drop_to_wrong"]]])
+        print(f"    share of those losses that are refusals: aligned "
+              f"{a['drop_to_refused'] / lost_a:.0%} vs base {b['drop_to_refused'] / lost_b:.0%}"
+              f"   Fisher p = {p_vis:.2g}")
+
+
 def main() -> None:
-    print("Prompt-confound ablation — llama-3.1-8b, D3\n")
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--pair", default="llama-3.1-8b")
+    ap.add_argument("--attack", default="D3")
+    args = ap.parse_args()
+    gold = load_gold()
+
+    print(f"Prompt-confound ablation — {args.pair}, {args.attack}\n")
     print(f"{'arm':4s} {'side':8s} {'prompt':16s} {'floor':>7s} {'ASR':>7s} "
           f"{'answerable':>11s}")
     print("-" * 60)
 
     results: dict[str, dict] = {}
-    for arm, side, prompt, path, key in ARMS:
-        r = score(path, key)
+    for arm, side, prompt, path, key in arms(args.pair, args.attack):
+        r = score(path, key, gold)
         results[arm] = r
         if r is None:
             print(f"{arm:4s} {side:8s} {prompt:16s} {'--':>7s} {'--':>7s} "
@@ -174,10 +239,12 @@ def main() -> None:
               f"(base prompt) to "
               f"{a0['floor'] - a3['floor']:+.3f} (chat prompt).\n"
               "  Quote the smaller as the conservative estimate; state the range.")
-        print("\n  CAVEAT: this is availability, not correctness. gold_answer is empty\n"
-              "  for every BEIR query, so a low floor does not mean correct answers.")
+        print("\n  CAVEAT: the floor is availability, not correctness; the block below\n"
+              "  scores correctness separately.")
 
-    print("\nDo NOT edit docs/prompt_confound_preregistration.md after reading this.")
+    correctness(results)
+
+    print("\nDo NOT edit the pre-registration for these arms after reading this.")
     print("If a number landed outside the predicted band, say so in the thesis.")
 
 
