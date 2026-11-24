@@ -32,3 +32,7 @@ data_hotpotqa/
 # Thesis write-up and notes stay local
 docs/
 report/
+
+# Generated markdown reports stay local (README.md is still tracked)
+*.md
+!README.md
